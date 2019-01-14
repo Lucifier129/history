@@ -32,10 +32,14 @@ export const getCurrentLocation = () => {
 export const getUserConfirmation = (message, callback) =>
   callback(window.confirm(message)) // eslint-disable-line no-alert
 
+const isExtraneousPopstateEvent = event => {
+  return event.state === undefined && navigator.userAgent.indexOf('CriOS') === -1
+}
+
 export const startListener = (listener) => {
   const handlePopState = (event) => {
-    if (event.state !== undefined) // Ignore extraneous popstate events in WebKit
-      listener(_createLocation(event.state))
+    if (isExtraneousPopstateEvent(event)) return // Ignore extraneous popstate events in WebKit
+    listener(_createLocation(event.state))
   }
 
   addEventListener(window, PopStateEvent, handlePopState)
