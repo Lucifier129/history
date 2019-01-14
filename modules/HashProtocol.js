@@ -10,6 +10,14 @@ import {
   createPath
 } from './PathUtils'
 
+import {
+  getUserConfirmation as _getUserConfirmation,
+  go as _go
+} from './BrowserProtocol'
+
+export let getUserConfirmation = _getUserConfirmation
+export let go = _go
+
 const HashChangeEvent = 'hashchange'
 
 const getHashPath = () => {
@@ -30,8 +38,6 @@ const replaceHashPath = (path) => {
     window.location.href.slice(0, hashIndex >= 0 ? hashIndex : 0) + '#' + path
   )
 }
-
-export { getUserConfirmation, go } from './BrowserProtocol'
 
 export const getCurrentLocation = (pathCoder, queryKey) => {
   let path = pathCoder.decodePath(getHashPath())
@@ -61,12 +67,24 @@ export const startListener = (listener, pathCoder, queryKey) => {
       replaceHashPath(encodedPath)
     } else {
       const currentLocation = getCurrentLocation(pathCoder, queryKey)
-      const isEqualKey = prevLocation && currentLocation.key && prevLocation.key === currentLocation.key
-      const isEqualPathname = prevLocation && prevLocation.pathname === currentLocation.pathname
-      const isEqualSearch = prevLocation && prevLocation.search === currentLocation.search
 
-      if (isEqualKey || isEqualPathname && isEqualSearch) {
-        return // Ignore extraneous hashchange events
+      // Ignore extraneous hashchange events
+      if (prevLocation) {
+        if (currentLocation.key && prevLocation.key === currentLocation.key) {
+          return
+        }
+
+        let curPath = currentLocation.pathname + currentLocation.search
+        let prevPath = prevLocation.pathname + prevLocation.search
+
+        // prepend basename if existed
+        if (prevLocation.basename) {
+          prevPath = prevLocation.basename + prevPath
+        }
+        
+        if (prevPath === curPath) {
+          return
+        }
       }
 
       prevLocation = currentLocation
