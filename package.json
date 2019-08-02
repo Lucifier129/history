@@ -19,15 +19,19 @@
     "release": "node ./scripts/release.js",
     "prepublish": "node ./scripts/build.js",
     "test": "npm run lint && karma start",
-    "lint": "eslint modules"
+    "lint": "eslint modules",
+    "build-ts": "tsc --module commonjs"
   },
   "dependencies": {
-    "invariant": "^2.2.1",
+    "invariant": "^2.2.4",
+    "loose-envify": "^1.2.0",
     "query-string": "^4.2.2",
-    "warning": "^3.0.0",
-    "loose-envify": "^1.2.0"
+    "warning": "^3.0.0"
   },
   "devDependencies": {
+    "@types/invariant": "^2.2.30",
+    "@types/node": "^12.6.9",
+    "@types/warning": "^3.0.0",
     "babel-cli": "^6.10.1",
     "babel-core": "^6.9.1",
     "babel-eslint": "^6.0.4",
@@ -53,6 +57,8 @@
     "pretty-bytes": "^3.0.1",
     "readline-sync": "^1.4.4",
     "rimraf": "^2.5.2",
+    "ts-node": "^8.3.0",
+    "typescript": "^3.5.3",
     "webpack": "^1.13.1",
     "webpack-dev-server": "^1.14.1"
   },
