@@ -20,7 +20,8 @@
     "prepublish": "node ./scripts/build.js",
     "test": "npm run lint && karma start",
     "lint": "eslint modules",
-    "build-ts": "tsc --module commonjs"
+    "build-ts": "tsc --module commonjs",
+    "test:jest": "jest --watchAll"
   },
   "dependencies": {
     "invariant": "^2.2.4",
@@ -30,6 +31,7 @@
   },
   "devDependencies": {
     "@types/invariant": "^2.2.30",
+    "@types/jest": "^24.0.16",
     "@types/node": "^12.6.9",
     "@types/warning": "^3.0.0",
     "babel-cli": "^6.10.1",
@@ -46,6 +48,7 @@
     "expect": "^1.20.1",
     "gzip-size": "^3.0.0",
     "in-publish": "^2.0.0",
+    "jest": "^24.8.0",
     "karma": "^0.13.22",
     "karma-browserstack-launcher": "^1.0.1",
     "karma-chrome-launcher": "^1.0.1",
@@ -57,6 +60,7 @@
     "pretty-bytes": "^3.0.1",
     "readline-sync": "^1.4.4",
     "rimraf": "^2.5.2",
+    "ts-jest": "^24.0.2",
     "ts-node": "^8.3.0",
     "typescript": "^3.5.3",
     "webpack": "^1.13.1",
