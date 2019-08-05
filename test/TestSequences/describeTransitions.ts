@@ -96,7 +96,7 @@ const describeTransitions: Describe = (createHistory) => {
 
       unlistenBefore = history.listenBefore(() => confirmationMessage)
 
-      unlisten = history.listen(loc => {
+      unlisten = history.listen((loc: Location) => {
         location = loc
       })
     })

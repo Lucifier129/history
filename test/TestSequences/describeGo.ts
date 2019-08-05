@@ -76,6 +76,28 @@ const describeGo: Describe = (createHistory)  => {
             expect(location.action).toEqual(PUSH)
             expect(location.key).toBeDefined()
 
+            history.push({
+              pathname: '/person',
+              search: '?the=query',
+              state: { the: 'state a' }
+            })
+          },
+          (location: Location) => {
+            expect(location.pathname).toEqual('/person')
+            expect(location.search).toEqual('?the=query')
+            expect(location.state).toEqual({ the: 'state a' })
+            expect(location.action).toEqual(PUSH)
+            expect(location.key).toBeDefined()
+
+            history.goBack()
+          },
+          (location: Location) => {
+            expect(location.pathname).toEqual('/home')
+            expect(location.search).toEqual('?the=query')
+            expect(location.state).toEqual({ the: 'state' })
+            expect(location.action).toEqual(POP)
+            expect(location.key).toBeDefined()
+
             history.goBack()
           },
           (location: Location) => {
@@ -96,7 +118,7 @@ const describeGo: Describe = (createHistory)  => {
           }
         ]
 
-        execSteps(steps, history, done)
+        execSteps(steps, history, done, true)
       })
     })
   })

@@ -2,7 +2,7 @@
  * @Author: Ma Tianqi 
  * @Date: 2019-08-02 16:22:07 
  * @Last Modified by: Ma Tianqi
- * @Last Modified time: 2019-08-05 17:10:01
+ * @Last Modified time: 2019-08-05 19:42:14
  */
 
 import warning from 'warning'
@@ -24,23 +24,20 @@ const createStateStorage: (entries: Location[]) => Memo = (entries) =>
       return memo
     }, {})
 
-const createMemoryHistory: (options?: string | string[] | object) => NativeHistory
+const createMemoryHistory: (options?: any) => NativeHistory
 = (options = {}) => {
-  let reFormatOptions: {
-    entries?: any[],
-    current?: number
-  } = {}
   if (Array.isArray(options)) {
-    reFormatOptions = { entries: options }
+    options = { entries: options }
   } else if (typeof options === 'string') {
-    reFormatOptions = { entries: [ options ] }
+    options = { entries: [ options ] }
   }
 
   const getCurrentLocation: () => Location = () => {
     const entry: Location = entries[current]
     const path: string = createPath(entry)
 
-    let key, state
+    let key: string
+    let state: any
     if (entry && entry.key) {
       key = entry.key
       state = readState(key)
@@ -65,8 +62,8 @@ const createMemoryHistory: (options?: string | string[] | object) => NativeHisto
     if (!canGo(n)) {
       warning(
         false,
-        'Cannot go(%s) there is not enough history',
-        n
+        'Cannot go(%s) there is not enough history when current is %s and entries length is %s',
+        n, current, entries.length
       )
 
       return
@@ -98,21 +95,14 @@ const createMemoryHistory: (options?: string | string[] | object) => NativeHisto
   }
 
   const history: NativeHistory = createHistory({
-    ...reFormatOptions,
+    ...options,
     getCurrentLocation,
     pushLocation,
     replaceLocation,
     go
   })
 
-  let entries: any[] = []
-  let current: number
-  if (reFormatOptions.entries !== undefined) {
-    entries = reFormatOptions.entries
-  }
-  if (reFormatOptions.current !== undefined) {
-    current = reFormatOptions.current
-  }
+  let { entries, current } = options
 
   if (typeof entries === 'string') {
     entries = [ entries ]

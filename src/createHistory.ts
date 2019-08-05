@@ -1,7 +1,7 @@
 import { loopAsync } from './AsyncUtils'
 import { createPath } from './PathUtils'
 import runTransitionHook from './runTransitionHook'
-import { PUSH, REPLACE, POP } from './Actions'
+import Actions, { PUSH, REPLACE, POP } from './Actions'
 import {
   createLocation as _createLocation,
   statesAreEqual,
@@ -164,10 +164,10 @@ const createHistory: (options?: HistoryOptions) => NativeHistory
     })
   }
 
-  const push = (input) =>
+  const push: (input: string | Location) => void = (input) =>
     transitionTo(createLocation(input, PUSH))
 
-  const replace = (input) =>
+  const replace: (input: string | Location) => void = (input) =>
     transitionTo(createLocation(input, REPLACE))
 
   const goBack = () =>
@@ -182,7 +182,7 @@ const createHistory: (options?: HistoryOptions) => NativeHistory
   const createHref = (location) =>
     createPath(location)
 
-  const createLocation = (location, action, key = createKey()) =>
+  const createLocation: (location: string | Location, action: Actions, key?: string) => Location = (location, action, key = createKey()) =>
     _createLocation(location, action, key)
 
   return {
