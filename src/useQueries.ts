@@ -14,7 +14,8 @@ const defaultParseQueryString: Function = parse
  * Returns a new createHistory function that may be used to create
  * history objects that know how to handle URL queries.
  */
-const useQueries: (createHistory: typeof CH) => (options: HistoryOptions) => NativeHistory = (createHistory) =>
+const useQueries: (createHistory: typeof CH) => (options?: HistoryOptions) => NativeHistory
+= (createHistory) =>
   (options = {}) => {
     const history: NativeHistory = createHistory(options)
     let { stringifyQuery, parseQueryString } = options

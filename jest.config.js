@@ -1,9 +1,27 @@
-export default {
-  // "roots": [
-  //     "./test"
-  // ],
+module.exports = {
   "transform": {
-      "^.+\\.ts?$": "ts-jest"
+    ".(ts|tsx)": "ts-jest"
   },
-  "testMatch": ["**/test/*.ts?(x)"]
+  "testEnvironment": "jsdom",
+  "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
+  "moduleFileExtensions": [
+    "ts",
+    "tsx",
+    "js"
+  ],
+  "coveragePathIgnorePatterns": [
+    "/node_modules/",
+    "/test/"
+  ],
+  "coverageThreshold": {
+    "global": {
+      "branches": 90,
+      "functions": 95,
+      "lines": 95,
+      "statements": 95
+    }
+  },
+  "collectCoverageFrom": [
+    "src/*.{js,ts}"
+  ]
 }

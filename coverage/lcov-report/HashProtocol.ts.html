@@ -1,0 +1,521 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for HashProtocol.ts</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="prettify.css" />
+    <link rel="stylesheet" href="base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="index.html">All files</a> HashProtocol.ts
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">97.14% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>68/70</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">84.62% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>22/26</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">100% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>12/12</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">97.1% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>67/69</span>
+      </div>
+    </div>
+  </div>
+  <div class='status-line high'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">292x</span>
+<span class="cline-any cline-yes">292x</span>
+<span class="cline-any cline-yes">292x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">23x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">40x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">40x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">126x</span>
+<span class="cline-any cline-yes">126x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">126x</span>
+<span class="cline-any cline-yes">19x</span>
+<span class="cline-any cline-yes">19x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">126x</span>
+<span class="cline-any cline-yes">126x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">126x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">31x</span>
+<span class="cline-any cline-yes">102x</span>
+<span class="cline-any cline-yes">102x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">102x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">101x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">101x</span>
+<span class="cline-any cline-yes">101x</span>
+<span class="cline-any cline-yes">14x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">87x</span>
+<span class="cline-any cline-yes">87x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">87x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">87x</span>
+<span class="cline-any cline-yes">74x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">13x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">13x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">31x</span>
+<span class="cline-any cline-yes">31x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">31x</span>
+<span class="cline-any cline-yes">29x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">31x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">31x</span>
+<span class="cline-any cline-yes">31x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">33x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">33x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">33x</span>
+<span class="cline-any cline-yes">27x</span>
+<span class="cline-any cline-yes">27x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">33x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">33x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">23x</span>
+<span class="cline-any cline-yes">23x</span>
+<span class="cline-any cline-yes">23x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">/*
+ * @Author: Ma Tianqi 
+ * @Date: 2019-08-02 15:55:05 
+ * @Last Modified by: Ma Tianqi
+ * @Last Modified time: 2019-08-02 16:17:14
+ */
+&nbsp;
+import warning from 'warning'
+import { createLocation, Location } from './LocationUtils'
+import { addEventListener, removeEventListener } from './DOMUtils'
+import { saveState, readState } from './DOMStateStorage'
+import {
+  addQueryStringValueToPath,
+  stripQueryStringValueFromPath,
+  getQueryStringValueFromPath,
+  parsePath,
+  createPath
+} from './PathUtils'
+&nbsp;
+import {
+  getUserConfirmation as _getUserConfirmation,
+  go as _go
+} from './BrowserProtocol'
+import { PathCoder } from './createHashHistory'
+&nbsp;
+export let getUserConfirmation = _getUserConfirmation
+export let go = _go
+&nbsp;
+const HashChangeEvent: string = 'hashchange'
+&nbsp;
+const getHashPath: () =&gt; string
+= () =&gt; {
+  // We can't use window.location.hash here because it's not
+  // consistent across browsers - Firefox will pre-decode it!
+  const href: string = window.location.href
+  const hashIndex: number = href.indexOf('#')
+  return hashIndex === -1 ? '' : href.substring(hashIndex + 1)
+}
+&nbsp;
+const pushHashPath: (path: string) =&gt; string = (path) =&gt;
+  window.location.hash = path
+&nbsp;
+const replaceHashPath: (path: string) =&gt; void = (path) =&gt; {
+  const hashIndex: number = window.location.href.indexOf('#')
+&nbsp;
+  window.location.replace(
+    window.location.href.slice(0, hashIndex &gt;= 0 ? hashIndex : 0) + '#' + path
+  )
+}
+&nbsp;
+export const getCurrentLocation: (pathCoder: PathCoder, queryKey: string) =&gt; Location
+= (pathCoder, queryKey) =&gt; {
+  let path: string = pathCoder.decodePath(getHashPath())
+  const key: string = getQueryStringValueFromPath(path, queryKey)
+&nbsp;
+  let state
+  if (key) {
+    path = stripQueryStringValueFromPath(path, queryKey)
+    state = readState(key)
+  }
+&nbsp;
+  const init: Location = parsePath(path)
+  init.state = state
+&nbsp;
+  return createLocation(init, undefined, key)
+}
+&nbsp;
+let prevLocation: Location
+&nbsp;
+export const startListener: (listener: Function, pathCoder: PathCoder, queryKey: string) =&gt; () =&gt; void
+= (listener, pathCoder, queryKey) =&gt; {
+  const handleHashChange: () =&gt; void
+  = () =&gt; {
+    const path = getHashPath()
+    const encodedPath = pathCoder.encodePath(path)
+&nbsp;
+    if (path !== encodedPath) {
+      // Always be sure we have a properly-encoded hash.
+      replaceHashPath(encodedPath)
+    } else {
+      const currentLocation: Location = getCurrentLocation(pathCoder, queryKey)
+&nbsp;
+      // Ignore extraneous hashchange events
+      <span class="missing-if-branch" title="else path not taken" >E</span>if (prevLocation) {
+        if (currentLocation.key &amp;&amp; prevLocation.key === currentLocation.key) {
+          return
+        }
+&nbsp;
+        let curPath: string = currentLocation.pathname + currentLocation.search
+        let prevPath: string = prevLocation.pathname + prevLocation.search
+&nbsp;
+        // prepend basename if existed
+        <span class="missing-if-branch" title="if path not taken" >I</span>if (prevLocation.basename) {
+<span class="cstat-no" title="statement not covered" >          prevPath = prevLocation.basename + prevPath</span>
+        }
+        
+        if (prevPath === curPath) {
+          return
+        }
+      }
+&nbsp;
+      prevLocation = currentLocation
+&nbsp;
+      listener(currentLocation)
+    }
+  }
+&nbsp;
+  // Ensure the hash is encoded properly.
+  const path: string = getHashPath()
+  const encodedPath: string = pathCoder.encodePath(path)
+&nbsp;
+  if (path !== encodedPath)
+    replaceHashPath(encodedPath)
+&nbsp;
+  addEventListener(window, HashChangeEvent, handleHashChange)
+&nbsp;
+  return () =&gt;
+    removeEventListener(window, HashChangeEvent, handleHashChange)
+}
+&nbsp;
+const updateLocation: (location: Location, pathCoder: PathCoder, queryKey: string, updateHash: Function) =&gt; void
+= (location, pathCoder, queryKey, updateHash) =&gt; {
+  const { state, key } = location
+&nbsp;
+  let path: string = pathCoder.encodePath(createPath(location))
+&nbsp;
+  if (state !== undefined) {
+    path = addQueryStringValueToPath(path, queryKey, key)
+    saveState(key, state)
+  }
+&nbsp;
+  prevLocation = location
+&nbsp;
+  updateHash(path)
+}
+&nbsp;
+export const pushLocation: (location: Location, pathCoder: PathCoder, queryKey: string) =&gt; void
+= (location, pathCoder, queryKey) =&gt;
+  updateLocation(location, pathCoder, queryKey, (path) =&gt; {
+    <span class="missing-if-branch" title="else path not taken" >E</span>if (getHashPath() !== path) {
+      pushHashPath(path)
+    } else {
+<span class="cstat-no" title="statement not covered" >      warning(false, 'You cannot PUSH the same path using hash history')</span>
+    }
+  })
+&nbsp;
+export const replaceLocation: (location: Location, pathCoder: PathCoder, queryKey: string) =&gt; void
+= (location, pathCoder, queryKey) =&gt;
+  updateLocation(location, pathCoder, queryKey, (path) =&gt; {
+    <span class="missing-if-branch" title="else path not taken" >E</span>if (getHashPath() !== path)
+      replaceHashPath(path)
+  })
+&nbsp;</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Mon Aug 05 2019 15:45:00 GMT+0800 (GMT+08:00)
+</div>
+</div>
+<script src="prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="sorter.js"></script>
+</body>
+</html>

@@ -46,7 +46,7 @@ export interface NativeHistory {
   createLocation: typeof createLocation
 }
 
-const createHistory: (options: HistoryOptions) => NativeHistory
+const createHistory: (options?: HistoryOptions) => NativeHistory
 = (options = {}) => {
   const {
     getCurrentLocation,
@@ -87,21 +87,22 @@ const createHistory: (options: HistoryOptions) => NativeHistory
     listeners.forEach(listener => listener(currentLocation))
   }
 
-  const listenBefore = (listener) => {
+  const listenBefore: (listener: Function) => () => Function[] = (listener) => {
     beforeListeners.push(listener)
 
     return () =>
       beforeListeners = beforeListeners.filter(item => item !== listener)
   }
 
-  const listen = (listener) => {
+  const listen: (listener: Function) => () => Function[] = (listener) => {
     listeners.push(listener)
 
     return () =>
       listeners = listeners.filter(item => item !== listener)
   }
 
-  const confirmTransitionTo = (location, callback) => {
+  const confirmTransitionTo: (location: Location, callback: (ok: any) => void) => void
+  = (location, callback) => {
     loopAsync(
       beforeListeners.length,
       (index, next, done) => {

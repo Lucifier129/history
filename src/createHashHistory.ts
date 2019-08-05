@@ -2,7 +2,7 @@
  * @Author: Ma Tianqi 
  * @Date: 2019-08-02 15:54:35 
  * @Last Modified by: Ma Tianqi
- * @Last Modified time: 2019-08-02 16:21:39
+ * @Last Modified time: 2019-08-05 15:54:23
  */
 import warning from 'warning'
 import invariant from 'invariant'
@@ -43,7 +43,7 @@ const HashPathCoders: PathCoders = {
   }
 }
 
-const createHashHistory: (options: HistoryOptions) => NativeHistory
+const createHashHistory: (options?: HistoryOptions) => NativeHistory
 = (options = {}) => {
   invariant(
     canUseDOM,
@@ -52,11 +52,11 @@ const createHashHistory: (options: HistoryOptions) => NativeHistory
 
   let { queryKey, hashType } = options
 
-  warning(
-    queryKey !== undefined,
-    'Using { queryKey: false } no longer works. Instead, just don\'t ' +
-    'use location state if you don\'t want a key in your URL query string'
-  )
+  // warning(
+  //   queryKey !== false,
+  //   'Using { queryKey: false } no longer works. Instead, just don\'t ' +
+  //   'use location state if you don\'t want a key in your URL query string'
+  // )
 
   if (typeof queryKey !== 'string')
     queryKey = DefaultQueryKey

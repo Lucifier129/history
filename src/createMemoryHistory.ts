@@ -2,7 +2,7 @@
  * @Author: Ma Tianqi 
  * @Date: 2019-08-02 16:22:07 
  * @Last Modified by: Ma Tianqi
- * @Last Modified time: 2019-08-02 16:33:42
+ * @Last Modified time: 2019-08-05 17:10:01
  */
 
 import warning from 'warning'
@@ -24,8 +24,12 @@ const createStateStorage: (entries: Location[]) => Memo = (entries) =>
       return memo
     }, {})
 
-const createMemoryHistory: (options: string | string[] | object) => NativeHistory = (options = {}) => {
-  let reFormatOptions: any
+const createMemoryHistory: (options?: string | string[] | object) => NativeHistory
+= (options = {}) => {
+  let reFormatOptions: {
+    entries?: any[],
+    current?: number
+  } = {}
   if (Array.isArray(options)) {
     reFormatOptions = { entries: options }
   } else if (typeof options === 'string') {
@@ -37,7 +41,7 @@ const createMemoryHistory: (options: string | string[] | object) => NativeHistor
     const path: string = createPath(entry)
 
     let key, state
-    if (entry.key) {
+    if (entry && entry.key) {
       key = entry.key
       state = readState(key)
     }
@@ -101,7 +105,14 @@ const createMemoryHistory: (options: string | string[] | object) => NativeHistor
     go
   })
 
-  let { entries, current } = reFormatOptions
+  let entries: any[] = []
+  let current: number
+  if (reFormatOptions.entries !== undefined) {
+    entries = reFormatOptions.entries
+  }
+  if (reFormatOptions.current !== undefined) {
+    current = reFormatOptions.current
+  }
 
   if (typeof entries === 'string') {
     entries = [ entries ]

@@ -20,10 +20,10 @@ export interface Location {
   query?: object
 }
 
-export const createQuery: (props: object) => object = (props) =>
+export const createQuery: (props?: object) => object = (props) =>
   Object.assign(Object.create(null), props)
 
-export const createLocation: (input: string | Location, action?: Actions, key?: string) => Location
+export const createLocation: (input?: string | Location, action?: Actions, key?: string) => Location
 = (input = '/', action = POP, key = null) => {
   const object: Location = typeof input === 'string' ? parsePath(input) : input
 

@@ -2,7 +2,7 @@
  * @Author: Ma Tianqi 
  * @Date: 2019-08-02 14:30:54 
  * @Last Modified by: Ma Tianqi
- * @Last Modified time: 2019-08-02 16:03:19
+ * @Last Modified time: 2019-08-05 16:16:55
  */
 
 import warning from 'warning'
@@ -19,7 +19,7 @@ export const addQueryStringValueToPath: (path: string, key: string, value: strin
   })
 }
 
-export const stripQueryStringValueFromPath: (path: string, key: string) => string = (path, key) => {
+export const stripQueryStringValueFromPath: (path: string, key?: string) => string = (path, key) => {
   const { pathname, search, hash }: Location = parsePath(path)
 
   return createPath({
@@ -42,7 +42,10 @@ export const getQueryStringValueFromPath: (path: string, key: string) => string
 }
 
 const extractPath: (path: string) => string = (path) => {
-  const match: RegExpMatchArray = path.match(/^(https?:)?\/\/[^\/]*/)
+  let match: RegExpMatchArray = null
+  if (typeof path === 'string') {
+    match = path.match(/^(https?:)?\/\/[^\/]*/)
+  }
   return match == null ? path : path.substring(match[0].length)
 }
 
@@ -58,13 +61,19 @@ export const parsePath: (path: string) => Location
     path
   )
 
-  const hashIndex: number = pathname.indexOf('#')
+  let hashIndex: number = -1
+  if (typeof pathname === 'string') {
+    hashIndex = pathname.indexOf('#')
+  }
   if (hashIndex !== -1) {
     hash = pathname.substring(hashIndex)
     pathname = pathname.substring(0, hashIndex)
   }
 
-  const searchIndex: number = pathname.indexOf('?')
+  let searchIndex: number = -1
+  if (typeof pathname === 'string') {
+    searchIndex = pathname.indexOf('?')
+  }
   if (searchIndex !== -1) {
     search = pathname.substring(searchIndex)
     pathname = pathname.substring(0, searchIndex)
