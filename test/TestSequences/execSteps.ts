@@ -6,7 +6,7 @@ const execSteps: (
   history: NativeHistory,
   done: Done,
   mark?: boolean
-) => void = (steps, history, done, mark) => {
+) => void = (steps, history, done) => {
   let index: number = 0
   let unlisten: Function
 
@@ -16,9 +16,6 @@ const execSteps: (
   }
 
   const execNextStep = (...args) => {
-    if (mark) {
-      console.log(index)
-    }
     try {
       steps[index++](...args)
 

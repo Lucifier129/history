@@ -9,7 +9,7 @@ import invariant from 'invariant'
 import { canUseDOM } from './ExecutionEnvironment'
 import { supportsGoWithoutReloadUsingHash } from './DOMUtils'
 import * as HashProtocol from './HashProtocol'
-import createHistory, { HistoryOptions, NativeHistory } from './createHistory'
+import createHistory, { NativeHistory, CreateHistoryFunc } from './createHistory'
 import { Location } from './LocationUtils'
 
 export interface PathCoder {
@@ -43,8 +43,7 @@ const HashPathCoders: PathCoders = {
   }
 }
 
-const createHashHistory: (options?: HistoryOptions) => NativeHistory
-= (options = {}) => {
+const createHashHistory: CreateHistoryFunc = (options = {}) => {
   invariant(
     canUseDOM,
     'Hash history needs a DOM'

@@ -118,7 +118,7 @@ const describeGo: Describe = (createHistory)  => {
           }
         ]
 
-        execSteps(steps, history, done, true)
+        execSteps(steps, history, done)
       })
     })
   })

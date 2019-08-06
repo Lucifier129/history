@@ -5,7 +5,7 @@
  * @Last Modified time: 2019-08-02 17:00:24
  */
 
- import { locationsAreEqual as _locationsAreEqual } from './LocationUtils'
+import { locationsAreEqual as _locationsAreEqual } from './LocationUtils'
 
 export const locationsAreEqual = _locationsAreEqual
 export { default as createHistory } from './createBrowserHistory'
@@ -18,4 +18,8 @@ export { default as useQueries } from './useQueries'
 
 export { default as Actions } from './Actions'
 
-
+export { Work, Callback } from './AsyncUtils'
+export { PathCoder, PathCoders } from './createHashHistory'
+export { GetCurrentLocationFunc, HistoryOptions, NativeHistory, CreateHistoryFunc } from './createHistory'
+export { Memo } from './createMemoryHistory'
+export { Location } from './LocationUtils'

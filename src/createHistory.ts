@@ -46,8 +46,11 @@ export interface NativeHistory {
   createLocation: typeof createLocation
 }
 
-const createHistory: (options?: HistoryOptions) => NativeHistory
-= (options = {}) => {
+export interface CreateHistoryFunc {
+  (options?: HistoryOptions): NativeHistory
+}
+
+const createHistory: CreateHistoryFunc = (options = {}) => {
   const {
     getCurrentLocation,
     getUserConfirmation,

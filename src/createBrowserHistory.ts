@@ -3,7 +3,7 @@ import { canUseDOM } from './ExecutionEnvironment'
 import * as BrowserProtocol from './BrowserProtocol'
 import * as RefreshProtocol from './RefreshProtocol'
 import { supportsHistory } from './DOMUtils'
-import createHistory, { HistoryOptions, NativeHistory } from './createHistory'
+import createHistory, { CreateHistoryFunc } from './createHistory'
 
 /**
  * Creates and returns a history object that uses HTML5's history API
@@ -15,8 +15,7 @@ import createHistory, { HistoryOptions, NativeHistory } from './createHistory'
  * page reloads will be used to preserve clean URLs. You can force this
  * behavior using { forceRefresh: true } in options.
  */
-const createBrowserHistory: (options: HistoryOptions) => NativeHistory
-= (options = {}) => {
+const createBrowserHistory: CreateHistoryFunc = (options = {}) => {
   invariant(
     canUseDOM,
     'Browser history needs a DOM'

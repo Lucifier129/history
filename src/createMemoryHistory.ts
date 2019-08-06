@@ -9,10 +9,10 @@ import warning from 'warning'
 import invariant from 'invariant'
 import { createLocation, Location } from './LocationUtils'
 import { createPath, parsePath } from './PathUtils'
-import createHistory, { NativeHistory } from './createHistory'
+import createHistory, { NativeHistory, HistoryOptions, CreateHistoryFunc } from './createHistory'
 import { POP } from './Actions'
 
-interface Memo {
+export interface Memo {
   [propName: string]: any
 }
 
@@ -24,12 +24,17 @@ const createStateStorage: (entries: Location[]) => Memo = (entries) =>
       return memo
     }, {})
 
-const createMemoryHistory: (options?: any) => NativeHistory
-= (options = {}) => {
-  if (Array.isArray(options)) {
-    options = { entries: options }
+export interface MemoryOptions extends HistoryOptions {
+  entries?: any
+  current?: number
+}
+
+const createMemoryHistory: CreateHistoryFunc = (options = {}) => {
+  let reFormatOptions: MemoryOptions = Object.assign({}, options)
+  if (Array.isArray(reFormatOptions)) {
+    reFormatOptions = { entries: options }
   } else if (typeof options === 'string') {
-    options = { entries: [ options ] }
+    reFormatOptions = { entries: [ options ] }
   }
 
   const getCurrentLocation: () => Location = () => {
@@ -95,14 +100,14 @@ const createMemoryHistory: (options?: any) => NativeHistory
   }
 
   const history: NativeHistory = createHistory({
-    ...options,
+    ...reFormatOptions,
     getCurrentLocation,
     pushLocation,
     replaceLocation,
     go
   })
 
-  let { entries, current } = options
+  let { entries, current } = reFormatOptions
 
   if (typeof entries === 'string') {
     entries = [ entries ]

@@ -5,10 +5,10 @@
  * @Last Modified time: 2019-08-02 12:33:43
  */
 
-interface Work {
+export interface Work {
   (currentTurn: number, next: () => void, done: (...args: any[]) => void): void
 }
-interface Callback {
+export interface Callback {
   (...args: any[]): void
 }
 
