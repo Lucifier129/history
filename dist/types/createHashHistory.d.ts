@@ -8,5 +8,5 @@ export interface PathCoders {
     noslash: PathCoder;
     slash: PathCoder;
 }
-declare const createHashHistory: (options: HistoryOptions) => NativeHistory;
+declare const createHashHistory: (options?: HistoryOptions) => NativeHistory;
 export default createHashHistory;

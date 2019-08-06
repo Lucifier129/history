@@ -9,7 +9,7 @@ export interface Location {
     action?: any;
     query?: object;
 }
-export declare const createQuery: (props: object) => object;
-export declare const createLocation: (input: string | Location, action?: Actions, key?: string) => Location;
+export declare const createQuery: (props?: object) => object;
+export declare const createLocation: (input?: string | Location, action?: Actions, key?: string) => Location;
 export declare const statesAreEqual: (a: any, b: any) => boolean;
 export declare const locationsAreEqual: (a: Location, b: Location) => boolean;

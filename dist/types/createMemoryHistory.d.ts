@@ -1,3 +1,3 @@
 import { NativeHistory } from './createHistory';
-declare const createMemoryHistory: (options: string | string[] | object) => NativeHistory;
+declare const createMemoryHistory: (options?: any) => NativeHistory;
 export default createMemoryHistory;
