@@ -1,4 +1,4 @@
-import { HistoryOptions, NativeHistory } from './createHistory';
+import { CreateHistoryFunc } from './createHistory';
 /**
  * Creates and returns a history object that uses HTML5's history API
  * (pushState, replaceState, and the popstate event) to manage history.
@@ -9,5 +9,5 @@ import { HistoryOptions, NativeHistory } from './createHistory';
  * page reloads will be used to preserve clean URLs. You can force this
  * behavior using { forceRefresh: true } in options.
  */
-declare const createBrowserHistory: (options: HistoryOptions) => NativeHistory;
+declare const createBrowserHistory: CreateHistoryFunc;
 export default createBrowserHistory;

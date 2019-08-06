@@ -6,3 +6,8 @@ export { default as useBasename } from './useBasename';
 export { default as useBeforeUnload } from './useBeforeUnload';
 export { default as useQueries } from './useQueries';
 export { default as Actions } from './Actions';
+export { Work, Callback } from './AsyncUtils';
+export { PathCoder, PathCoders } from './createHashHistory';
+export { GetCurrentLocationFunc, HistoryOptions, NativeHistory, CreateHistoryFunc } from './createHistory';
+export { Memo } from './createMemoryHistory';
+export { Location } from './LocationUtils';

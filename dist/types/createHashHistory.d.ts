@@ -1,4 +1,4 @@
-import { HistoryOptions, NativeHistory } from './createHistory';
+import { CreateHistoryFunc } from './createHistory';
 export interface PathCoder {
     encodePath: (path: string) => string;
     decodePath: (path: string) => string;
@@ -8,5 +8,5 @@ export interface PathCoders {
     noslash: PathCoder;
     slash: PathCoder;
 }
-declare const createHashHistory: (options?: HistoryOptions) => NativeHistory;
+declare const createHashHistory: CreateHistoryFunc;
 export default createHashHistory;

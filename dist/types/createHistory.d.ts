@@ -33,5 +33,8 @@ export interface NativeHistory {
     createHref: Function;
     createLocation: typeof createLocation;
 }
-declare const createHistory: (options?: HistoryOptions) => NativeHistory;
+export interface CreateHistoryFunc {
+    (options?: HistoryOptions): NativeHistory;
+}
+declare const createHistory: CreateHistoryFunc;
 export default createHistory;
