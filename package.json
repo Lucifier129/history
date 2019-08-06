@@ -1,6 +1,6 @@
 {
   "name": "create-history",
-  "version": "1.0.4",
+  "version": "2.0.1",
   "description": "Manage browser history with JavaScript",
   "repository": {
     "type": "git",
@@ -8,8 +8,11 @@
   },
   "author": "Michael Jackson",
   "license": "MIT",
-  "main": "dist/lib/index.ts",
+  "main": "dist/lib/index.js",
   "typings": "dist/types/index.d.ts",
+  "files": [
+    "dist"
+  ],
   "tags": [
     "history",
     "location"
@@ -25,7 +28,8 @@
     "lint": "tslint  --project tsconfig.json -t codeFrame 'src/**/*.ts' 'test/**/*.ts'",
     "prebuild": "rimraf dist",
     "build": "tsc --module commonjs",
-    "test": "jest --coverage",
+    "test": "jest",
+    "test:coverage": "jest --coverage",
     "test:watch": "jest --coverage --watchAll",
     "test:prod": "npm run lint && npm run test -- --no-cache",
     "report-coverage": "cat ./coverage/lcov.info | coveralls",
@@ -33,11 +37,11 @@
     "semantic-release": "semantic-release",
     "semantic-release-prepare": "ts-node tools/semantic-release-prepare",
     "precommit": "lint-staged",
-    "travis-deploy-once": "travis-deploy-once"
+    "travis-deploy-once": "travis-deploy-once",
+    "prepare": "npm run test && npm run build"
   },
   "dependencies": {
     "invariant": "^2.2.4",
-    "loose-envify": "^1.2.0",
     "query-string": "^4.2.2",
     "warning": "^3.0.0"
   },
@@ -47,6 +51,7 @@
     "@types/node": "^12.6.9",
     "@types/warning": "^3.0.0",
     "jest": "^23.0.1",
+    "rimraf": "^2.6.3",
     "ts-jest": "^23.0.1",
     "ts-node": "^8.3.0",
     "tslint": "^5.18.0",
