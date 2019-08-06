@@ -1,6 +1,6 @@
 {
   "name": "create-history",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Manage browser history with JavaScript",
   "repository": {
     "type": "git",
@@ -8,8 +8,11 @@
   },
   "author": "Michael Jackson",
   "license": "MIT",
-  "main": "dist/lib/index.ts",
+  "main": "dist/lib/index.js",
   "typings": "dist/types/index.d.ts",
+  "files": [
+    "dist"
+  ],
   "tags": [
     "history",
     "location"
@@ -39,7 +42,6 @@
   },
   "dependencies": {
     "invariant": "^2.2.4",
-    "loose-envify": "^1.2.0",
     "query-string": "^4.2.2",
     "warning": "^3.0.0"
   },
