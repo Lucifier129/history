@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1565005342388" clover="3.2.0">
-  <project timestamp="1565005342388" name="All files">
+<coverage generated="1565059509454" clover="3.2.0">
+  <project timestamp="1565059509455" name="All files">
     <metrics statements="656" coveredstatements="568" conditionals="321" coveredconditionals="248" methods="147" coveredmethods="127" elements="1124" coveredelements="943" complexity="0" loc="656" ncloc="656" packages="1" files="19" classes="19">
       <file name="Actions.ts" path="D:\Projects\history\src\Actions.ts">
         <metrics statements="8" coveredstatements="8" conditionals="2" coveredconditionals="2" methods="1" coveredmethods="1"/>
