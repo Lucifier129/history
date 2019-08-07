@@ -4,8 +4,7 @@ import { Step, Done } from '../type'
 const execSteps: (
   steps: Step[],
   history: NativeHistory,
-  done: Done,
-  mark?: boolean
+  done: Done
 ) => void = (steps, history, done) => {
   let index: number = 0
   let unlisten: Function
