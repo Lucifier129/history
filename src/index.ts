@@ -8,18 +8,32 @@
 import { locationsAreEqual as _locationsAreEqual } from './LocationUtils'
 
 export const locationsAreEqual = _locationsAreEqual
-export { default as createHistory } from './createBrowserHistory'
-export { default as createHashHistory } from './createHashHistory'
-export { default as createMemoryHistory } from './createMemoryHistory'
+import { default as createHistory } from './createBrowserHistory'
+import { default as createHashHistory } from './createHashHistory'
+import { default as createMemoryHistory } from './createMemoryHistory'
 
-export { default as useBasename } from './useBasename'
-export { default as useBeforeUnload } from './useBeforeUnload'
-export { default as useQueries } from './useQueries'
+import { default as useBasename } from './useBasename'
+import { default as useBeforeUnload } from './useBeforeUnload'
+import { default as useQueries } from './useQueries'
 
-export { default as Actions } from './Actions'
+import { default as Actions } from './Actions'
 
 export { Work, Callback } from './AsyncUtils'
 export { PathCoder, PathCoders } from './createHashHistory'
 export { GetCurrentLocationFunc, HistoryOptions, NativeHistory, CreateHistoryFunc } from './createHistory'
 export { Memo } from './createMemoryHistory'
 export { Location } from './LocationUtils'
+
+export default {
+  locationsAreEqual,
+
+  createHistory,
+  createHashHistory,
+  createMemoryHistory,
+
+  useBasename,
+  useBeforeUnload,
+  useQueries,
+  
+  Actions
+}
