@@ -1,5 +1,5 @@
-/// <reference path="../../src/type.d.ts" />
 import { Done, Describe } from '../type'
+import CH from '../../src'
 
 const describePopStateCancel: Describe = (createHistory) => {
   describe('when popstate transitons are canceled', () => {

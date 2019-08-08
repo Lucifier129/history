@@ -1,4 +1,4 @@
-/// <reference path="./index.d.ts" />
+import Utils from './type'
 
 export const addEventListener: Utils.DOMUtils.AddEventListener = (node, event, listener) =>
   node.addEventListener

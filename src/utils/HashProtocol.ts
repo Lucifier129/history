@@ -1,4 +1,3 @@
-/// <reference path="./index.d.ts" />
 import warning from 'warning'
 import { createLocation } from './LocationUtils'
 import { addEventListener, removeEventListener } from './DOMUtils'
@@ -14,7 +13,7 @@ import {
   getUserConfirmation as _getUserConfirmation,
   go as _go
 } from './BrowserProtocol'
-import '.'
+import Utils from './type'
 
 export let getUserConfirmation = _getUserConfirmation
 export let go = _go

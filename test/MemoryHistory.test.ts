@@ -1,4 +1,3 @@
-/// <reference path="./type.d.ts" />
 import createMemoryHistory from '../src/createMemoryHistory'
 import describeListen from './TestSequences/describeListen'
 import describeInitialLocation from './TestSequences/describeInitialLocation'

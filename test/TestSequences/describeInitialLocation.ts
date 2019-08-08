@@ -1,6 +1,6 @@
-/// <reference path="../../src/type.d.ts" />
 import execSteps from './execSteps'
 import { Step, Done, Describe } from '../type'
+import CH from '../../src'
 
 const describeInitialLocation: Describe = (createHistory) => {
   describe('on the initial POP', () => {

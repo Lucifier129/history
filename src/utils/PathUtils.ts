@@ -1,5 +1,5 @@
-/// <reference path="./index.d.ts" />
 import warning from 'warning'
+import Utils from './type'
 
 export const addQueryStringValueToPath: Utils.Path.AddQueryStringValueToPath = (path, key, value) => {
   const { pathname, search, hash }: Utils.Location = parsePath(path)

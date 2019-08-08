@@ -1,4 +1,4 @@
-/// <reference path="./index.d.ts" />
+import Utils from './type'
 import { createLocation } from './LocationUtils'
 import { createPath } from './PathUtils'
 import {

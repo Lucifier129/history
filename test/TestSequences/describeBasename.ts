@@ -1,7 +1,7 @@
-/// <reference path="../../src/type.d.ts" />
 import useBasename from '../../src/useBasename'
 import execSteps from './execSteps'
 import { Step, Done, Describe } from '../type'
+import CH from '../../src'
 
 const stripHash: (path: string) => string = (path) =>
   path.replace(/^#/, '')

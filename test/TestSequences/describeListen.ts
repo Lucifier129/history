@@ -1,5 +1,5 @@
-/// <reference path="../../src/type.d.ts" />
 import { Describe } from '../type'
+import CH from '../../src'
 
 const describeListen: Describe = (createHistory) => {
   let history: CH.NativeHistory

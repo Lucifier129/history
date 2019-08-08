@@ -10,6 +10,8 @@ import { default as useBasename } from './useBasename'
 import { default as useBeforeUnload } from './useBeforeUnload'
 import { default as useQueries } from './useQueries'
 
+import Actions from './utils/Actions';
+
 export default {
   locationsAreEqual,
 
@@ -19,5 +21,7 @@ export default {
 
   useBasename,
   useBeforeUnload,
-  useQueries
+  useQueries,
+
+  Actions
 }

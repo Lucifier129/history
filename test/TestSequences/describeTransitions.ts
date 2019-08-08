@@ -1,5 +1,5 @@
-/// <reference path="../../src/type.d.ts" />
 import execSteps from './execSteps'
+import CH from '../../src'
 
 import { Step, Done, Describe } from '../type'
 

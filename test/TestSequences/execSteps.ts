@@ -1,5 +1,5 @@
-/// <reference path="../../src/type.d.ts" />
 import { Step, Done } from '../type'
+import CH from '../../src'
 
 const execSteps: (
   steps: Step[],

@@ -1,13 +1,10 @@
-import { REPLACE, POP } from '../../src/Actions'
 import execSteps from './execSteps'
-
 import { Step, Done, Describe } from '../type'
-import { NativeHistory } from '../../src/createHistory'
-import { Location } from '../../src/LocationUtils'
+import CH from '../../src'
 
 const describeReplace: Describe = (createHistory) => {
   describe('replace', () => {
-    let history: NativeHistory
+    let history: CH.NativeHistory
     beforeEach(() => {
       history = createHistory()
     })
@@ -15,19 +12,19 @@ const describeReplace: Describe = (createHistory) => {
     describe('with a path string', () => {
       it('calls change listeners with the new location', (done: Done) => {
         const steps: Step[] = [
-          (location: Location) => {
+          (location: CH.Location) => {
             expect(location.pathname).toEqual('/')
             expect(location.search).toEqual('')
             expect(location.state).toBeUndefined()
-            expect(location.action).toEqual(POP)
+            expect(location.action).toEqual(CH.Actions.POP)
 
             history.replace('/home?the=query')
           },
-          (location: Location) => {
+          (location: CH.Location) => {
             expect(location.pathname).toEqual('/home')
             expect(location.search).toEqual('?the=query')
             expect(location.state).toBeUndefined()
-            expect(location.action).toEqual(REPLACE)
+            expect(location.action).toEqual(CH.Actions.REPLACE)
           }
         ]
 
@@ -38,11 +35,11 @@ const describeReplace: Describe = (createHistory) => {
     describe('with a path object', () => {
       it('calls change listeners with the new location', (done: Done) => {
         const steps: Step[] = [
-          (location: Location) => {
+          (location: CH.Location) => {
             expect(location.pathname).toEqual('/')
             expect(location.search).toEqual('')
             expect(location.state).toBeUndefined()
-            expect(location.action).toEqual(POP)
+            expect(location.action).toEqual(CH.Actions.POP)
 
             history.replace({
               pathname: '/home',
@@ -50,11 +47,11 @@ const describeReplace: Describe = (createHistory) => {
               state: { the: 'state' }
             })
           },
-          (location: Location) => {
+          (location: CH.Location) => {
             expect(location.pathname).toEqual('/home')
             expect(location.search).toEqual('?the=query')
             expect(location.state).toEqual({ the: 'state' })
-            expect(location.action).toEqual(REPLACE)
+            expect(location.action).toEqual(CH.Actions.REPLACE)
           }
         ]
 
@@ -62,14 +59,14 @@ const describeReplace: Describe = (createHistory) => {
       })
 
       it('correctly merges with old location', (done: Done) => {
-        let oldLocation: Location
+        let oldLocation: CH.Location
 
         const steps: Step[] = [
-          (location: Location) => {
+          (location: CH.Location) => {
             expect(location.pathname).toEqual('/')
             expect(location.search).toEqual('')
             expect(location.state).toBeUndefined()
-            expect(location.action).toEqual(POP)
+            expect(location.action).toEqual(CH.Actions.POP)
 
             oldLocation = location
 
@@ -79,11 +76,11 @@ const describeReplace: Describe = (createHistory) => {
               state: { the: 'state' }
             })
           },
-          (location: Location) => {
+          (location: CH.Location) => {
             expect(location.pathname).toEqual(oldLocation.pathname)
             expect(location.search).toEqual('?the=query')
             expect(location.state).toEqual({ the: 'state' })
-            expect(location.action).toEqual(REPLACE)
+            expect(location.action).toEqual(CH.Actions.REPLACE)
             expect(location.key).not.toEqual(oldLocation.key)
           }
         ]

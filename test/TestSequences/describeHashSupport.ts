@@ -1,6 +1,6 @@
-/// <reference path="../../src/type.d.ts" />
 import execSteps from './execSteps'
 import { Step, Done, Describe } from '../type'
+import CH from '../../src'
 
 const describeHashSupport: Describe = (createHistory) => {
   describe('when a URL with a hash is pushed', () => {

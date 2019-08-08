@@ -1,4 +1,4 @@
-/// <reference path="./index.d.ts" />
+import Utils from './type'
 import warning from 'warning'
 
 const runTransitionHook: Utils.Transition.RunTransitionHook = (hook, location, callback) => {
