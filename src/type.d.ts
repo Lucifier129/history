@@ -3,6 +3,11 @@
  */
 /// <reference path="./utils/type.d.ts" />
 
+import Actions from './utils/Actions'
+
+export = CH
+export as namespace CH
+
 declare namespace CH {
   /**
    * Main data constructure.
@@ -11,7 +16,7 @@ declare namespace CH {
    *
    * Which information need when we create a new history app.
    */
-  export interface HistoryOptions {
+  interface HistoryOptions {
     getCurrentLocation?: GetCurrentLocation
     getUserConfirmation?: GetUserConfirmation
     pushLocation?: PushLocation
@@ -28,10 +33,12 @@ declare namespace CH {
     current?: number
   }
 
+  type Location = Utils.Location
+
   /**
    * History app constructure
    */
-  export interface NativeHistory {
+  interface NativeHistory {
     getCurrentLocation: GetCurrentLocation
     listenBefore: History.ListenBefore | Hash.ListenBefore
     listen: History.Listen | Hash.Listen
@@ -47,37 +54,37 @@ declare namespace CH {
     createLocation: History.CreateLocation
   }
 
-  export interface Memo {
+  interface Memo {
     [propName: string]: any
   }
 
-  export interface MemoryOptions extends CH.HistoryOptions {
+  interface MemoryOptions extends CH.HistoryOptions {
     entries?: any
     current?: number
   }
 
-  export type GetCurrentLocation = History.GetCurrentLocation |
+  type GetCurrentLocation = History.GetCurrentLocation |
     Hash.GetCurrentLocation |
     Utils.Hash.GetCurrentLocation |
     Utils.Refresh.GetCurrentLocation
   
-  export type GetUserConfirmation = Utils.Browser.GetUserConfirmation
+  type GetUserConfirmation = Utils.Browser.GetUserConfirmation
 
-  export type PushLocation = HistoryPushLocation |
+  type PushLocation = HistoryPushLocation |
     Utils.Browser.PushLocation |
     Hash.PushLocation |
     Utils.Hash.PushLocation |
     Utils.Refresh.PushLocation |
     Memory.PushLocation
 
-  export type ReplaceLocation = HistoryReplaceLocation |
+  type ReplaceLocation = HistoryReplaceLocation |
     Utils.Browser.ReplaceLocation |
     Utils.Hash.ReplaceLocation |
     Utils.Refresh.ReplaceLocation
 
-  export type Go = Utils.Browser.Go
+  type Go = Utils.Browser.Go
 
-  export type CreateHistory = History.CreateHistory |
+  type CreateHistory = History.CreateHistory |
     Hash.CreateHistory |
     Browser.CreateHistory |
     Memory.CreateHistory
@@ -88,12 +95,12 @@ declare namespace CH {
    * Hash path (encode & decode)
    */
 
-  export interface PathCoder {
+  interface PathCoder {
     encodePath: (path: string) => string;
     decodePath: (path: string) => string;
   }
 
-  export interface PathCoders {
+  interface PathCoders {
     hashbang: PathCoder;
     noslash: PathCoder;
     slash: PathCoder;
@@ -106,71 +113,71 @@ declare namespace CH {
    *
    * The types @History need
    */
-  export interface HistoryGetCurrentLocation {
+  interface HistoryGetCurrentLocation {
     (): Location;
   }
 
-  export interface HistoryPushLocation {
+  interface HistoryPushLocation {
     (nextLocation?: Location): boolean;
   }
 
-  export interface HistoryReplaceLocation {
+  interface HistoryReplaceLocation {
     (location: Location): boolean;
   }
 
-  export interface HistoryCreatePath {
+  interface HistoryCreatePath {
     (location?: Location | string): string;
   }
   /**
    * @createHistory functions
    */
-  export module History {
-    export interface GetCurrentLocation extends HistoryGetCurrentLocation {
+  module History {
+    interface GetCurrentLocation extends HistoryGetCurrentLocation {
     }
 
-    export interface ListenBefore {
+    interface ListenBefore {
       (listener: Function): Function;
     }
 
-    export interface Listen {
+    interface Listen {
       (listener: Function): Function;
     }
 
-    export interface TransitionTo {
+    interface TransitionTo {
       (nextLocation: Location): void;
     }
 
-    export interface Push {
+    interface Push {
       (input: string | Location): void;
     }
 
-    export interface Replace {
+    interface Replace {
       (input: string | Location): void;
     }
 
-    export interface Go extends Utils.Browser.Go {
+    interface Go extends Utils.Browser.Go {
     }
 
-    export interface GoBack {
+    interface GoBack {
       (): void;
     }
 
-    export interface GoForward {
+    interface GoForward {
       (): void;
     }
 
-    export interface CreateKey {
+    interface CreateKey {
       (): string;
     }
 
-    export interface CreatePath extends Utils.Path.CreatePath {
+    interface CreatePath extends Utils.Path.CreatePath {
     }
 
-    export interface CreateHref {
+    interface CreateHref {
       (location: Location | string): string;
     }
 
-    export interface CreateLocation {
+    interface CreateLocation {
       (
         location: Location | string,
         action?: Actions,
@@ -178,19 +185,19 @@ declare namespace CH {
       ): Location;
     }
 
-    export interface CreateHistory {
+    interface CreateHistory {
       (options?: HistoryOptions): NativeHistory;
     }
 
-    export interface GetCurrentIndex {
+    interface GetCurrentIndex {
       (): number;
     }
 
-    export interface UpdateLocation {
+    interface UpdateLocation {
       (location: Location): void;
     }
 
-    export interface ConfirmTransitionTo {
+    interface ConfirmTransitionTo {
       (location: Location, callback: (ok: any) => void): void;
     }
   }
@@ -198,84 +205,84 @@ declare namespace CH {
   /**
    * Browser
    */
-  export module Browser {
-    export interface CreateHistory {
+  module Browser {
+    interface CreateHistory {
       (options?: HistoryOptions): NativeHistory;
     }
 
-    export interface StartListenner {
+    interface StartListenner {
       (listener: Function, before: boolean): Function
     }
 
-    export interface ListenBefore {
+    interface ListenBefore {
       (listener: Function): Function
     }
 
-    export interface Listen {
+    interface Listen {
       (listener: Function): Function
     }
   }
 
-  export module Hash {
-    export interface CreateHistory {
+  module Hash {
+    interface CreateHistory {
       (options?: HistoryOptions): NativeHistory
     }
 
-    export interface GetCurrentLocation {
-      (): CH.Location
+    interface GetCurrentLocation {
+      (): Location
     }
 
-    export interface PushLocation {
+    interface PushLocation {
       (location: Location): void
     }
 
-    export interface ReplaceLocation {
+    interface ReplaceLocation {
       (location: Location): void
     }
 
-    export interface StartListener {
+    interface StartListener {
       (listener: Function, before: boolean): () => void
     }
 
-    export interface ListenBefore {
+    interface ListenBefore {
       (listener: Function): Function
     }
 
-    export interface Listen {
+    interface Listen {
       (listener: Function): Function
     }
 
-    export interface Go {
+    interface Go {
       (n: number): void
     }
 
-    export interface CreateHref {
+    interface CreateHref {
       (path: string): string
     }
   }
 
-  export module Memory {
-    export interface CreateHistory {
+  module Memory {
+    interface CreateHistory {
       (options?: HistoryOptions): NativeHistory
     }
 
-    export interface GetCurrentLocation {
+    interface GetCurrentLocation {
       (): Location
     }
 
-    export interface CanGo {
+    interface CanGo {
       (n: number): boolean
     }
 
-    export interface Go {
+    interface Go {
       (n: number): void
     }
 
-    export interface PushLocation {
+    interface PushLocation {
       (location: Location): void
     }
 
-    export interface ReplaceLocation {
+    interface ReplaceLocation {
       (location: Location): void
     }
   }
@@ -283,48 +290,48 @@ declare namespace CH {
   /**
    * Basename
    */
-  export module Basename {
-    export interface UseBasename {
+  module Basename {
+    interface UseBasename {
       (createHistory: CreateHistory): CreateHistory
     }
 
-    export interface AddBasename {
+    interface AddBasename {
       (location: Location): Location
     }
 
-    export interface PrePendBasename {
+    interface PrePendBasename {
       (location: Location): Location
     }
 
-    export interface GetCurrentLocation {
+    interface GetCurrentLocation {
       (): Location
     }
 
-    export interface ListenBefore {
+    interface ListenBefore {
       (hook: Function): any
     }
 
-    export interface Listen {
+    interface Listen {
       (listener: Function): any
     }
 
-    export interface Push {
+    interface Push {
       (location: Location): any
     }
 
-    export interface Replace {
+    interface Replace {
       (location: Location): any
     }
 
-    export interface CreatePath {
+    interface CreatePath {
       (location: Location): any
     }
 
-    export interface CreateHref {
+    interface CreateHref {
       (location: Location): any
     }
 
-    export interface CreateLocation {
+    interface CreateLocation {
       (location: Location, ...args: any[]): Location
     }
   }
@@ -332,14 +339,14 @@ declare namespace CH {
   /**
    * BeforeUnload
    */
-  export module BeforeUnload {
-    export interface StartListener {
+  module BeforeUnload {
+    interface StartListener {
       (getPromptMessage: () => boolean): Function
     }
-    export interface HandleBeforeUnload {
+    interface HandleBeforeUnload {
       (event: Event): boolean
     }
-    export interface UseBeforeUnload {
+    interface UseBeforeUnload {
       (createHistory: CreateHistory): CreateHistory
     }
   }
@@ -347,48 +354,48 @@ declare namespace CH {
   /**
    * Queries
    */
-  export module Queries {
-    export interface useQueries {
+  module Queries {
+    interface useQueries {
       (createHistory: CreateHistory): CreateHistory
     }
     
-    export interface DecodeQuery {
+    interface DecodeQuery {
       (location: Location): Location
     }
 
-    export interface EncodeQuery {
+    interface EncodeQuery {
       (location: Location, query: object): Location
     }
     
-    export interface GetCurrentLocation {
+    interface GetCurrentLocation {
       (): Location
     }
 
-    export interface ListenBefore {
+    interface ListenBefore {
       (hook: Function): any
     }
 
-    export interface Listen {
+    interface Listen {
       (listener: Function): any
     }
 
-    export interface Push {
+    interface Push {
       (location: Location): any
     }
 
-    export interface Replace {
+    interface Replace {
       (location: Location): any
     }
 
-    export interface CreatePath {
+    interface CreatePath {
       (location: Location): any
     }
 
-    export interface CreateHref {
+    interface CreateHref {
       (location: Location): any
     }
 
-    export interface CreateLocation {
+    interface CreateLocation {
       (location: Location, ...args: any[]): Location
     }
   }

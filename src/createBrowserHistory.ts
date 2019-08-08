@@ -4,7 +4,7 @@ import * as BrowserProtocol from './utils/BrowserProtocol'
 import * as RefreshProtocol from './utils/RefreshProtocol'
 import { supportsHistory } from './utils/DOMUtils'
 import createHistory from './createHistory'
-import './type'
+import CH from './type'
 
 /**
  * Creates and returns a history object that uses HTML5's history API

@@ -1,19 +1,14 @@
-/*
- * @Author: Ma Tianqi 
- * @Date: 2019-08-02 12:34:28 
- * @Last Modified by: Ma Tianqi
- * @Last Modified time: 2019-08-02 15:18:24
- */
+import Utils from './type'
 
 import { createLocation } from './LocationUtils'
 import { addEventListener, removeEventListener } from './DOMUtils'
 import { saveState, readState } from './DOMStateStorage'
 import { createPath } from './PathUtils'
-import './type'
+import '.'
 
 const PopStateEvent = 'popstate'
 
-const _createLocation: CH.Utils.Browser.CreateBrowserLocation = (historyState) => {
+const _createLocation: Utils.Browser.CreateBrowserLocation = (historyState) => {
   const key = historyState && historyState.key
 
   return createLocation({
@@ -24,7 +19,7 @@ const _createLocation: CH.Utils.Browser.CreateBrowserLocation = (historyState) =
   }, undefined, key)
 }
 
-export const getCurrentLocation: CH.Utils.Browser.GetBrowserCurrentLocation = () => {
+export const getCurrentLocation: Utils.Browser.GetBrowserCurrentLocation = () => {
   let historyState: any
   try {
     historyState = window.history.state || {}
@@ -37,13 +32,13 @@ export const getCurrentLocation: CH.Utils.Browser.GetBrowserCurrentLocation = ()
   return _createLocation(historyState)
 }
 
-export const getUserConfirmation: CH.Utils.Browser.GetUserConfirmation
+export const getUserConfirmation: Utils.Browser.GetUserConfirmation
   = (message, callback) => callback(window.confirm(message)) // eslint-disable-line no-alert
 
-const isExtraneousPopstateEvent: CH.Utils.Browser.IsExtraneousPopstateEvent
+const isExtraneousPopstateEvent: Utils.Browser.IsExtraneousPopstateEvent
   = event => event.state === undefined && navigator.userAgent.indexOf('CriOS') === -1
 
-export const startListener: CH.Utils.Browser.StartListener = (listener) => {
+export const startListener: Utils.Browser.StartListener = (listener) => {
   const handlePopState = (event) => {
     if (isExtraneousPopstateEvent(event)) return // Ignore extraneous popstate events in WebKit
     listener(_createLocation(event.state))
@@ -55,7 +50,7 @@ export const startListener: CH.Utils.Browser.StartListener = (listener) => {
     removeEventListener(window, PopStateEvent, handlePopState)
 }
 
-const updateLocation: CH.Utils.Browser.UpdateLocation = (location, updateState) => {
+const updateLocation: Utils.Browser.UpdateLocation = (location, updateState) => {
   const { state, key } = location
 
   if (state !== undefined)
@@ -64,19 +59,19 @@ const updateLocation: CH.Utils.Browser.UpdateLocation = (location, updateState) 
   updateState({ key }, createPath(location))
 }
 
-export const pushLocation: CH.Utils.Browser.PushLocation = (location) =>
+export const pushLocation: Utils.Browser.PushLocation = (location) =>
   updateLocation(
     location, 
     (state: object, path: string) =>
       window.history.pushState(state, null, path)
   )
 
-export const replaceLocation: CH.Utils.Browser.ReplaceLocation = (location) =>
+export const replaceLocation: Utils.Browser.ReplaceLocation = (location) =>
   updateLocation(location, (state: object, path: string) =>
     window.history.replaceState(state, null, path)
   )
 
-export const go: CH.Utils.Browser.Go = (n) => {
+export const go: Utils.Browser.Go = (n) => {
   if (n)
     window.history.go(n)
 }

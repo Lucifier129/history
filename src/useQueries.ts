@@ -1,3 +1,4 @@
+/// <reference path="./type.d.ts" />
 import { parse, stringify } from 'query-string'
 import runTransitionHook from './utils/runTransitionHook'
 import { createQuery } from './utils/LocationUtils'

@@ -1,10 +1,4 @@
-/*
- * @Author: Ma Tianqi 
- * @Date: 2019-08-02 16:43:03 
- * @Last Modified by: Ma Tianqi
- * @Last Modified time: 2019-08-02 16:48:24
- */
-
+/// <reference path="./type.d.ts" />
 import invariant from 'invariant'
 import { addEventListener, removeEventListener } from './utils/DOMUtils'
 import { canUseDOM } from './utils/ExecutionEnvironment'

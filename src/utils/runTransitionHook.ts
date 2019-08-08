@@ -1,6 +1,7 @@
+/// <reference path="./index.d.ts" />
 import warning from 'warning'
 
-const runTransitionHook: CH.Utils.Transition.RunTransitionHook = (hook, location, callback) => {
+const runTransitionHook: Utils.Transition.RunTransitionHook = (hook, location, callback) => {
   const result = hook(location, callback)
 
   if (hook.length < 2) {

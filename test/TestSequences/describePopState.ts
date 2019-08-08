@@ -1,9 +1,9 @@
+/// <reference path="../../src/type.d.ts" />
 import { Done, Describe } from '../type'
-import { NativeHistory } from '../../src/createHistory'
 
 const describePopState: Describe = (createHistory) => {
   describe('when a listenBefore hook is added', () => {
-    let history: NativeHistory
+    let history: CH.NativeHistory
     let unlisten: Function
     beforeEach(() => {
       history = createHistory()

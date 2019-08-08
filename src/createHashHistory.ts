@@ -1,16 +1,10 @@
-/*
- * @Author: Ma Tianqi 
- * @Date: 2019-08-02 15:54:35 
- * @Last Modified by: Ma Tianqi
- * @Last Modified time: 2019-08-05 15:54:23
- */
 import warning from 'warning'
 import invariant from 'invariant'
 import { canUseDOM } from './utils/ExecutionEnvironment'
 import { supportsGoWithoutReloadUsingHash } from './utils/DOMUtils'
 import * as HashProtocol from './utils/HashProtocol'
 import createHistory from './createHistory'
-import './type'
+import CH from './type'
 
 const DefaultQueryKey: string = '_k'
 

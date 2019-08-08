@@ -1,3 +1,4 @@
+/// <reference path="./type.d.ts" />
 import createMemoryHistory from '../src/createMemoryHistory'
 import describeListen from './TestSequences/describeListen'
 import describeInitialLocation from './TestSequences/describeInitialLocation'
@@ -7,9 +8,6 @@ import describeReplace from './TestSequences/describeReplace'
 import describeBasename from './TestSequences/describeBasename'
 import describeQueries from './TestSequences/describeQueries'
 import describeGo from './TestSequences/describeGo'
-
-import { NativeHistory } from '../src/createHistory'
-import { Location } from '../src/LocationUtils'
 
 describe('memory history', () => {
   describeListen(createMemoryHistory)
@@ -23,10 +21,10 @@ describe('memory history', () => {
 
   describe('when using push in the middle of the stack', () => {
     it('clears rest of stack so the user cannot go forward', () => {
-      const history: NativeHistory = createMemoryHistory()
+      const history: CH.NativeHistory = createMemoryHistory()
 
-      let location: Location
-      history.listen((loc: Location) => {
+      let location: CH.Location
+      history.listen((loc: CH.Location) => {
         location = loc
       })
 

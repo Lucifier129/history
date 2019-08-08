@@ -1,19 +1,13 @@
-/*
- * @Author: Ma Tianqi 
- * @Date: 2019-08-02 14:30:44 
- * @Last Modified by: Ma Tianqi
- * @Last Modified time: 2019-08-02 16:59:18
- */
-
 import invariant from 'invariant'
 import { parsePath } from './PathUtils'
-import './type'
+import Utils from './type'
+import { POP } from './Actions'
 
-export const createQuery: CH.Utils.Location.CreateQuery = (props) =>
+export const createQuery: Utils.Location.CreateQuery = (props) =>
   Object.assign(Object.create(null), props)
 
-export const createLocation: CH.Utils.Location.CreateLocation = (input = '/', action = CH.Actions.POP, key = null) => {
-  const object: CH.Location = typeof input === 'string' ? parsePath(input) : input
+export const createLocation: Utils.Location.CreateLocation = (input = '/', action = POP, key = null) => {
+  const object: Utils.Location = typeof input === 'string' ? parsePath(input) : input
 
   const pathname: string = object.pathname || '/'
   const search: string = object.search || ''
@@ -30,10 +24,10 @@ export const createLocation: CH.Utils.Location.CreateLocation = (input = '/', ac
   }
 }
 
-const isDate: CH.Utils.Location.IsDate = (object) =>
+const isDate: Utils.Location.IsDate = (object) =>
   Object.prototype.toString.call(object) === '[object Date]'
 
-export const statesAreEqual: CH.Utils.Location.StatesAreEqual = (a, b) => {
+export const statesAreEqual: Utils.Location.StatesAreEqual = (a, b) => {
   if (a === b)
     return true
 
@@ -72,7 +66,7 @@ export const statesAreEqual: CH.Utils.Location.StatesAreEqual = (a, b) => {
   return false
 }
 
-export const locationsAreEqual: CH.Utils.Location.LocationsAreEqual = (a, b) =>
+export const locationsAreEqual: Utils.Location.LocationsAreEqual = (a, b) =>
   a.key === b.key && // Different key !== location change.
   // a.action === b.action && // Different action !== location change.
   a.pathname === b.pathname &&

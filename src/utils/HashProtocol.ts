@@ -1,3 +1,4 @@
+/// <reference path="./index.d.ts" />
 import warning from 'warning'
 import { createLocation } from './LocationUtils'
 import { addEventListener, removeEventListener } from './DOMUtils'
@@ -13,14 +14,14 @@ import {
   getUserConfirmation as _getUserConfirmation,
   go as _go
 } from './BrowserProtocol'
-import './type'
+import '.'
 
 export let getUserConfirmation = _getUserConfirmation
 export let go = _go
 
 const HashChangeEvent: string = 'hashchange'
 
-const getHashPath: CH.Utils.Hash.GetPath = () => {
+const getHashPath: Utils.Hash.GetPath = () => {
   // We can't use window.location.hash here because it's not
   // consistent across browsers - Firefox will pre-decode it!
   const href: string = window.location.href
@@ -28,10 +29,10 @@ const getHashPath: CH.Utils.Hash.GetPath = () => {
   return hashIndex === -1 ? '' : href.substring(hashIndex + 1)
 }
 
-const pushHashPath: CH.Utils.Hash.PushPath = (path) =>
+const pushHashPath: Utils.Hash.PushPath = (path) =>
   window.location.hash = path
 
-const replaceHashPath: CH.Utils.Hash.ReplacePath = (path) => {
+const replaceHashPath: Utils.Hash.ReplacePath = (path) => {
   const hashIndex: number = window.location.href.indexOf('#')
 
   window.location.replace(
@@ -39,7 +40,7 @@ const replaceHashPath: CH.Utils.Hash.ReplacePath = (path) => {
   )
 }
 
-export const getCurrentLocation: CH.Utils.Hash.GetCurrentLocation = (pathCoder, queryKey) => {
+export const getCurrentLocation: Utils.Hash.GetCurrentLocation = (pathCoder, queryKey) => {
   let path: string = pathCoder.decodePath(getHashPath())
   const key: string = getQueryStringValueFromPath(path, queryKey)
 
@@ -49,16 +50,16 @@ export const getCurrentLocation: CH.Utils.Hash.GetCurrentLocation = (pathCoder, 
     state = readState(key)
   }
 
-  const init: CH.Location = parsePath(path)
+  const init: Utils.Location = parsePath(path)
   init.state = state
 
   return createLocation(init, undefined, key)
 }
 
-let prevLocation: CH.Location
+let prevLocation: Utils.Location
 
-export const startListener: CH.Utils.Hash.StartListener = (listener, pathCoder, queryKey) => {
-  const handleHashChange: CH.Utils.Hash.HandleChange = () => {
+export const startListener: Utils.Hash.StartListener = (listener, pathCoder, queryKey) => {
+  const handleHashChange: Utils.Hash.HandleChange = () => {
     const path: string = getHashPath()
     const encodedPath: string = pathCoder.encodePath(path)
 
@@ -66,7 +67,7 @@ export const startListener: CH.Utils.Hash.StartListener = (listener, pathCoder, 
       // Always be sure we have a properly-encoded hash.
       replaceHashPath(encodedPath)
     } else {
-      const currentLocation: CH.Location = getCurrentLocation(pathCoder, queryKey)
+      const currentLocation: Utils.Location = getCurrentLocation(pathCoder, queryKey)
 
       // Ignore extraneous hashchange events
       if (prevLocation) {
@@ -106,7 +107,7 @@ export const startListener: CH.Utils.Hash.StartListener = (listener, pathCoder, 
     removeEventListener(window, HashChangeEvent, handleHashChange)
 }
 
-const updateLocation: CH.Utils.Hash.UpdateLocation = (location, pathCoder, queryKey, updateHash) => {
+const updateLocation: Utils.Hash.UpdateLocation = (location, pathCoder, queryKey, updateHash) => {
   const { state, key } = location
 
   let path: string = pathCoder.encodePath(createPath(location))
@@ -121,7 +122,7 @@ const updateLocation: CH.Utils.Hash.UpdateLocation = (location, pathCoder, query
   updateHash(path)
 }
 
-export const pushLocation: CH.Utils.Hash.PushLocation = (location, pathCoder, queryKey) =>
+export const pushLocation: Utils.Hash.PushLocation = (location, pathCoder, queryKey) =>
   updateLocation(location, pathCoder, queryKey, (path) => {
     if (getHashPath() !== path) {
       pushHashPath(path)
@@ -130,7 +131,7 @@ export const pushLocation: CH.Utils.Hash.PushLocation = (location, pathCoder, qu
     }
   })
 
-export const replaceLocation: CH.Utils.Hash.ReplaceLocation = (location, pathCoder, queryKey) =>
+export const replaceLocation: Utils.Hash.ReplaceLocation = (location, pathCoder, queryKey) =>
   updateLocation(location, pathCoder, queryKey, (path) => {
     if (getHashPath() !== path)
       replaceHashPath(path)

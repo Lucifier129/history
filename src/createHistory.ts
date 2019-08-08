@@ -6,7 +6,8 @@ import {
   statesAreEqual,
   locationsAreEqual,
 } from './utils/LocationUtils'
-import './type'
+import Actions, { POP, PUSH, REPLACE } from './utils/Actions'
+import CH from './type'
 
 const createHistory: CH.History.CreateHistory = (options = {}) => {
   const {
@@ -25,7 +26,7 @@ const createHistory: CH.History.CreateHistory = (options = {}) => {
   let allKeys: string[] = []
 
   const getCurrentIndex: CH.History.GetCurrentIndex = () => {
-    if (pendingLocation && pendingLocation.action === CH.Actions.POP)
+    if (pendingLocation && pendingLocation.action === Actions.POP)
       return allKeys.indexOf(pendingLocation.key)
 
     if (currentLocation)
@@ -38,9 +39,9 @@ const createHistory: CH.History.CreateHistory = (options = {}) => {
     const currentIndex = getCurrentIndex()
     currentLocation = nextLocation
 
-    if (currentLocation.action === CH.Actions.PUSH) {
+    if (currentLocation.action === PUSH) {
       allKeys = [ ...allKeys.slice(0, currentIndex + 1), currentLocation.key ]
-    } else if (currentLocation.action === CH.Actions.REPLACE) {
+    } else if (currentLocation.action === REPLACE) {
       allKeys[currentIndex] = currentLocation.key
     }
 
@@ -96,24 +97,24 @@ const createHistory: CH.History.CreateHistory = (options = {}) => {
 
       if (ok) {
         // Treat PUSH to same path like REPLACE to be consistent with browsers
-        if (nextLocation.action === CH.Actions.PUSH) {
+        if (nextLocation.action === PUSH) {
           const prevPath = createPath(currentLocation)
           const nextPath = createPath(nextLocation)
 
           if (nextPath === prevPath && statesAreEqual(currentLocation.state, nextLocation.state))
-            nextLocation.action = CH.Actions.REPLACE
+            nextLocation.action = REPLACE
         }
 
-        if (nextLocation.action === CH.Actions.POP) {
+        if (nextLocation.action === POP) {
           updateLocation(nextLocation)
-        } else if (nextLocation.action === CH.Actions.PUSH) {
+        } else if (nextLocation.action === PUSH) {
           if (pushLocation(nextLocation) !== false)
             updateLocation(nextLocation)
-        } else if (nextLocation.action === CH.Actions.REPLACE) {
+        } else if (nextLocation.action === REPLACE) {
           if (replaceLocation(nextLocation) !== false)
             updateLocation(nextLocation)
         }
-      } else if (currentLocation && nextLocation.action === CH.Actions.POP) {
+      } else if (currentLocation && nextLocation.action === POP) {
         const prevIndex = allKeys.indexOf(currentLocation.key)
         const nextIndex = allKeys.indexOf(nextLocation.key)
 
@@ -124,10 +125,10 @@ const createHistory: CH.History.CreateHistory = (options = {}) => {
   }
 
   const push: CH.History.Push = (input) =>
-    transitionTo(createLocation(input, CH.Actions.PUSH))
+    transitionTo(createLocation(input, PUSH))
 
   const replace: CH.History.Replace = (input) =>
-    transitionTo(createLocation(input, CH.Actions.REPLACE))
+    transitionTo(createLocation(input, REPLACE))
 
   const goBack: CH.History.GoBack = () =>
     go(-1)
@@ -142,7 +143,7 @@ const createHistory: CH.History.CreateHistory = (options = {}) => {
     createPath(location)
 
   const createLocation: CH.History.CreateLocation = 
-    (location: Location, action: CH.Actions, key: string = createKey()) =>
+    (location: Location, action: Actions, key: string = createKey()) =>
     _createLocation(location, action, key)
 
   return {

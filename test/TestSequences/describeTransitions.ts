@@ -1,13 +1,11 @@
-import { PUSH } from '../../src/Actions'
+/// <reference path="../../src/type.d.ts" />
 import execSteps from './execSteps'
 
 import { Step, Done, Describe } from '../type'
-import { NativeHistory } from '../../src/createHistory'
-import { Location } from '../../src/LocationUtils'
 
 const describeTransitions: Describe = (createHistory) => {
   describe('a synchronous transition hook', () => {
-    let history: NativeHistory
+    let history: CH.NativeHistory
     let unlistenBefore: Function
     beforeEach(() => {
       history = createHistory()
@@ -19,7 +17,7 @@ const describeTransitions: Describe = (createHistory) => {
     })
 
     it('receives the next location', (done: Done) => {
-      let nextLocation: Location
+      let nextLocation: CH.Location
       const steps: Step[] = [
         () => {
           history.push({
@@ -28,12 +26,12 @@ const describeTransitions: Describe = (createHistory) => {
             state: { the: 'state' }
           })
         },
-        (location: Location) => {
+        (location: CH.Location) => {
           expect(nextLocation).toBe(location)
         }
       ]
 
-      unlistenBefore = history.listenBefore((location: Location) => {
+      unlistenBefore = history.listenBefore((location: CH.Location) => {
         nextLocation = location
       })
 
@@ -42,7 +40,7 @@ const describeTransitions: Describe = (createHistory) => {
   })
 
   describe('an asynchronous transition hook', () => {
-    let history: NativeHistory
+    let history: CH.NativeHistory
     let unlistenBefore: Function
     beforeEach(() => {
       history = createHistory()
@@ -54,7 +52,7 @@ const describeTransitions: Describe = (createHistory) => {
     })
 
     it('receives the next location', (done: Done) => {
-      let nextLocation: Location
+      let nextLocation: CH.Location
       const steps: Step[] = [
         () => {
           history.push({
@@ -68,7 +66,7 @@ const describeTransitions: Describe = (createHistory) => {
         }
       ]
 
-      unlistenBefore = history.listenBefore((location: Location, callback: Function) => {
+      unlistenBefore = history.listenBefore((location: CH.Location, callback: Function) => {
         nextLocation = location
         setTimeout(callback)
       })
@@ -78,8 +76,8 @@ const describeTransitions: Describe = (createHistory) => {
   })
 
   describe('when the user confirms a transition', () => {
-    let location: Location
-    let history: NativeHistory
+    let location: CH.Location
+    let history: CH.NativeHistory
     let unlisten: Function
     let unlistenBefore: Function
     beforeEach(() => {
@@ -96,7 +94,7 @@ const describeTransitions: Describe = (createHistory) => {
 
       unlistenBefore = history.listenBefore(() => confirmationMessage)
 
-      unlisten = history.listen((loc: Location) => {
+      unlisten = history.listen((loc: CH.Location) => {
         location = loc
       })
     })
@@ -110,7 +108,7 @@ const describeTransitions: Describe = (createHistory) => {
     })
 
     it('updates the location', () => {
-      const prevLocation: Location = location
+      const prevLocation: CH.Location = location
 
       history.push({
         pathname: '/home',
@@ -123,14 +121,14 @@ const describeTransitions: Describe = (createHistory) => {
       expect(location.pathname).toEqual('/home')
       expect(location.search).toEqual('?the=query')
       expect(location.state).toEqual({ the: 'state' })
-      expect(location.action).toEqual(PUSH)
+      expect(location.action).toEqual(CH.Actions.PUSH)
       expect(location.key).toBeDefined()
     })
   })
 
   describe('when the user cancels a transition', () => {
-    let location: Location
-    let history: NativeHistory
+    let location: CH.Location
+    let history: CH.NativeHistory
     let unlisten: Function
     let unlistenBefore: Function
     beforeEach(() => {
@@ -147,7 +145,7 @@ const describeTransitions: Describe = (createHistory) => {
 
       unlistenBefore = history.listenBefore(() => confirmationMessage)
 
-      unlisten = history.listen((loc: Location) => {
+      unlisten = history.listen((loc: CH.Location) => {
         location = loc
       })
     })
@@ -161,15 +159,15 @@ const describeTransitions: Describe = (createHistory) => {
     })
 
     it('does not update the location', () => {
-      const prevLocation: Location = location
+      const prevLocation: CH.Location = location
       history.push('/home')
       expect(prevLocation).toBe(location)
     })
   })
 
   describe('when the transition hook cancels a transition', () => {
-    let location: Location
-    let history: NativeHistory
+    let location: CH.Location
+    let history: CH.NativeHistory
     let unlisten: Function
     let unlistenBefore: Function
     beforeEach(() => {
@@ -179,7 +177,7 @@ const describeTransitions: Describe = (createHistory) => {
 
       unlistenBefore = history.listenBefore(() => false)
 
-      unlisten = history.listen((loc: Location) => {
+      unlisten = history.listen((loc: CH.Location) => {
         location = loc
       })
     })
@@ -193,7 +191,7 @@ const describeTransitions: Describe = (createHistory) => {
     })
 
     it('does not update the location', () => {
-      const prevLocation: Location = location
+      const prevLocation: CH.Location = location
       history.push('/home')
       expect(prevLocation).toBe(location)
     })

@@ -1,4 +1,4 @@
-import { supportsHistory } from '../src/DOMUtils'
+import { supportsHistory } from '../src/utils/DOMUtils'
 import createBrowserHistory from '../src/createBrowserHistory'
 import describeListen from './TestSequences/describeListen'
 import describeInitialLocation from './TestSequences/describeInitialLocation'

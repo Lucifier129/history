@@ -1,17 +1,10 @@
-/*
- * @Author: Ma Tianqi 
- * @Date: 2019-08-02 16:22:07 
- * @Last Modified by: Ma Tianqi
- * @Last Modified time: 2019-08-05 19:42:14
- */
-
 import warning from 'warning'
 import invariant from 'invariant'
 import { createLocation } from './utils/LocationUtils'
 import { createPath, parsePath } from './utils/PathUtils'
 import createHistory from './createHistory'
-import './type'
-
+import { POP } from './utils/Actions'
+import CH from './type'
 
 const createStateStorage: (entries: CH.Location[]) => CH.Memo = (entries) =>
   entries
@@ -68,7 +61,7 @@ const createMemoryHistory: CH.Memory.CreateHistory = (options = {}) => {
     const currentLocation = getCurrentLocation()
 
     // Change action to POP
-    history.transitionTo({ ...currentLocation, action: CH.Actions.POP })
+    history.transitionTo({ ...currentLocation, action: POP })
   }
 
   const pushLocation: CH.Memory.PushLocation = (location) => {
