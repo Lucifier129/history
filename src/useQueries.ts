@@ -2,8 +2,6 @@ import { parse, stringify } from 'query-string'
 import runTransitionHook from './utils/runTransitionHook'
 import { createQuery } from './utils/LocationUtils'
 import { parsePath } from './utils/PathUtils'
-import CH, { HistoryOptions, NativeHistory } from './createHistory';
-import { Location } from './utils/LocationUtils'
 
 const defaultStringifyQuery: (query: object) => string = (query) =>
   stringify(query).replace(/%20/g, '+')
@@ -14,10 +12,9 @@ const defaultParseQueryString: Function = parse
  * Returns a new createHistory function that may be used to create
  * history objects that know how to handle URL queries.
  */
-const useQueries: (createHistory: typeof CH) => (options?: HistoryOptions) => NativeHistory
-= (createHistory) =>
+const useQueries: CH.Queries.useQueries = (createHistory) =>
   (options = {}) => {
-    const history: NativeHistory = createHistory(options)
+    const history: CH.NativeHistory = createHistory(options)
     let { stringifyQuery, parseQueryString } = options
 
     if (typeof stringifyQuery !== 'function')
@@ -26,8 +23,7 @@ const useQueries: (createHistory: typeof CH) => (options?: HistoryOptions) => Na
     if (typeof parseQueryString !== 'function')
       parseQueryString = defaultParseQueryString
 
-    const decodeQuery: (location: Location) => Location
-    = (location) => {
+    const decodeQuery: CH.Queries.DecodeQuery = (location) => {
       if (!location)
         return location
 
@@ -37,12 +33,11 @@ const useQueries: (createHistory: typeof CH) => (options?: HistoryOptions) => Na
       return location
     }
 
-    const encodeQuery: (location: Location, query: object) => Location
-    = (location, query) => {
+    const encodeQuery: CH.Queries.EncodeQuery = (location, query) => {
       if (query == null)
         return location
 
-      const object: Location = typeof location === 'string' ? parsePath(location) : location
+      const object: CH.Location = typeof location === 'string' ? parsePath(location) : location
       const queryString: string = stringifyQuery(query)
       const search: string = queryString ? `?${queryString}` : ''
 
@@ -53,33 +48,33 @@ const useQueries: (createHistory: typeof CH) => (options?: HistoryOptions) => Na
     }
 
     // Override all read methods with query-aware versions.
-    const getCurrentLocation: () => Location = () =>
+    const getCurrentLocation: CH.Queries.GetCurrentLocation = () =>
       decodeQuery(history.getCurrentLocation())
 
-    const listenBefore: (hook: Function) => any = (hook) =>
+    const listenBefore: CH.Queries.ListenBefore = (hook) =>
       history.listenBefore(
         (location, callback) =>
           runTransitionHook(hook, decodeQuery(location), callback)
       )
 
-    const listen: (hook: Function) => any = (listener) =>
+    const listen: CH.Queries.Listen = (listener) =>
       history.listen(location => listener(decodeQuery(location)))
 
     // Override all write methods with query-aware versions.
-    const push: (location: Location) => any = (location) =>
+    const push: CH.Queries.Push = (location) =>
       history.push(encodeQuery(location, location.query))
 
-    const replace: (location: Location) => any = (location) =>
+    const replace: CH.Queries.Replace = (location) =>
       history.replace(encodeQuery(location, location.query))
 
-    const createPath: (location: Location) => any = (location) =>
+    const createPath: CH.Queries.CreatePath = (location) =>
       history.createPath(encodeQuery(location, location.query))
 
-    const createHref: (location: Location) => any = (location) =>
+    const createHref: CH.Queries.CreateHref = (location) =>
       history.createHref(encodeQuery(location, location.query))
 
-    const createLocation: (location: Location, ...args: any[]) => Location = (location, ...args) => {
-      const newLocation: Location =
+    const createLocation: CH.Queries.CreateLocation = (location, ...args) => {
+      const newLocation: CH.Location =
         history.createLocation(encodeQuery(location, location.query), ...args)
 
       if (location.query)

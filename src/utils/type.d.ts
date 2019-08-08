@@ -231,7 +231,7 @@ declare namespace CH {
       }
 
       export interface GetCurrentLocation {
-        (pathCoder: CH.PathCoder, queryKey: string): Location;
+        (pathCoder?: CH.PathCoder, queryKey?: string): Location;
       }
 
       export interface StartListener {
@@ -253,24 +253,24 @@ declare namespace CH {
       export interface UpdateLocation {
         (
           location: Location,
-          pathCoder: PathCoder,
-          queryKey: string,
-          updateHash: Update
+          pathCoder?: PathCoder,
+          queryKey?: string,
+          updateHash?: Update
         ): void;
       }
       export interface PushLocation {
         (
           location: Location,
-          pathCoder: CH.PathCoder,
-          queryKey: string
+          pathCoder?: CH.PathCoder,
+          queryKey?: string
         ): void;
       }
 
       export interface ReplaceLocation {
         (
           location: CH.Location,
-          pathCoder: CH.PathCoder,
-          queryKey: string
+          pathCoder?: CH.PathCoder,
+          queryKey?: string
         ): void
       }
     }

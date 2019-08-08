@@ -1,15 +1,12 @@
 import runTransitionHook from './utils/runTransitionHook'
 import { parsePath } from './utils/PathUtils'
-import CH, { HistoryOptions, NativeHistory } from './createHistory'
-import { Location } from './utils/LocationUtils'
+import './type'
 
-const useBasename: (createHistory: typeof CH) => (options: HistoryOptions) => NativeHistory
-= (createHistory) => (options = {}) => {
-    const history: NativeHistory = createHistory(options)
+const useBasename: CH.Basename.UseBasename = (createHistory) => (options = {}) => {
+    const history: CH.NativeHistory = createHistory(options)
     const { basename } = options
 
-    const addBasename: (location: Location) => Location
-    = (location) => {
+    const addBasename: CH.Basename.AddBasename = (location) => {
       if (!location)
         return location
 
@@ -28,8 +25,7 @@ const useBasename: (createHistory: typeof CH) => (options: HistoryOptions) => Na
       return location
     }
 
-    const prependBasename: (location: Location) => Location
-    = (location) => {
+    const prependBasename: CH.Basename.PrePendBasename = (location) => {
       if (!basename)
         return location
 
@@ -46,32 +42,32 @@ const useBasename: (createHistory: typeof CH) => (options: HistoryOptions) => Na
     }
 
     // Override all read methods with basename-aware versions.
-    const getCurrentLocation: () => Location = () =>
+    const getCurrentLocation: CH.Basename.GetCurrentLocation = () =>
       addBasename(history.getCurrentLocation())
 
-    const listenBefore: (hook: Function) => any = (hook) =>
+    const listenBefore: CH.Basename.ListenBefore = (hook) =>
       history.listenBefore(
         (location, callback) =>
           runTransitionHook(hook, addBasename(location), callback)
       )
 
-    const listen: (listener: Function) => any = (listener) =>
+    const listen: CH.Basename.Listen = (listener) =>
       history.listen(location => listener(addBasename(location)))
 
     // Override all write methods with basename-aware versions.
-    const push: (location: Location) => any = (location) =>
+    const push: CH.Basename.Push = (location) =>
       history.push(prependBasename(location))
 
-    const replace: (location: Location) => any = (location) =>
+    const replace: CH.Basename.Replace = (location) =>
       history.replace(prependBasename(location))
 
-    const createPath: (location: Location) => any = (location) =>
+    const createPath: CH.Basename.CreatePath = (location) =>
       history.createPath(prependBasename(location))
 
-    const createHref: (location: Location) => any = (location) =>
+    const createHref: CH.Basename.CreateHref = (location) =>
       history.createHref(prependBasename(location))
 
-    const createLocation: (location: Location, ...args: any[]) => Location = (location, ...args) =>
+    const createLocation: CH.Basename.CreateLocation = (location, ...args) =>
       addBasename(history.createLocation(prependBasename(location), ...args))
 
     return {

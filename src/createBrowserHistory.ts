@@ -16,7 +16,7 @@ import './type'
  * page reloads will be used to preserve clean URLs. You can force this
  * behavior using { forceRefresh: true } in options.
  */
-const createBrowserHistory: CH.Browser.CreateHistoryFunc = (options = {}) => {
+const createBrowserHistory: CH.Browser.CreateHistory = (options = {}) => {
   invariant(
     canUseDOM,
     'Browser history needs a DOM'
@@ -67,7 +67,7 @@ const createBrowserHistory: CH.Browser.CreateHistoryFunc = (options = {}) => {
   const listenBefore: CH.Browser.ListenBefore = (listener) =>
     startListener(listener, true)
 
-  const listen: (listener: Function) => () => void = (listener) =>
+  const listen: CH.Browser.Listen = (listener) =>
     startListener(listener, false)
 
   return {
