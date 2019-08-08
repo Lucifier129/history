@@ -1,18 +1,14 @@
-export declare const locationsAreEqual: (a: import("./LocationUtils").Location, b: import("./LocationUtils").Location) => boolean;
-import { default as Actions } from './Actions';
-export { Work, Callback } from './AsyncUtils';
-export { PathCoder, PathCoders } from './createHashHistory';
-export { GetCurrentLocationFunc, HistoryOptions, NativeHistory, CreateHistoryFunc } from './createHistory';
-export { Memo } from './createMemoryHistory';
-export { Location } from './LocationUtils';
+/// <reference path="../../src/type.d.ts" />
+export declare const locationsAreEqual: import("./utils/type").Location.LocationsAreEqual;
+import Actions from './utils/Actions';
 declare const _default: {
-    locationsAreEqual: (a: import("./LocationUtils").Location, b: import("./LocationUtils").Location) => boolean;
-    createHistory: import("./createHistory").CreateHistoryFunc;
-    createHashHistory: import("./createHistory").CreateHistoryFunc;
-    createMemoryHistory: import("./createHistory").CreateHistoryFunc;
-    useBasename: (createHistory: import("./createHistory").CreateHistoryFunc) => (options: import("./createHistory").HistoryOptions) => import("./createHistory").NativeHistory;
-    useBeforeUnload: (createHistory: import("./createHistory").CreateHistoryFunc) => (options: import("./createHistory").HistoryOptions) => import("./createHistory").NativeHistory;
-    useQueries: (createHistory: import("./createHistory").CreateHistoryFunc) => (options?: import("./createHistory").HistoryOptions) => import("./createHistory").NativeHistory;
+    locationsAreEqual: import("./utils/type").Location.LocationsAreEqual;
+    createHistory: import("./type").Browser.CreateHistory;
+    createHashHistory: import("./type").Hash.CreateHistory;
+    createMemoryHistory: import("./type").Memory.CreateHistory;
+    useBasename: import("./type").Basename.UseBasename;
+    useBeforeUnload: import("./type").BeforeUnload.UseBeforeUnload;
+    useQueries: import("./type").Queries.useQueries;
     Actions: typeof Actions;
 };
 export default _default;

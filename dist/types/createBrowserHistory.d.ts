@@ -1,4 +1,4 @@
-import { CreateHistoryFunc } from './createHistory';
+import CH from './type';
 /**
  * Creates and returns a history object that uses HTML5's history API
  * (pushState, replaceState, and the popstate event) to manage history.
@@ -9,5 +9,5 @@ import { CreateHistoryFunc } from './createHistory';
  * page reloads will be used to preserve clean URLs. You can force this
  * behavior using { forceRefresh: true } in options.
  */
-declare const createBrowserHistory: CreateHistoryFunc;
+declare const createBrowserHistory: CH.Browser.CreateHistory;
 export default createBrowserHistory;
