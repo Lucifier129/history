@@ -6,8 +6,8 @@
  */
 
 import invariant from 'invariant'
-import { addEventListener, removeEventListener } from './DOMUtils'
-import { canUseDOM } from './ExecutionEnvironment'
+import { addEventListener, removeEventListener } from './utils/DOMUtils'
+import { canUseDOM } from './utils/ExecutionEnvironment'
 import CH, { NativeHistory, HistoryOptions } from './createHistory';
 
 const startListener: (getPromptMessage: () => boolean) => () => void

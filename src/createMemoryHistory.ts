@@ -7,10 +7,10 @@
 
 import warning from 'warning'
 import invariant from 'invariant'
-import { createLocation, Location } from './LocationUtils'
-import { createPath, parsePath } from './PathUtils'
+import { createLocation, Location } from './utils/LocationUtils'
+import { createPath, parsePath } from './utils/PathUtils'
 import createHistory, { NativeHistory, HistoryOptions, CreateHistoryFunc } from './createHistory'
-import { POP } from './Actions'
+import { POP } from './utils/Actions'
 
 export interface Memo {
   [propName: string]: any

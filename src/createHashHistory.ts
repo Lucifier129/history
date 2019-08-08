@@ -6,22 +6,11 @@
  */
 import warning from 'warning'
 import invariant from 'invariant'
-import { canUseDOM } from './ExecutionEnvironment'
-import { supportsGoWithoutReloadUsingHash } from './DOMUtils'
-import * as HashProtocol from './HashProtocol'
+import { canUseDOM } from './utils/ExecutionEnvironment'
+import { supportsGoWithoutReloadUsingHash } from './utils/DOMUtils'
+import * as HashProtocol from './utils/HashProtocol'
 import createHistory, { NativeHistory, CreateHistoryFunc } from './createHistory'
-import { Location } from './LocationUtils'
-
-export interface PathCoder {
-  encodePath: (path: string) => string
-  decodePath: (path: string) => string
-}
-
-export interface PathCoders {
-  hashbang: PathCoder
-  noslash: PathCoder
-  slash: PathCoder
-}
+import { Location } from './utils/LocationUtils'
 
 const DefaultQueryKey: string = '_k'
 

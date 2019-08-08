@@ -5,6 +5,7 @@
  * @Last Modified time: 2019-08-05 14:52:03
  */
 import warning from 'warning'
+import './type'
 
 const QuotaExceededErrors = {
   QuotaExceededError: true,
@@ -17,11 +18,10 @@ const SecurityErrors = {
 
 const KeyPrefix: string = '@@History/'
 
-export const createKey: (key: string) => string = (key) =>
+export const createKey: CH.Utils.CreateKey = (key) =>
   KeyPrefix + key
 
-export const saveState: (key: string, state: object) => void
-= (key, state) => {
+export const saveState: CH.Utils.SaveKey = (key, state) => {
   if (!window.sessionStorage) {
     // Session storage is not available or hidden.
     // sessionStorage is undefined in Internet Explorer when served via file protocol.
@@ -65,8 +65,7 @@ export const saveState: (key: string, state: object) => void
   }
 }
 
-export const readState: (key: string) => void
-= (key) => {
+export const readState: CH.Utils.ReadState = (key) => {
   let json: string
   try {
     json = window.sessionStorage.getItem(createKey(key))

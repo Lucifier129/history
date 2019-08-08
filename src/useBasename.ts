@@ -1,7 +1,7 @@
-import runTransitionHook from './runTransitionHook'
-import { parsePath } from './PathUtils'
+import runTransitionHook from './utils/runTransitionHook'
+import { parsePath } from './utils/PathUtils'
 import CH, { HistoryOptions, NativeHistory } from './createHistory'
-import { Location } from './LocationUtils'
+import { Location } from './utils/LocationUtils'
 
 const useBasename: (createHistory: typeof CH) => (options: HistoryOptions) => NativeHistory
 = (createHistory) => (options = {}) => {

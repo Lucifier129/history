@@ -1,9 +1,9 @@
 import { parse, stringify } from 'query-string'
-import runTransitionHook from './runTransitionHook'
-import { createQuery } from './LocationUtils'
-import { parsePath } from './PathUtils'
+import runTransitionHook from './utils/runTransitionHook'
+import { createQuery } from './utils/LocationUtils'
+import { parsePath } from './utils/PathUtils'
 import CH, { HistoryOptions, NativeHistory } from './createHistory';
-import { Location } from './LocationUtils'
+import { Location } from './utils/LocationUtils'
 
 const defaultStringifyQuery: (query: object) => string = (query) =>
   stringify(query).replace(/%20/g, '+')

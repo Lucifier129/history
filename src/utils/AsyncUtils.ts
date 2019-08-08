@@ -4,16 +4,9 @@
  * @Last Modified by: Ma Tianqi
  * @Last Modified time: 2019-08-02 12:33:43
  */
+import './type'
 
-export interface Work {
-  (currentTurn: number, next: () => void, done: (...args: any[]) => void): void
-}
-export interface Callback {
-  (...args: any[]): void
-}
-
-export const loopAsync: (turns: number, work: Work, callback: Callback) => void 
-= (turns, work, callback) => {
+export const loopAsync: CH.Utils.LoopAsync = (turns, work, callback) => {
   let currentTurn: number = 0
   let isDone: boolean = false
   let isSync: boolean = false

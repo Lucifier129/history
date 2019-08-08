@@ -1,9 +1,13 @@
 import invariant from 'invariant'
-import { canUseDOM } from './ExecutionEnvironment'
-import * as BrowserProtocol from './BrowserProtocol'
-import * as RefreshProtocol from './RefreshProtocol'
-import { supportsHistory } from './DOMUtils'
-import createHistory, { CreateHistoryFunc } from './createHistory'
+import { canUseDOM } from './utils/ExecutionEnvironment'
+import * as BrowserProtocol from './utils/BrowserProtocol'
+import * as RefreshProtocol from './utils/RefreshProtocol'
+import { supportsHistory } from './utils/DOMUtils'
+import createHistory from './createHistory'
+import {
+  CreateHistoryFunc,
+  NativeHistory
+} from './type'
 
 /**
  * Creates and returns a history object that uses HTML5's history API
@@ -33,7 +37,7 @@ const createBrowserHistory: CreateHistoryFunc = (options = {}) => {
     go
   } = Protocol
 
-  const history = createHistory({
+  const history: NativeHistory = createHistory({
     getUserConfirmation, // User may override in options
     ...options,
     getCurrentLocation,

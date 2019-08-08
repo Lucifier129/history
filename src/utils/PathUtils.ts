@@ -1,16 +1,8 @@
-/*
- * @Author: Ma Tianqi 
- * @Date: 2019-08-02 14:30:54 
- * @Last Modified by: Ma Tianqi
- * @Last Modified time: 2019-08-05 16:16:55
- */
-
 import warning from 'warning'
-import { Location } from './LocationUtils'
+import './type'
 
-export const addQueryStringValueToPath: (path: string, key: string, value: string) => string
-= (path, key, value) => {
-  const { pathname, search, hash }: Location = parsePath(path)
+export const addQueryStringValueToPath: CH.Utils.AddQueryStringValueToPath = (path, key, value) => {
+  const { pathname, search, hash }: CH.Location = parsePath(path)
 
   return createPath({
     pathname,
@@ -19,8 +11,8 @@ export const addQueryStringValueToPath: (path: string, key: string, value: strin
   })
 }
 
-export const stripQueryStringValueFromPath: (path: string, key?: string) => string = (path, key) => {
-  const { pathname, search, hash }: Location = parsePath(path)
+export const stripQueryStringValueFromPath: CH.Utils.StripQueryStringValueFromPath = (path, key) => {
+  const { pathname, search, hash }: CH.Location = parsePath(path)
 
   return createPath({
     pathname,
@@ -34,14 +26,14 @@ export const stripQueryStringValueFromPath: (path: string, key?: string) => stri
   })
 }
 
-export const getQueryStringValueFromPath: (path: string, key: string) => string
+export const getQueryStringValueFromPath: CH.Utils.GetQueryStringValueFromPath
 = (path, key) => {
-  const { search }: Location = parsePath(path)
+  const { search }: CH.Location = parsePath(path)
   const match: RegExpMatchArray = search.match(new RegExp(`[?&]${key}=([a-zA-Z0-9]+)`))
   return match && match[1]
 }
 
-const extractPath: (path: string) => string = (path) => {
+const extractPath: CH.Utils.ExtractPath = (path) => {
   let match: RegExpMatchArray = null
   if (typeof path === 'string') {
     match = path.match(/^(https?:)?\/\/[^\/]*/)
@@ -49,8 +41,7 @@ const extractPath: (path: string) => string = (path) => {
   return match == null ? path : path.substring(match[0].length)
 }
 
-export const parsePath: (path: string) => Location
-= (path) => {
+export const parsePath: CH.Utils.ParsePath = (path) => {
   let pathname: string = extractPath(path)
   let search: string = ''
   let hash: string = ''
@@ -89,11 +80,11 @@ export const parsePath: (path: string) => Location
   }
 }
 
-export const createPath: (location?: Location | string) => string = (location) => {
+export const createPath: CH.Utils.CreatePath = (location) => {
   if (location === undefined || typeof location === 'string')
     return <string>location
 
-  const { basename, pathname, search, hash }: Location = location
+  const { basename, pathname, search, hash }: CH.Location = location
   let path = (basename || '') + pathname
 
   if (search && search !== '?')
