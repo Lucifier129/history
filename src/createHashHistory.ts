@@ -9,15 +9,15 @@ import invariant from 'invariant'
 import { canUseDOM } from './utils/ExecutionEnvironment'
 import { supportsGoWithoutReloadUsingHash } from './utils/DOMUtils'
 import * as HashProtocol from './utils/HashProtocol'
-import createHistory, { NativeHistory, CreateHistoryFunc } from './createHistory'
-import { Location } from './utils/LocationUtils'
+import createHistory from './createHistory'
+import './type'
 
 const DefaultQueryKey: string = '_k'
 
 const addLeadingSlash: (path: string) => string = (path) =>
   path.charAt(0) === '/' ? path : '/' + path
 
-const HashPathCoders: PathCoders = {
+const HashPathCoders: CH.PathCoders = {
   hashbang: {
     encodePath: (path) => path.charAt(0) === '!' ? path : '!' + path,
     decodePath: (path) => path.charAt(0) === '!' ? path.substring(1) : path
@@ -32,13 +32,13 @@ const HashPathCoders: PathCoders = {
   }
 }
 
-const createHashHistory: CreateHistoryFunc = (options = {}) => {
+const createHashHistory: CH.Hash.CreateHistory = (options = {}) => {
   invariant(
     canUseDOM,
     'Hash history needs a DOM'
   )
 
-  let { queryKey, hashType } = options
+  let { queryKey, hashType }: CH.HistoryOptions = options
 
   // warning(
   //   queryKey !== false,
@@ -62,20 +62,20 @@ const createHashHistory: CreateHistoryFunc = (options = {}) => {
     hashType = 'slash'
   }
 
-  const pathCoder: PathCoder = HashPathCoders[hashType]
+  const pathCoder: CH.PathCoder = HashPathCoders[hashType]
 
   const { getUserConfirmation } = HashProtocol
 
-  const getCurrentLocation: () => Location = () =>
+  const getCurrentLocation: CH.Hash.GetCurrentLocation = () =>
     HashProtocol.getCurrentLocation(pathCoder, queryKey)
 
-  const pushLocation: (location: Location) => void = (location) =>
+  const pushLocation: CH.Hash.PushLocation = (location) =>
     HashProtocol.pushLocation(location, pathCoder, queryKey)
 
-  const replaceLocation: (location: Location) => void = (location) =>
+  const replaceLocation: CH.Hash.ReplaceLocation = (location) =>
     HashProtocol.replaceLocation(location, pathCoder, queryKey)
 
-  const history: NativeHistory = createHistory({
+  const history: CH.NativeHistory = createHistory({
     getUserConfirmation, // User may override in options
     ...options,
     getCurrentLocation,
@@ -87,8 +87,7 @@ const createHashHistory: CreateHistoryFunc = (options = {}) => {
   let listenerCount: number = 0
   let stopListener: Function
 
-  const startListener: (listener: Function, before: boolean) => () => void
-  = (listener, before) => {
+  const startListener: CH.Hash.StartListener = (listener, before) => {
     if (++listenerCount === 1)
       stopListener = HashProtocol.startListener(
         history.transitionTo,
@@ -108,16 +107,15 @@ const createHashHistory: CreateHistoryFunc = (options = {}) => {
     }
   }
 
-  const listenBefore: (listener: Function) => void = (listener) =>
+  const listenBefore: CH.Hash.ListenBefore = (listener) =>
     startListener(listener, true)
 
-  const listen: (listener: Function) => void = (listener) =>
+  const listen: CH.Hash.Listen = (listener) =>
     startListener(listener, false)
 
   const goIsSupportedWithoutReload: boolean = supportsGoWithoutReloadUsingHash()
 
-  const go: (n: number) => void
-  = (n) => {
+  const go: CH.Hash.Go = (n) => {
     warning(
       goIsSupportedWithoutReload,
       'Hash history go(n) causes a full page reload in this browser'
@@ -126,7 +124,7 @@ const createHashHistory: CreateHistoryFunc = (options = {}) => {
     history.go(n)
   }
 
-  const createHref: (path: string) => string = (path) =>
+  const createHref: CH.Hash.CreateHref = (path) =>
     '#' + pathCoder.encodePath(history.createHref(path))
 
   return {

@@ -1,7 +1,7 @@
 import warning from 'warning'
 import './type'
 
-export const addQueryStringValueToPath: CH.Utils.AddQueryStringValueToPath = (path, key, value) => {
+export const addQueryStringValueToPath: CH.Utils.Path.AddQueryStringValueToPath = (path, key, value) => {
   const { pathname, search, hash }: CH.Location = parsePath(path)
 
   return createPath({
@@ -11,7 +11,7 @@ export const addQueryStringValueToPath: CH.Utils.AddQueryStringValueToPath = (pa
   })
 }
 
-export const stripQueryStringValueFromPath: CH.Utils.StripQueryStringValueFromPath = (path, key) => {
+export const stripQueryStringValueFromPath: CH.Utils.Path.StripQueryStringValueFromPath = (path, key) => {
   const { pathname, search, hash }: CH.Location = parsePath(path)
 
   return createPath({
@@ -26,14 +26,14 @@ export const stripQueryStringValueFromPath: CH.Utils.StripQueryStringValueFromPa
   })
 }
 
-export const getQueryStringValueFromPath: CH.Utils.GetQueryStringValueFromPath
+export const getQueryStringValueFromPath: CH.Utils.Path.GetQueryStringValueFromPath
 = (path, key) => {
   const { search }: CH.Location = parsePath(path)
   const match: RegExpMatchArray = search.match(new RegExp(`[?&]${key}=([a-zA-Z0-9]+)`))
   return match && match[1]
 }
 
-const extractPath: CH.Utils.ExtractPath = (path) => {
+const extractPath: CH.Utils.Path.ExtractPath = (path) => {
   let match: RegExpMatchArray = null
   if (typeof path === 'string') {
     match = path.match(/^(https?:)?\/\/[^\/]*/)
@@ -41,7 +41,7 @@ const extractPath: CH.Utils.ExtractPath = (path) => {
   return match == null ? path : path.substring(match[0].length)
 }
 
-export const parsePath: CH.Utils.ParsePath = (path) => {
+export const parsePath: CH.Utils.Path.ParsePath = (path) => {
   let pathname: string = extractPath(path)
   let search: string = ''
   let hash: string = ''
@@ -80,7 +80,7 @@ export const parsePath: CH.Utils.ParsePath = (path) => {
   }
 }
 
-export const createPath: CH.Utils.CreatePath = (location) => {
+export const createPath: CH.Utils.Path.CreatePath = (location) => {
   if (location === undefined || typeof location === 'string')
     return <string>location
 

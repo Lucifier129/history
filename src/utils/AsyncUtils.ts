@@ -6,7 +6,7 @@
  */
 import './type'
 
-export const loopAsync: CH.Utils.LoopAsync = (turns, work, callback) => {
+export const loopAsync: CH.Utils.Async.LoopAsync = (turns, work, callback) => {
   let currentTurn: number = 0
   let isDone: boolean = false
   let isSync: boolean = false

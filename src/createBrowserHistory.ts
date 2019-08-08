@@ -4,10 +4,7 @@ import * as BrowserProtocol from './utils/BrowserProtocol'
 import * as RefreshProtocol from './utils/RefreshProtocol'
 import { supportsHistory } from './utils/DOMUtils'
 import createHistory from './createHistory'
-import {
-  CreateHistoryFunc,
-  NativeHistory
-} from './type'
+import './type'
 
 /**
  * Creates and returns a history object that uses HTML5's history API
@@ -19,7 +16,7 @@ import {
  * page reloads will be used to preserve clean URLs. You can force this
  * behavior using { forceRefresh: true } in options.
  */
-const createBrowserHistory: CreateHistoryFunc = (options = {}) => {
+const createBrowserHistory: CH.Browser.CreateHistoryFunc = (options = {}) => {
   invariant(
     canUseDOM,
     'Browser history needs a DOM'
@@ -37,7 +34,7 @@ const createBrowserHistory: CreateHistoryFunc = (options = {}) => {
     go
   } = Protocol
 
-  const history: NativeHistory = createHistory({
+  const history: CH.NativeHistory = createHistory({
     getUserConfirmation, // User may override in options
     ...options,
     getCurrentLocation,
@@ -49,8 +46,7 @@ const createBrowserHistory: CreateHistoryFunc = (options = {}) => {
   let listenerCount: number = 0
   let stopListener: Function
 
-  const startListener: (listener: Function, before: boolean) => () => void
-  = (listener, before) => {
+  const startListener: CH.Browser.StartListenner = (listener, before) => {
     if (++listenerCount === 1)
       stopListener = BrowserProtocol.startListener(
         history.transitionTo
@@ -68,7 +64,7 @@ const createBrowserHistory: CreateHistoryFunc = (options = {}) => {
     }
   }
 
-  const listenBefore: (listener: Function) => () => void = (listener) =>
+  const listenBefore: CH.Browser.ListenBefore = (listener) =>
     startListener(listener, true)
 
   const listen: (listener: Function) => () => void = (listener) =>

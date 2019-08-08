@@ -121,8 +121,7 @@ const updateLocation: CH.Utils.Hash.UpdateLocation = (location, pathCoder, query
   updateHash(path)
 }
 
-export const pushLocation: 
-= (location, pathCoder, queryKey) =>
+export const pushLocation: CH.Utils.Hash.PushLocation = (location, pathCoder, queryKey) =>
   updateLocation(location, pathCoder, queryKey, (path) => {
     if (getHashPath() !== path) {
       pushHashPath(path)
@@ -131,8 +130,7 @@ export const pushLocation:
     }
   })
 
-export const replaceLocation: (location: Location, pathCoder: PathCoder, queryKey: string) => void
-= (location, pathCoder, queryKey) =>
+export const replaceLocation: CH.Utils.Hash.ReplaceLocation = (location, pathCoder, queryKey) =>
   updateLocation(location, pathCoder, queryKey, (path) => {
     if (getHashPath() !== path)
       replaceHashPath(path)

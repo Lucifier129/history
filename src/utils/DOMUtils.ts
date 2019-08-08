@@ -1,12 +1,12 @@
 import './type'
 
-export const addEventListener: CH.Utils.AddEventListener = (node, event, listener) =>
+export const addEventListener: CH.Utils.DOMUtils.AddEventListener = (node, event, listener) =>
   node.addEventListener
     ? node.addEventListener(event, listener, false)
     // @ts-ignore
     : node.attachEvent('on' + event, listener)
 
-export const removeEventListener: CH.Utils.RemoveEventListener = (node, event, listener) =>
+export const removeEventListener: CH.Utils.DOMUtils.RemoveEventListener = (node, event, listener) =>
   node.removeEventListener
     ? node.removeEventListener(event, listener, false)
     // @ts-ignore
@@ -19,7 +19,7 @@ export const removeEventListener: CH.Utils.RemoveEventListener = (node, event, l
  * https://github.com/Modernizr/Modernizr/blob/master/feature-detects/history.js
  * changed to avoid false negatives for Windows Phones: https://github.com/reactjs/react-router/issues/586
  */
-export const supportsHistory: CH.Utils.SupportsHistory = () => {
+export const supportsHistory: CH.Utils.DOMUtils.SupportsHistory = () => {
   const ua: string = window.navigator.userAgent
 
   if ((ua.indexOf('Android 2.') !== -1 || ua.indexOf('Android 4.0') !== -1) &&
@@ -36,5 +36,5 @@ export const supportsHistory: CH.Utils.SupportsHistory = () => {
 /**
  * Returns false if using go(n) with hash history causes a full page reload.
  */
-export const supportsGoWithoutReloadUsingHash: CH.Utils.SupportsGoWithoutReloadUsingHash = () =>
+export const supportsGoWithoutReloadUsingHash: CH.Utils.DOMUtils.SupportsGoWithoutReloadUsingHash = () =>
   window.navigator.userAgent.indexOf('Firefox') === -1

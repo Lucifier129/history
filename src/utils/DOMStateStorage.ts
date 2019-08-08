@@ -18,10 +18,10 @@ const SecurityErrors = {
 
 const KeyPrefix: string = '@@History/'
 
-export const createKey: CH.Utils.CreateKey = (key) =>
+export const createKey: CH.Utils.DOMStateStorage.CreateKey = (key) =>
   KeyPrefix + key
 
-export const saveState: CH.Utils.SaveKey = (key, state) => {
+export const saveState: CH.Utils.DOMStateStorage.SaveKey = (key, state) => {
   if (!window.sessionStorage) {
     // Session storage is not available or hidden.
     // sessionStorage is undefined in Internet Explorer when served via file protocol.
@@ -65,7 +65,7 @@ export const saveState: CH.Utils.SaveKey = (key, state) => {
   }
 }
 
-export const readState: CH.Utils.ReadState = (key) => {
+export const readState: CH.Utils.DOMStateStorage.ReadState = (key) => {
   let json: string
   try {
     json = window.sessionStorage.getItem(createKey(key))

@@ -7,16 +7,13 @@
 
 import warning from 'warning'
 import invariant from 'invariant'
-import { createLocation, Location } from './utils/LocationUtils'
+import { createLocation } from './utils/LocationUtils'
 import { createPath, parsePath } from './utils/PathUtils'
-import createHistory, { NativeHistory, HistoryOptions, CreateHistoryFunc } from './createHistory'
-import { POP } from './utils/Actions'
+import createHistory from './createHistory'
+import './type'
 
-export interface Memo {
-  [propName: string]: any
-}
 
-const createStateStorage: (entries: Location[]) => Memo = (entries) =>
+const createStateStorage: (entries: CH.Location[]) => CH.Memo = (entries) =>
   entries
     .filter(entry => entry.state)
     .reduce((memo, entry) => {
@@ -24,21 +21,16 @@ const createStateStorage: (entries: Location[]) => Memo = (entries) =>
       return memo
     }, {})
 
-export interface MemoryOptions extends HistoryOptions {
-  entries?: any
-  current?: number
-}
-
-const createMemoryHistory: CreateHistoryFunc = (options = {}) => {
-  let reFormatOptions: MemoryOptions = Object.assign({}, options)
+const createMemoryHistory: CH.Memory.CreateHistory = (options = {}) => {
+  let reFormatOptions: CH.MemoryOptions = Object.assign({}, options)
   if (Array.isArray(reFormatOptions)) {
     reFormatOptions = { entries: options }
   } else if (typeof options === 'string') {
     reFormatOptions = { entries: [ options ] }
   }
 
-  const getCurrentLocation: () => Location = () => {
-    const entry: Location = entries[current]
+  const getCurrentLocation: CH.Memory.GetCurrentLocation = () => {
+    const entry: CH.Location = entries[current]
     const path: string = createPath(entry)
 
     let key: string
@@ -48,19 +40,17 @@ const createMemoryHistory: CreateHistoryFunc = (options = {}) => {
       state = readState(key)
     }
 
-    const init: Location = parsePath(path)
+    const init: CH.Location = parsePath(path)
 
     return createLocation({ ...init, state }, undefined, key)
   }
 
-  const canGo: (n: number) => boolean
-  = (n) => {
+  const canGo: CH.Memory.CanGo = (n) => {
     const index = current + n
     return index >= 0 && index < entries.length
   }
 
-  const go: (n: number) => void
-  = (n) => {
+  const go: CH.Memory.Go = (n) => {
     if (!n)
       return
 
@@ -78,11 +68,10 @@ const createMemoryHistory: CreateHistoryFunc = (options = {}) => {
     const currentLocation = getCurrentLocation()
 
     // Change action to POP
-    history.transitionTo({ ...currentLocation, action: POP })
+    history.transitionTo({ ...currentLocation, action: CH.Actions.POP })
   }
 
-  const pushLocation: (location: Location) => void
-  = (location) => {
+  const pushLocation: CH.Memory.PushLocation = (location) => {
     current += 1
 
     if (current < entries.length)
@@ -93,13 +82,12 @@ const createMemoryHistory: CreateHistoryFunc = (options = {}) => {
     saveState(location.key, location.state)
   }
 
-  const replaceLocation: (location: Location) => void
-  = (location) => {
+  const replaceLocation: CH.Memory.ReplaceLocation = (location) => {
     entries[current] = location
     saveState(location.key, location.state)
   }
 
-  const history: NativeHistory = createHistory({
+  const history: CH.NativeHistory = createHistory({
     ...reFormatOptions,
     getCurrentLocation,
     pushLocation,
@@ -127,7 +115,7 @@ const createMemoryHistory: CreateHistoryFunc = (options = {}) => {
     )
   }
 
-  const storage: Memo = createStateStorage(entries)
+  const storage: CH.Memo = createStateStorage(entries)
 
   const saveState: (key: string, state: any) => any = (key, state) =>
     storage[key] = state

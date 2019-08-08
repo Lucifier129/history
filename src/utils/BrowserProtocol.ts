@@ -13,7 +13,7 @@ import './type'
 
 const PopStateEvent = 'popstate'
 
-const _createLocation: CH.Utils.CreateBrowserLocation = (historyState) => {
+const _createLocation: CH.Utils.Browser.CreateBrowserLocation = (historyState) => {
   const key = historyState && historyState.key
 
   return createLocation({
@@ -24,7 +24,7 @@ const _createLocation: CH.Utils.CreateBrowserLocation = (historyState) => {
   }, undefined, key)
 }
 
-export const getCurrentLocation: CH.Utils.GetBrowserCurrentLocation = () => {
+export const getCurrentLocation: CH.Utils.Browser.GetBrowserCurrentLocation = () => {
   let historyState: any
   try {
     historyState = window.history.state || {}
@@ -37,13 +37,13 @@ export const getCurrentLocation: CH.Utils.GetBrowserCurrentLocation = () => {
   return _createLocation(historyState)
 }
 
-export const getUserConfirmation: CH.Utils.GetUserConfirmation
+export const getUserConfirmation: CH.Utils.Browser.GetUserConfirmation
   = (message, callback) => callback(window.confirm(message)) // eslint-disable-line no-alert
 
-const isExtraneousPopstateEvent: CH.Utils.IsExtraneousPopstateEvent
+const isExtraneousPopstateEvent: CH.Utils.Browser.IsExtraneousPopstateEvent
   = event => event.state === undefined && navigator.userAgent.indexOf('CriOS') === -1
 
-export const startListener: CH.Utils.StartListener = (listener) => {
+export const startListener: CH.Utils.Browser.StartListener = (listener) => {
   const handlePopState = (event) => {
     if (isExtraneousPopstateEvent(event)) return // Ignore extraneous popstate events in WebKit
     listener(_createLocation(event.state))
@@ -55,7 +55,7 @@ export const startListener: CH.Utils.StartListener = (listener) => {
     removeEventListener(window, PopStateEvent, handlePopState)
 }
 
-const updateLocation: CH.Utils.UpdateLocation = (location, updateState) => {
+const updateLocation: CH.Utils.Browser.UpdateLocation = (location, updateState) => {
   const { state, key } = location
 
   if (state !== undefined)
@@ -64,19 +64,19 @@ const updateLocation: CH.Utils.UpdateLocation = (location, updateState) => {
   updateState({ key }, createPath(location))
 }
 
-export const pushLocation: CH.Utils.PushLocation = (location) =>
+export const pushLocation: CH.Utils.Browser.PushLocation = (location) =>
   updateLocation(
     location, 
     (state: object, path: string) =>
       window.history.pushState(state, null, path)
   )
 
-export const replaceLocation: CH.Utils.ReplaceLocation = (location) =>
+export const replaceLocation: CH.Utils.Browser.ReplaceLocation = (location) =>
   updateLocation(location, (state: object, path: string) =>
     window.history.replaceState(state, null, path)
   )
 
-export const go: CH.Utils.Go = (n) => {
+export const go: CH.Utils.Browser.Go = (n) => {
   if (n)
     window.history.go(n)
 }
