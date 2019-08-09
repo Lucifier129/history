@@ -7,6 +7,7 @@ import describeReplace from './TestSequences/describeReplace'
 import describeBasename from './TestSequences/describeBasename'
 import describeQueries from './TestSequences/describeQueries'
 import describeGo from './TestSequences/describeGo'
+import CH from '../src'
 
 describe('memory history', () => {
   describeListen(createMemoryHistory)

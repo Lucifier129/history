@@ -27,7 +27,7 @@
   "scripts": {
     "lint": "tslint  --project tsconfig.json -t codeFrame 'src/**/*.ts' 'test/**/*.ts'",
     "prebuild": "rimraf dist",
-    "build": "tsc --module commonjs",
+    "build": "tsc",
     "test": "jest",
     "test:coverage": "jest --coverage",
     "test:watch": "jest --coverage --watchAll",

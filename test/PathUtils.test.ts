@@ -3,7 +3,7 @@ import {
   getQueryStringValueFromPath,
   stripQueryStringValueFromPath,
   createPath
-} from '../src/utils/PathUtils'
+} from '../src/PathUtils'
 
 describe('addQueryStringValueToPath', () => {
   describe('when the path has no query string', () => {

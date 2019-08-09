@@ -1,5 +1,5 @@
 import createHistory from '../src/createHistory'
-import { createLocation } from '../src/utils/LocationUtils'
+import { createLocation } from '../src/LocationUtils'
 import CH from '../src'
 
 describe('a location', () => {

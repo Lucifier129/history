@@ -1,10 +1,10 @@
 import warning from 'warning'
 import invariant from 'invariant'
-import { canUseDOM } from './utils/ExecutionEnvironment'
-import { supportsGoWithoutReloadUsingHash } from './utils/DOMUtils'
-import * as HashProtocol from './utils/HashProtocol'
+import { canUseDOM } from './ExecutionEnvironment'
+import { supportsGoWithoutReloadUsingHash } from './DOMUtils'
+import * as HashProtocol from './HashProtocol'
 import createHistory from './createHistory'
-import CH from './type'
+import CH from './index'
 
 const DefaultQueryKey: string = '_k'
 

@@ -1,4 +1,4 @@
-import { saveState, readState } from '../src/utils/DOMStateStorage'
+import { saveState, readState } from '../src/DOMStateStorage'
 
 describe('dom state storage', () => {
   it('saves and reads state data', () => {

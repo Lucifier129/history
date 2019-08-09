@@ -1,5 +1,5 @@
 import warning from 'warning'
-import Utils from './type'
+import { Utils } from './index'
 
 export const addQueryStringValueToPath: Utils.Path.AddQueryStringValueToPath = (path, key, value) => {
   const { pathname, search, hash }: Utils.Location = parsePath(path)

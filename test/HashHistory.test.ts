@@ -1,4 +1,4 @@
-import { supportsGoWithoutReloadUsingHash, supportsHistory } from '../src/utils/DOMUtils'
+import { supportsGoWithoutReloadUsingHash, supportsHistory } from '../src/DOMUtils'
 import createHashHistory from '../src/createHashHistory'
 import describeListen from './TestSequences/describeListen'
 import describeInitialLocation from './TestSequences/describeInitialLocation'

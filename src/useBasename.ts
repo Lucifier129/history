@@ -1,6 +1,6 @@
-/// <reference path="./type.d.ts" />
-import runTransitionHook from './utils/runTransitionHook'
-import { parsePath } from './utils/PathUtils'
+import runTransitionHook from './runTransitionHook'
+import { parsePath } from './PathUtils'
+import CH from './index'
 
 const useBasename: CH.Basename.UseBasename = (createHistory) => (options = {}) => {
     const history: CH.NativeHistory = createHistory(options)

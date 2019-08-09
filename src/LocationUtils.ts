@@ -1,12 +1,12 @@
 import invariant from 'invariant'
 import { parsePath } from './PathUtils'
-import Utils from './type'
 import { POP } from './Actions'
+import { Utils } from './index'
 
-export const createQuery: Utils.Location.CreateQuery = (props) =>
+export const createQuery: Utils.LocationUtil.CreateQuery = (props) =>
   Object.assign(Object.create(null), props)
 
-export const createLocation: Utils.Location.CreateLocation = (input = '/', action = POP, key = null) => {
+export const createLocation: Utils.LocationUtil.CreateLocation = (input = '/', action = POP, key = null) => {
   const object: Utils.Location = typeof input === 'string' ? parsePath(input) : input
 
   const pathname: string = object.pathname || '/'
@@ -24,10 +24,10 @@ export const createLocation: Utils.Location.CreateLocation = (input = '/', actio
   }
 }
 
-const isDate: Utils.Location.IsDate = (object) =>
+const isDate: Utils.LocationUtil.IsDate = (object) =>
   Object.prototype.toString.call(object) === '[object Date]'
 
-export const statesAreEqual: Utils.Location.StatesAreEqual = (a, b) => {
+export const statesAreEqual: Utils.LocationUtil.StatesAreEqual = (a, b) => {
   if (a === b)
     return true
 
@@ -66,7 +66,7 @@ export const statesAreEqual: Utils.Location.StatesAreEqual = (a, b) => {
   return false
 }
 
-export const locationsAreEqual: Utils.Location.LocationsAreEqual = (a, b) =>
+export const locationsAreEqual: Utils.LocationUtil.LocationsAreEqual = (a, b) =>
   a.key === b.key && // Different key !== location change.
   // a.action === b.action && // Different action !== location change.
   a.pathname === b.pathname &&

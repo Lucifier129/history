@@ -1,10 +1,10 @@
 import warning from 'warning'
 import invariant from 'invariant'
-import { createLocation } from './utils/LocationUtils'
-import { createPath, parsePath } from './utils/PathUtils'
+import { createLocation } from './LocationUtils'
+import { createPath, parsePath } from './PathUtils'
 import createHistory from './createHistory'
-import { POP } from './utils/Actions'
-import CH from './type'
+import { POP } from './Actions'
+import CH from './index'
 
 const createStateStorage: (entries: CH.Location[]) => CH.Memo = (entries) =>
   entries

@@ -1,8 +1,8 @@
-/// <reference path="./type.d.ts" />
 import { parse, stringify } from 'query-string'
-import runTransitionHook from './utils/runTransitionHook'
-import { createQuery } from './utils/LocationUtils'
-import { parsePath } from './utils/PathUtils'
+import runTransitionHook from './runTransitionHook'
+import { createQuery } from './LocationUtils'
+import { parsePath } from './PathUtils'
+import CH from './index'
 
 const defaultStringifyQuery: (query: object) => string = (query) =>
   stringify(query).replace(/%20/g, '+')

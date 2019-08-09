@@ -1,10 +1,10 @@
-import Utils from './type'
 import { createLocation } from './LocationUtils'
 import { createPath } from './PathUtils'
 import {
   getUserConfirmation as _getUserConfirmation,
   go as _go
 } from './BrowserProtocol'
+import { Utils } from './index'
 
 export let getUserConfirmation = _getUserConfirmation
 export let go = _go

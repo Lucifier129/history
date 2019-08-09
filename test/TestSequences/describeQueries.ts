@@ -1,4 +1,4 @@
-import { createQuery } from '../../src/utils/LocationUtils'
+import { createQuery } from '../../src/LocationUtils'
 import useQueries from '../../src/useQueries'
 import execSteps from './execSteps'
 import { Step, Done, Describe } from '../type'

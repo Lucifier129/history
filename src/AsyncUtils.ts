@@ -1,4 +1,4 @@
-import Utils from './type'
+import { Utils } from './index'
 
 export const loopAsync: Utils.Async.LoopAsync = (turns, work, callback) => {
   let currentTurn: number = 0

@@ -1,13 +1,13 @@
-import { loopAsync } from './utils/AsyncUtils'
-import { createPath } from './utils/PathUtils'
-import runTransitionHook from './utils/runTransitionHook'
+import { loopAsync } from './AsyncUtils'
+import { createPath } from './PathUtils'
+import runTransitionHook from './runTransitionHook'
 import {
   createLocation as _createLocation,
   statesAreEqual,
   locationsAreEqual,
-} from './utils/LocationUtils'
-import Actions, { POP, PUSH, REPLACE } from './utils/Actions'
-import CH from './type'
+} from './LocationUtils'
+import Actions, { POP, PUSH, REPLACE } from './Actions'
+import CH from './index'
 
 const createHistory: CH.History.CreateHistory = (options = {}) => {
   const {

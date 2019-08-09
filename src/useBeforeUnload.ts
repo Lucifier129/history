@@ -1,7 +1,7 @@
-/// <reference path="./type.d.ts" />
 import invariant from 'invariant'
-import { addEventListener, removeEventListener } from './utils/DOMUtils'
-import { canUseDOM } from './utils/ExecutionEnvironment'
+import { addEventListener, removeEventListener } from './DOMUtils'
+import { canUseDOM } from './ExecutionEnvironment'
+import CH from './index'
 
 const startListener: CH.BeforeUnload.StartListener = (getPromptMessage) => {
   const handleBeforeUnload: CH.BeforeUnload.HandleBeforeUnload = (event) => {

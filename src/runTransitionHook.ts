@@ -1,5 +1,5 @@
-import Utils from './type'
 import warning from 'warning'
+import { Utils } from './index'
 
 const runTransitionHook: Utils.Transition.RunTransitionHook = (hook, location, callback) => {
   const result = hook(location, callback)

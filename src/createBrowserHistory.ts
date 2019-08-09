@@ -1,10 +1,10 @@
 import invariant from 'invariant'
-import { canUseDOM } from './utils/ExecutionEnvironment'
-import * as BrowserProtocol from './utils/BrowserProtocol'
-import * as RefreshProtocol from './utils/RefreshProtocol'
-import { supportsHistory } from './utils/DOMUtils'
+import { canUseDOM } from './ExecutionEnvironment'
+import * as BrowserProtocol from './BrowserProtocol'
+import * as RefreshProtocol from './RefreshProtocol'
+import { supportsHistory } from './DOMUtils'
 import createHistory from './createHistory'
-import CH from './type'
+import CH from './index'
 
 /**
  * Creates and returns a history object that uses HTML5's history API

@@ -1,4 +1,4 @@
-import Utils from './type'
+import { Utils } from './index'
 
 export const addEventListener: Utils.DOMUtils.AddEventListener = (node, event, listener) =>
   node.addEventListener

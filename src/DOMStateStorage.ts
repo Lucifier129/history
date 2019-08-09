@@ -1,5 +1,5 @@
 import warning from 'warning'
-import Utils from './type'
+import { Utils } from './index'
 
 const QuotaExceededErrors = {
   QuotaExceededError: true,
