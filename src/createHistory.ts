@@ -27,9 +27,7 @@ export type GoBack = CH.GoBack
 
 export type GoForward = CH.GoForward
 
-export interface CreateKey {
-  (): string;
-}
+export type CreateKey = CH.CreateKey
 
 export type CreatePath = CH.CreatePath
 
@@ -63,8 +61,8 @@ const createHistory: CreateHistory = (options = {}) => {
 
   let currentLocation: Location
   let pendingLocation: Location
-  let beforeListeners: Function[] = []
-  let listeners: Function[] = []
+  let beforeHooks: Function[] = []
+  let hooks: Function[] = []
   let allKeys: string[] = []
 
   const getCurrentIndex: GetCurrentIndex = () => {
@@ -87,28 +85,28 @@ const createHistory: CreateHistory = (options = {}) => {
       allKeys[currentIndex] = currentLocation.key
     }
 
-    listeners.forEach(listener => listener(currentLocation))
+    hooks.forEach(hook => hook(currentLocation))
   }
 
-  const listenBefore: ListenBefore = (listener) => {
-    beforeListeners.push(listener)
+  const listenBefore: ListenBefore = (hook) => {
+    beforeHooks.push(hook)
 
     return () =>
-      beforeListeners = beforeListeners.filter(item => item !== listener)
+    beforeHooks = beforeHooks.filter(item => item !== hook)
   }
 
-  const listen: Listen = (listener) => {
-    listeners.push(listener)
+  const listen: Listen = (hook) => {
+    hooks.push(hook)
 
     return () =>
-      listeners = listeners.filter(item => item !== listener)
+      hooks = hooks.filter(item => item !== hook)
   }
 
   const confirmTransitionTo: ConfirmTransitionTo = (location, callback) => {
     loopAsync(
-      beforeListeners.length,
+      beforeHooks.length,
       (index, next, done) => {
-        runTransitionHook(beforeListeners[index], location, (result) =>
+        runTransitionHook(beforeHooks[index], location, (result) =>
           result != null ? done(result) : next()
         )
       },

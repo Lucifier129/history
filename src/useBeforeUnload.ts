@@ -45,25 +45,25 @@ const useBeforeUnload: UseBeforeUnload = (createHistory) => {
   const ch = (options) => {
     const history: CH.NativeHistory = createHistory(options)
 
-    let listeners: Function[] = []
+    let hooks: Function[] = []
     let stopListener: Function
 
     const getPromptMessage = () => {
       let message
-      for (let i = 0, len = listeners.length; message == null && i < len; ++i)
-        message = listeners[i].call(this)
+      for (let i = 0, len = hooks.length; message == null && i < len; ++i)
+        message = hooks[i].call(this)
 
       return message
     }
 
     const listenBeforeUnload = (listener) => {
-      if (listeners.push(listener) === 1)
+      if (hooks.push(listener) === 1)
         stopListener = startListener(getPromptMessage)
 
       return () => {
-        listeners = listeners.filter(item => item !== listener)
+        hooks= hooks.filter(item => item !== listener)
 
-        if (listeners.length === 0 && stopListener) {
+        if (hooks.length === 0 && stopListener) {
           stopListener()
           stopListener = null
         }

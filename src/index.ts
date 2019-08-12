@@ -102,7 +102,7 @@ namespace CH {
     getCurrentLocation: GetCurrentLocation
     listenBefore: ListenBefore
     listen: Listen
-    listenBeforeUnload?: listenBeforeUnload
+    listenBeforeUnload?: ListenBeforeUnload
     transitionTo: TransitionTo
     push: Push
     replace: Replace
@@ -120,15 +120,15 @@ namespace CH {
   }
 
   export interface ListenBefore {
-    (listener: Function): Function
+    (hook: Function): Function
   }
 
   export interface Listen {
-    (listener: Function): Function;
+    (hook: Function): Function;
   }
 
-  export interface listenBeforeUnload {
-    (listener: Function): Function
+  export interface ListenBeforeUnload {
+    (hook: Function): Function
   }
 
   export interface TransitionTo {
