@@ -1,12 +1,34 @@
-import { Utils } from './index'
+export interface AddEventListener {
+  (
+    node: Element | Window,
+    event: string,
+    listener: EventListenerOrEventListenerObject
+  ): void;
+}
 
-export const addEventListener: Utils.DOMUtils.AddEventListener = (node, event, listener) =>
+export interface RemoveEventListener {
+  (
+    node: Element | Window,
+    event: string,
+    listener: EventListenerOrEventListenerObject
+  ): void;
+}
+
+export interface SupportsHistory {
+  (): boolean;
+}
+
+export interface SupportsGoWithoutReloadUsingHash {
+  (): boolean;
+}
+
+export const addEventListener: AddEventListener = (node, event, listener) =>
   node.addEventListener
     ? node.addEventListener(event, listener, false)
     // @ts-ignore
     : node.attachEvent('on' + event, listener)
 
-export const removeEventListener: Utils.DOMUtils.RemoveEventListener = (node, event, listener) =>
+export const removeEventListener: RemoveEventListener = (node, event, listener) =>
   node.removeEventListener
     ? node.removeEventListener(event, listener, false)
     // @ts-ignore
@@ -19,7 +41,7 @@ export const removeEventListener: Utils.DOMUtils.RemoveEventListener = (node, ev
  * https://github.com/Modernizr/Modernizr/blob/master/feature-detects/history.js
  * changed to avoid false negatives for Windows Phones: https://github.com/reactjs/react-router/issues/586
  */
-export const supportsHistory: Utils.DOMUtils.SupportsHistory = () => {
+export const supportsHistory: SupportsHistory = () => {
   const ua: string = window.navigator.userAgent
 
   if ((ua.indexOf('Android 2.') !== -1 || ua.indexOf('Android 4.0') !== -1) &&
@@ -36,5 +58,5 @@ export const supportsHistory: Utils.DOMUtils.SupportsHistory = () => {
 /**
  * Returns false if using go(n) with hash history causes a full page reload.
  */
-export const supportsGoWithoutReloadUsingHash: Utils.DOMUtils.SupportsGoWithoutReloadUsingHash = () =>
+export const supportsGoWithoutReloadUsingHash: SupportsGoWithoutReloadUsingHash = () =>
   window.navigator.userAgent.indexOf('Firefox') === -1

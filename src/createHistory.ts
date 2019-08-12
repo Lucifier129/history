@@ -7,9 +7,51 @@ import {
   locationsAreEqual,
 } from './LocationUtils'
 import Actions, { POP, PUSH, REPLACE } from './Actions'
-import CH from './index'
+import CH, { Location } from './index'
 
-const createHistory: CH.History.CreateHistory = (options = {}) => {
+export type GetCurrentLocation = CH.GetCurrentLocation
+
+export type ListenBefore = CH.ListenBefore
+
+export type Listen = CH.Listen
+
+export type TransitionTo = CH.TransitionTo
+
+export type Push = CH.Push
+
+export type Replace = CH.Replace
+
+export type Go = CH.Go
+
+export type GoBack = CH.GoBack
+
+export type GoForward = CH.GoForward
+
+export interface CreateKey {
+  (): string;
+}
+
+export type CreatePath = CH.CreatePath
+
+export type CreateHref = CH.CreateHref
+
+export type CreateLocation = CH.CreateLocation
+
+export type CreateHistory = CH.CreateHistory
+
+export interface GetCurrentIndex {
+  (): number;
+}
+
+export interface UpdateLocation {
+  (location: Location): void;
+}
+
+export interface ConfirmTransitionTo {
+  (location: Location, callback: (ok: any) => void): void;
+}
+
+const createHistory: CreateHistory = (options = {}) => {
   const {
     getCurrentLocation,
     getUserConfirmation,
@@ -19,13 +61,13 @@ const createHistory: CH.History.CreateHistory = (options = {}) => {
     keyLength
   } = options
 
-  let currentLocation: CH.Location
-  let pendingLocation: CH.Location
+  let currentLocation: Location
+  let pendingLocation: Location
   let beforeListeners: Function[] = []
   let listeners: Function[] = []
   let allKeys: string[] = []
 
-  const getCurrentIndex: CH.History.GetCurrentIndex = () => {
+  const getCurrentIndex: GetCurrentIndex = () => {
     if (pendingLocation && pendingLocation.action === Actions.POP)
       return allKeys.indexOf(pendingLocation.key)
 
@@ -35,7 +77,7 @@ const createHistory: CH.History.CreateHistory = (options = {}) => {
     return -1
   }
 
-  const updateLocation: CH.History.UpdateLocation = (nextLocation) => {
+  const updateLocation: UpdateLocation = (nextLocation) => {
     const currentIndex = getCurrentIndex()
     currentLocation = nextLocation
 
@@ -48,21 +90,21 @@ const createHistory: CH.History.CreateHistory = (options = {}) => {
     listeners.forEach(listener => listener(currentLocation))
   }
 
-  const listenBefore: CH.History.ListenBefore = (listener) => {
+  const listenBefore: ListenBefore = (listener) => {
     beforeListeners.push(listener)
 
     return () =>
       beforeListeners = beforeListeners.filter(item => item !== listener)
   }
 
-  const listen: CH.History.Listen = (listener) => {
+  const listen: Listen = (listener) => {
     listeners.push(listener)
 
     return () =>
       listeners = listeners.filter(item => item !== listener)
   }
 
-  const confirmTransitionTo: CH.History.ConfirmTransitionTo = (location, callback) => {
+  const confirmTransitionTo: ConfirmTransitionTo = (location, callback) => {
     loopAsync(
       beforeListeners.length,
       (index, next, done) => {
@@ -80,7 +122,7 @@ const createHistory: CH.History.CreateHistory = (options = {}) => {
     )
   }
 
-  const transitionTo: CH.History.TransitionTo = (nextLocation) => {
+  const transitionTo: TransitionTo = (nextLocation) => {
     if (
       (currentLocation && locationsAreEqual(currentLocation, nextLocation)) ||
       (pendingLocation && locationsAreEqual(pendingLocation, nextLocation))
@@ -124,25 +166,25 @@ const createHistory: CH.History.CreateHistory = (options = {}) => {
     })
   }
 
-  const push: CH.History.Push = (input) =>
+  const push: Push = (input) =>
     transitionTo(createLocation(input, PUSH))
 
-  const replace: CH.History.Replace = (input) =>
+  const replace: Replace = (input) =>
     transitionTo(createLocation(input, REPLACE))
 
-  const goBack: CH.History.GoBack = () =>
+  const goBack: GoBack = () =>
     go(-1)
 
-  const goForward: CH.History.GoForward = () =>
+  const goForward: GoForward = () =>
     go(1)
 
-  const createKey: CH.History.CreateKey = () =>
+  const createKey: CreateKey = () =>
     Math.random().toString(36).substr(2, keyLength || 6)
 
-  const createHref: CH.History.CreateHref = (location) =>
+  const createHref: CreateHref = (location) =>
     createPath(location)
 
-  const createLocation: CH.History.CreateLocation = 
+  const createLocation: CreateLocation = 
     (location: Location, action: Actions, key: string = createKey()) =>
     _createLocation(location, action, key)
 

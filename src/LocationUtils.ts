@@ -1,13 +1,40 @@
 import invariant from 'invariant'
 import { parsePath } from './PathUtils'
-import { POP } from './Actions'
-import { Utils } from './index'
+import Actions, { POP } from './Actions'
+import { Location } from './index'
 
-export const createQuery: Utils.LocationUtil.CreateQuery = (props) =>
+export interface CreateQuery {
+  (props?: object): object;
+}
+
+export interface CreateLocation {
+  (
+    location?: Location | string,
+    action?: Actions,
+    key?: string
+  ): Location
+}
+
+export interface IsDate {
+  (object: object): boolean;
+}
+
+export interface StatesAreEqual {
+  (a: any, b: any): boolean;
+}
+
+export interface LocationsAreEqual {
+  (a: Location, b: Location): boolean;
+}
+
+export const createQuery: CreateQuery = (props) =>
   Object.assign(Object.create(null), props)
 
-export const createLocation: Utils.LocationUtil.CreateLocation = (input = '/', action = POP, key = null) => {
-  const object: Utils.Location = typeof input === 'string' ? parsePath(input) : input
+export const createLocation: CreateLocation = (input = '/', action = POP, key = null) => {
+  const object: Location = typeof input === 'string' ? parsePath(input) : input
+
+  // console.log(input)
+  // console.log(object)
 
   const pathname: string = object.pathname || '/'
   const search: string = object.search || ''
@@ -24,10 +51,10 @@ export const createLocation: Utils.LocationUtil.CreateLocation = (input = '/', a
   }
 }
 
-const isDate: Utils.LocationUtil.IsDate = (object) =>
+const isDate: IsDate = (object) =>
   Object.prototype.toString.call(object) === '[object Date]'
 
-export const statesAreEqual: Utils.LocationUtil.StatesAreEqual = (a, b) => {
+export const statesAreEqual: StatesAreEqual = (a, b) => {
   if (a === b)
     return true
 
@@ -66,7 +93,7 @@ export const statesAreEqual: Utils.LocationUtil.StatesAreEqual = (a, b) => {
   return false
 }
 
-export const locationsAreEqual: Utils.LocationUtil.LocationsAreEqual = (a, b) =>
+export const locationsAreEqual: LocationsAreEqual = (a, b) =>
   a.key === b.key && // Different key !== location change.
   // a.action === b.action && // Different action !== location change.
   a.pathname === b.pathname &&

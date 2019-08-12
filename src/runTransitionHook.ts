@@ -1,7 +1,15 @@
 import warning from 'warning'
-import { Utils } from './index'
+import { Location } from './index'
 
-const runTransitionHook: Utils.Transition.RunTransitionHook = (hook, location, callback) => {
+export interface RunTransitionHook {
+  (
+    hook: Function, 
+    location: Location, 
+    callback: Function
+  ): void
+}
+
+const runTransitionHook: RunTransitionHook = (hook, location, callback) => {
   const result = hook(location, callback)
 
   if (hook.length < 2) {

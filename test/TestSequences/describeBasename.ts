@@ -1,7 +1,7 @@
 import useBasename from '../../src/useBasename'
 import execSteps from './execSteps'
 import { Step, Done, Describe } from '../type'
-import CH from '../../src'
+import CH, { Location } from '../../src'
 
 const stripHash: (path: string) => string = (path) =>
   path.replace(/^#/, '')
@@ -18,7 +18,7 @@ const describeBasename: Describe = (createHistory) => {
     describe('in push', () => {
       it('works with string', (done: Done) => {
         const steps: Step[] = [
-          (location: CH.Location) => {
+          (location: Location) => {
             expect(location.pathname).toEqual('/')
             expect(location.search).toEqual('')
             expect(location.state).toBeUndefined()
@@ -28,7 +28,7 @@ const describeBasename: Describe = (createHistory) => {
 
             history.push('/home')
           },
-          (location: CH.Location) => {
+          (location: Location) => {
             expect(location.pathname).toEqual('/home')
             expect(location.search).toEqual('')
             expect(location.state).toBeUndefined()
@@ -43,7 +43,7 @@ const describeBasename: Describe = (createHistory) => {
 
       it('works with object', (done: Done) => {
         const steps = [
-          (location: CH.Location) => {
+          (location: Location) => {
             expect(location.pathname).toEqual('/')
             expect(location.search).toEqual('')
             expect(location.state).toBeUndefined()
@@ -56,7 +56,7 @@ const describeBasename: Describe = (createHistory) => {
               state: { the: 'state' }
             })
           },
-          (location: CH.Location) => {
+          (location: Location) => {
             expect(location.pathname).toEqual('/home')
             expect(location.search).toEqual('')
             expect(location.state).toEqual({ the: 'state' })
@@ -69,7 +69,7 @@ const describeBasename: Describe = (createHistory) => {
               pathname: '/foo'
             })
           },
-          (location: CH.Location) => {
+          (location: Location) => {
             expect(location.pathname).toEqual('/foo')
             expect(location.search).toEqual('')
             expect(location.state).toEqual({ the: 'state' })
@@ -86,7 +86,7 @@ const describeBasename: Describe = (createHistory) => {
     describe('in replace', () => {
       it('works with string', (done: Done) => {
         const steps = [
-          (location: CH.Location) => {
+          (location: Location) => {
             expect(location.pathname).toEqual('/')
             expect(location.search).toEqual('')
             expect(location.state).toBeUndefined()
@@ -96,7 +96,7 @@ const describeBasename: Describe = (createHistory) => {
 
             history.replace('/home')
           },
-          (location: CH.Location) => {
+          (location: Location) => {
             expect(location.pathname).toEqual('/home')
             expect(location.search).toEqual('')
             expect(location.state).toBeUndefined()
@@ -111,7 +111,7 @@ const describeBasename: Describe = (createHistory) => {
 
       it('works with object', (done: Done) => {
         const steps = [
-          (location: CH.Location) => {
+          (location: Location) => {
             expect(location.pathname).toEqual('/')
             expect(location.search).toEqual('')
             expect(location.state).toBeUndefined()
@@ -124,7 +124,7 @@ const describeBasename: Describe = (createHistory) => {
               state: { the: 'state' }
             })
           },
-          (location: CH.Location) => {
+          (location: Location) => {
             expect(location.pathname).toEqual('/home')
             expect(location.search).toEqual('')
             expect(location.state).toEqual({ the: 'state' })
@@ -137,7 +137,7 @@ const describeBasename: Describe = (createHistory) => {
               pathname: '/foo'
             })
           },
-          (location: CH.Location) => {
+          (location: Location) => {
             expect(location.pathname).toEqual('/foo')
             expect(location.search).toEqual('')
             expect(location.state).toEqual({ the: 'state' })

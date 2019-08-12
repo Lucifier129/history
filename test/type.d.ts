@@ -1,4 +1,3 @@
-/// <reference path="../src/type.d.ts" />
 import CH from '../src/createHistory'
 
 export interface Step {

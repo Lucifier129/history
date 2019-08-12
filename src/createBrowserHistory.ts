@@ -16,7 +16,18 @@ import CH from './index'
  * page reloads will be used to preserve clean URLs. You can force this
  * behavior using { forceRefresh: true } in options.
  */
-const createBrowserHistory: CH.Browser.CreateHistory = (options = {}) => {
+
+export type CreateHistory = CH.CreateHistory
+
+export interface StartListenner {
+  (listener: Function, before: boolean): Function
+}
+
+export type ListenBefore = CH.ListenBefore
+
+export type Listen = CH.Listen
+
+const createBrowserHistory: CreateHistory = (options = {}) => {
   invariant(
     canUseDOM,
     'Browser history needs a DOM'
@@ -46,7 +57,7 @@ const createBrowserHistory: CH.Browser.CreateHistory = (options = {}) => {
   let listenerCount: number = 0
   let stopListener: Function
 
-  const startListener: CH.Browser.StartListenner = (listener, before) => {
+  const startListener: StartListenner = (listener, before) => {
     if (++listenerCount === 1)
       stopListener = BrowserProtocol.startListener(
         history.transitionTo
@@ -64,10 +75,10 @@ const createBrowserHistory: CH.Browser.CreateHistory = (options = {}) => {
     }
   }
 
-  const listenBefore: CH.Browser.ListenBefore = (listener) =>
+  const listenBefore: ListenBefore = (listener) =>
     startListener(listener, true)
 
-  const listen: CH.Browser.Listen = (listener) =>
+  const listen: Listen = (listener) =>
     startListener(listener, false)
 
   return {

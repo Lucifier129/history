@@ -1,5 +1,16 @@
 import warning from 'warning'
-import { Utils } from './index'
+
+export interface CreateKey {
+  (key: string): string;
+}
+
+export interface SaveKey {
+  (key: string, state: object): void;
+}
+
+export interface ReadState {
+  (key: string): void;
+}
 
 const QuotaExceededErrors = {
   QuotaExceededError: true,
@@ -12,10 +23,10 @@ const SecurityErrors = {
 
 const KeyPrefix: string = '@@History/'
 
-export const createKey: Utils.DOMStateStorage.CreateKey = (key) =>
+export const createKey: CreateKey = (key) =>
   KeyPrefix + key
 
-export const saveState: Utils.DOMStateStorage.SaveKey = (key, state) => {
+export const saveState: SaveKey = (key, state) => {
   if (!window.sessionStorage) {
     // Session storage is not available or hidden.
     // sessionStorage is undefined in Internet Explorer when served via file protocol.
@@ -59,7 +70,7 @@ export const saveState: Utils.DOMStateStorage.SaveKey = (key, state) => {
   }
 }
 
-export const readState: Utils.DOMStateStorage.ReadState = (key) => {
+export const readState: ReadState = (key) => {
   let json: string
   try {
     json = window.sessionStorage.getItem(createKey(key))

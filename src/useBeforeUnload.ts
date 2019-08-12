@@ -3,8 +3,18 @@ import { addEventListener, removeEventListener } from './DOMUtils'
 import { canUseDOM } from './ExecutionEnvironment'
 import CH from './index'
 
-const startListener: CH.BeforeUnload.StartListener = (getPromptMessage) => {
-  const handleBeforeUnload: CH.BeforeUnload.HandleBeforeUnload = (event) => {
+export interface StartListener {
+  (getPromptMessage: () => boolean): Function
+}
+export interface HandleBeforeUnload {
+  (event: Event): boolean
+}
+export interface UseBeforeUnload {
+  (createHistory: CH.CreateHistory): CH.CreateHistory
+}
+
+const startListener: StartListener = (getPromptMessage) => {
+  const handleBeforeUnload: HandleBeforeUnload = (event) => {
     const message: boolean = getPromptMessage()
 
     if (typeof message === 'string') {
@@ -26,7 +36,7 @@ const startListener: CH.BeforeUnload.StartListener = (getPromptMessage) => {
  * history objects that know how to use the beforeunload event in web
  * browsers to cancel navigation.
  */
-const useBeforeUnload: CH.BeforeUnload.UseBeforeUnload = (createHistory) => {
+const useBeforeUnload: UseBeforeUnload = (createHistory) => {
   invariant(
     canUseDOM,
     'useBeforeUnload only works in DOM environments'

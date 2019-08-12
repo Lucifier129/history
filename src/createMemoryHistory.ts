@@ -4,9 +4,36 @@ import { createLocation } from './LocationUtils'
 import { createPath, parsePath } from './PathUtils'
 import createHistory from './createHistory'
 import { POP } from './Actions'
-import CH from './index'
+import CH, { Location } from './index'
 
-const createStateStorage: (entries: CH.Location[]) => CH.Memo = (entries) =>
+export interface Memo {
+  [propName: string]: any
+}
+
+export interface MemoryOptions extends CH.HistoryOptions {
+  entries?: any
+  current?: number
+}
+
+export interface CreateStateStorage {
+  (entries: Location[]): Memo
+}
+
+export type CreateHistory = CH.CreateHistory
+
+export type GetCurrentLocation = CH.GetCurrentLocation
+
+export interface CanGo {
+  (n: number): boolean
+}
+
+export type Go = CH.Go
+
+export type PushLocation = CH.PushLocation
+
+export type ReplaceLocation = CH.ReplaceLocation
+
+const createStateStorage: CreateStateStorage = (entries) =>
   entries
     .filter(entry => entry.state)
     .reduce((memo, entry) => {
@@ -14,16 +41,16 @@ const createStateStorage: (entries: CH.Location[]) => CH.Memo = (entries) =>
       return memo
     }, {})
 
-const createMemoryHistory: CH.Memory.CreateHistory = (options = {}) => {
-  let reFormatOptions: CH.MemoryOptions = Object.assign({}, options)
+const createMemoryHistory: CreateHistory = (options = {}) => {
+  let reFormatOptions: MemoryOptions = Object.assign({}, options)
   if (Array.isArray(reFormatOptions)) {
     reFormatOptions = { entries: options }
   } else if (typeof options === 'string') {
     reFormatOptions = { entries: [ options ] }
   }
 
-  const getCurrentLocation: CH.Memory.GetCurrentLocation = () => {
-    const entry: CH.Location = entries[current]
+  const getCurrentLocation: GetCurrentLocation = () => {
+    const entry: Location = entries[current]
     const path: string = createPath(entry)
 
     let key: string
@@ -33,17 +60,17 @@ const createMemoryHistory: CH.Memory.CreateHistory = (options = {}) => {
       state = readState(key)
     }
 
-    const init: CH.Location = parsePath(path)
+    const init: Location = parsePath(path)
 
     return createLocation({ ...init, state }, undefined, key)
   }
 
-  const canGo: CH.Memory.CanGo = (n) => {
+  const canGo: CanGo = (n) => {
     const index = current + n
     return index >= 0 && index < entries.length
   }
 
-  const go: CH.Memory.Go = (n) => {
+  const go: Go = (n) => {
     if (!n)
       return
 
@@ -64,7 +91,7 @@ const createMemoryHistory: CH.Memory.CreateHistory = (options = {}) => {
     history.transitionTo({ ...currentLocation, action: POP })
   }
 
-  const pushLocation: CH.Memory.PushLocation = (location) => {
+  const pushLocation: PushLocation = (location) => {
     current += 1
 
     if (current < entries.length)
@@ -75,7 +102,7 @@ const createMemoryHistory: CH.Memory.CreateHistory = (options = {}) => {
     saveState(location.key, location.state)
   }
 
-  const replaceLocation: CH.Memory.ReplaceLocation = (location) => {
+  const replaceLocation: ReplaceLocation = (location) => {
     entries[current] = location
     saveState(location.key, location.state)
   }
@@ -108,7 +135,7 @@ const createMemoryHistory: CH.Memory.CreateHistory = (options = {}) => {
     )
   }
 
-  const storage: CH.Memo = createStateStorage(entries)
+  const storage: Memo = createStateStorage(entries)
 
   const saveState: (key: string, state: any) => any = (key, state) =>
     storage[key] = state
