@@ -1,12 +1,11 @@
-import { NativeHistory } from '../../src/createHistory'
 import { Step, Done } from '../type'
+import CH from '../../src'
 
 const execSteps: (
   steps: Step[],
-  history: NativeHistory,
-  done: Done,
-  mark?: boolean
-) => void = (steps, history, done, mark) => {
+  history: CH.NativeHistory,
+  done: Done
+) => void = (steps, history, done) => {
   let index: number = 0
   let unlisten: Function
 
@@ -16,9 +15,6 @@ const execSteps: (
   }
 
   const execNextStep = (...args) => {
-    if (mark) {
-      console.log(index)
-    }
     try {
       steps[index++](...args)
 

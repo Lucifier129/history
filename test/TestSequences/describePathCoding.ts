@@ -1,13 +1,10 @@
-import { PUSH, POP } from '../../src/Actions'
 import execSteps from './execSteps'
-
 import { Step, Done, Describe } from '../type'
-import { NativeHistory } from '../../src/createHistory'
-import { Location } from '../../src/LocationUtils'
+import CH, { Location } from '../../src'
 
 const describePathCoding: Describe = (createHistory) => {
   describe('with the "hashbang" hashType', () => {
-    let history: NativeHistory
+    let history: CH.NativeHistory
     beforeEach(() => {
       history = createHistory({
         hashType: 'hashbang'
@@ -31,7 +28,7 @@ const describePathCoding: Describe = (createHistory) => {
             expect(location.pathname).toEqual('/')
             expect(location.search).toEqual('')
             expect(location.state).toBeUndefined()
-            expect(location.action).toEqual(POP)
+            expect(location.action).toEqual(CH.Actions.POP)
             expect(location.key).toBeNull()
 
             expect(window.location.hash).toEqual('#!')
@@ -46,7 +43,7 @@ const describePathCoding: Describe = (createHistory) => {
             expect(location.pathname).toEqual('/home')
             expect(location.search).toEqual('?the=query')
             expect(location.state).toEqual({ the: 'state' })
-            expect(location.action).toEqual(PUSH)
+            expect(location.action).toEqual(CH.Actions.PUSH)
             expect(location.key).toBeDefined()
 
             expect(window.location.hash).toMatch(/^#!\/home/)
@@ -57,7 +54,7 @@ const describePathCoding: Describe = (createHistory) => {
             expect(location.pathname).toEqual('/')
             expect(location.search).toEqual('')
             expect(location.state).toBeUndefined()
-            expect(location.action).toEqual(POP)
+            expect(location.action).toEqual(CH.Actions.POP)
             expect(location.key).toBeNull()
 
             expect(window.location.hash).toEqual('#!')
@@ -68,7 +65,7 @@ const describePathCoding: Describe = (createHistory) => {
             expect(location.pathname).toEqual('/home')
             expect(location.search).toEqual('?the=query')
             expect(location.state).toEqual({ the: 'state' })
-            expect(location.action).toEqual(POP)
+            expect(location.action).toEqual(CH.Actions.POP)
             expect(location.key).toBeDefined()
 
             expect(window.location.hash).toMatch(/^#!\/home/)
@@ -81,7 +78,7 @@ const describePathCoding: Describe = (createHistory) => {
   })
 
   describe('with the "noslash" hashType', () => {
-    let history: NativeHistory
+    let history: CH.NativeHistory
     beforeEach(() => {
       history = createHistory({
         hashType: 'noslash'
@@ -105,7 +102,7 @@ const describePathCoding: Describe = (createHistory) => {
             expect(location.pathname).toEqual('/')
             expect(location.search).toEqual('')
             expect(location.state).toBeUndefined()
-            expect(location.action).toEqual(POP)
+            expect(location.action).toEqual(CH.Actions.POP)
             expect(location.key).toBeNull()
 
             // IE 10+ gives us "#", everyone else gives us ""
@@ -121,7 +118,7 @@ const describePathCoding: Describe = (createHistory) => {
             expect(location.pathname).toEqual('/home')
             expect(location.search).toEqual('?the=query')
             expect(location.state).toEqual({ the: 'state' })
-            expect(location.action).toEqual(PUSH)
+            expect(location.action).toEqual(CH.Actions.PUSH)
             expect(location.key).toBeDefined()
 
             expect(window.location.hash).toMatch(/^#home/)
@@ -132,7 +129,7 @@ const describePathCoding: Describe = (createHistory) => {
             expect(location.pathname).toEqual('/')
             expect(location.search).toEqual('')
             expect(location.state).toBeUndefined()
-            expect(location.action).toEqual(POP)
+            expect(location.action).toEqual(CH.Actions.POP)
             expect(location.key).toBeNull()
 
             // IE 10+ gives us "#", everyone else gives us ""
@@ -144,7 +141,7 @@ const describePathCoding: Describe = (createHistory) => {
             expect(location.pathname).toEqual('/home')
             expect(location.search).toEqual('?the=query')
             expect(location.state).toEqual({ the: 'state' })
-            expect(location.action).toEqual(POP)
+            expect(location.action).toEqual(CH.Actions.POP)
             expect(location.key).toBeDefined()
 
             expect(window.location.hash).toMatch(/^#home/)
@@ -157,7 +154,7 @@ const describePathCoding: Describe = (createHistory) => {
   })
 
   describe('with the "slash" hashType', () => {
-    let history: NativeHistory
+    let history: CH.NativeHistory
     beforeEach(() => {
       history = createHistory({
         hashType: 'slash'
@@ -181,7 +178,7 @@ const describePathCoding: Describe = (createHistory) => {
             expect(location.pathname).toEqual('/')
             expect(location.search).toEqual('')
             expect(location.state).toBeUndefined()
-            expect(location.action).toEqual(POP)
+            expect(location.action).toEqual(CH.Actions.POP)
             expect(location.key).toBeNull()
 
             expect(window.location.hash).toEqual('#/')
@@ -196,7 +193,7 @@ const describePathCoding: Describe = (createHistory) => {
             expect(location.pathname).toEqual('/home')
             expect(location.search).toEqual('?the=query')
             expect(location.state).toEqual({ the: 'state' })
-            expect(location.action).toEqual(PUSH)
+            expect(location.action).toEqual(CH.Actions.PUSH)
             expect(location.key).toBeDefined()
 
             expect(window.location.hash).toMatch(/^#\/home/)
@@ -207,7 +204,7 @@ const describePathCoding: Describe = (createHistory) => {
             expect(location.pathname).toEqual('/')
             expect(location.search).toEqual('')
             expect(location.state).toBeUndefined()
-            expect(location.action).toEqual(POP)
+            expect(location.action).toEqual(CH.Actions.POP)
             expect(location.key).toBeNull()
 
             expect(window.location.hash).toEqual('#/')
@@ -218,7 +215,7 @@ const describePathCoding: Describe = (createHistory) => {
             expect(location.pathname).toEqual('/home')
             expect(location.search).toEqual('?the=query')
             expect(location.state).toEqual({ the: 'state' })
-            expect(location.action).toEqual(POP)
+            expect(location.action).toEqual(CH.Actions.POP)
             expect(location.key).toBeDefined()
 
             expect(window.location.hash).toMatch(/^#\/home/)

@@ -1,22 +1,39 @@
-/*
- * @Author: Ma Tianqi 
- * @Date: 2019-08-02 16:22:07 
- * @Last Modified by: Ma Tianqi
- * @Last Modified time: 2019-08-05 19:42:14
- */
-
 import warning from 'warning'
 import invariant from 'invariant'
-import { createLocation, Location } from './LocationUtils'
+import { createLocation } from './LocationUtils'
 import { createPath, parsePath } from './PathUtils'
-import createHistory, { NativeHistory } from './createHistory'
+import createHistory from './createHistory'
 import { POP } from './Actions'
+import CH, { Location } from './index'
 
-interface Memo {
+export interface Memo {
   [propName: string]: any
 }
 
-const createStateStorage: (entries: Location[]) => Memo = (entries) =>
+export interface MemoryOptions extends CH.HistoryOptions {
+  entries?: any
+  current?: number
+}
+
+export interface CreateStateStorage {
+  (entries: Location[]): Memo
+}
+
+export type CreateHistory = CH.CreateHistory
+
+export type GetCurrentLocation = CH.GetCurrentLocation
+
+export interface CanGo {
+  (n: number): boolean
+}
+
+export type Go = CH.Go
+
+export type PushLocation = CH.PushLocation
+
+export type ReplaceLocation = CH.ReplaceLocation
+
+const createStateStorage: CreateStateStorage = (entries) =>
   entries
     .filter(entry => entry.state)
     .reduce((memo, entry) => {
@@ -24,15 +41,15 @@ const createStateStorage: (entries: Location[]) => Memo = (entries) =>
       return memo
     }, {})
 
-const createMemoryHistory: (options?: any) => NativeHistory
-= (options = {}) => {
-  if (Array.isArray(options)) {
-    options = { entries: options }
+const createMemoryHistory: CreateHistory = (options = {}) => {
+  let reFormatOptions: MemoryOptions = Object.assign({}, options)
+  if (Array.isArray(reFormatOptions)) {
+    reFormatOptions = { entries: options }
   } else if (typeof options === 'string') {
-    options = { entries: [ options ] }
+    reFormatOptions = { entries: [ options ] }
   }
 
-  const getCurrentLocation: () => Location = () => {
+  const getCurrentLocation: GetCurrentLocation = () => {
     const entry: Location = entries[current]
     const path: string = createPath(entry)
 
@@ -48,14 +65,12 @@ const createMemoryHistory: (options?: any) => NativeHistory
     return createLocation({ ...init, state }, undefined, key)
   }
 
-  const canGo: (n: number) => boolean
-  = (n) => {
+  const canGo: CanGo = (n) => {
     const index = current + n
     return index >= 0 && index < entries.length
   }
 
-  const go: (n: number) => void
-  = (n) => {
+  const go: Go = (n) => {
     if (!n)
       return
 
@@ -76,8 +91,7 @@ const createMemoryHistory: (options?: any) => NativeHistory
     history.transitionTo({ ...currentLocation, action: POP })
   }
 
-  const pushLocation: (location: Location) => void
-  = (location) => {
+  const pushLocation: PushLocation = (location) => {
     current += 1
 
     if (current < entries.length)
@@ -88,21 +102,20 @@ const createMemoryHistory: (options?: any) => NativeHistory
     saveState(location.key, location.state)
   }
 
-  const replaceLocation: (location: Location) => void
-  = (location) => {
+  const replaceLocation: ReplaceLocation = (location) => {
     entries[current] = location
     saveState(location.key, location.state)
   }
 
-  const history: NativeHistory = createHistory({
-    ...options,
+  const history: CH.NativeHistory = createHistory({
+    ...reFormatOptions,
     getCurrentLocation,
     pushLocation,
     replaceLocation,
     go
   })
 
-  let { entries, current } = options
+  let { entries, current } = reFormatOptions
 
   if (typeof entries === 'string') {
     entries = [ entries ]

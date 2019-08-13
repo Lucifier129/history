@@ -1,31 +1,40 @@
-/*
- * @Author: Ma Tianqi 
- * @Date: 2019-08-02 14:30:44 
- * @Last Modified by: Ma Tianqi
- * @Last Modified time: 2019-08-02 16:59:18
- */
-
 import invariant from 'invariant'
 import { parsePath } from './PathUtils'
 import Actions, { POP } from './Actions'
+import { Location } from './index'
 
-export interface Location {
-  basename?: string
-  pathname?: string
-  search?: string
-  hash?: string
-  state?: any
-  key?: string
-  action?: any
-  query?: object
+export interface CreateQuery {
+  (props?: object): object;
 }
 
-export const createQuery: (props?: object) => object = (props) =>
+export interface CreateLocation {
+  (
+    location?: Location | string,
+    action?: Actions,
+    key?: string
+  ): Location
+}
+
+export interface IsDate {
+  (object: object): boolean;
+}
+
+export interface StatesAreEqual {
+  (a: any, b: any): boolean;
+}
+
+export interface LocationsAreEqual {
+  (a: Location, b: Location): boolean;
+}
+
+export const createQuery: CreateQuery = (props) =>
   Object.assign(Object.create(null), props)
 
-export const createLocation: (input?: string | Location, action?: Actions, key?: string) => Location
-= (input = '/', action = POP, key = null) => {
+export const createLocation: CreateLocation = (input = '/', action = POP, key = null) => {
   const object: Location = typeof input === 'string' ? parsePath(input) : input
+
+  // console.log(input)
+  // console.log(object)
 
   const pathname: string = object.pathname || '/'
   const search: string = object.search || ''
@@ -42,11 +51,10 @@ export const createLocation: (input?: string | Location, action?: Actions, key?:
   }
 }
 
-const isDate: (object: object) => boolean = (object) =>
+const isDate: IsDate = (object) =>
   Object.prototype.toString.call(object) === '[object Date]'
 
-export const statesAreEqual: (a: any, b: any) => boolean
-= (a, b) => {
+export const statesAreEqual: StatesAreEqual = (a, b) => {
   if (a === b)
     return true
 
@@ -85,8 +93,7 @@ export const statesAreEqual: (a: any, b: any) => boolean
   return false
 }
 
-export const locationsAreEqual: (a: Location, b: Location) => boolean
-= (a, b) =>
+export const locationsAreEqual: LocationsAreEqual = (a, b) =>
   a.key === b.key && // Different key !== location change.
   // a.action === b.action && // Different action !== location change.
   a.pathname === b.pathname &&

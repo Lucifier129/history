@@ -1,18 +1,16 @@
-import { PUSH, REPLACE, POP } from '../../src/Actions'
 import { createQuery } from '../../src/LocationUtils'
 import useQueries from '../../src/useQueries'
 import execSteps from './execSteps'
-
 import { Step, Done, Describe } from '../type'
-import { NativeHistory } from '../../src/createHistory'
-import { Location } from '../../src/LocationUtils'
+import CH, { Location } from '../../src'
+
 
 const stripHash: (path: string) => string = (path) =>
   path.replace(/^#/, '')
 
 const describeQueries: Describe = (createHistory) => {
   describe('default query serialization', () => {
-    let history: NativeHistory
+    let history: CH.NativeHistory
     beforeEach(() => {
       history = useQueries(createHistory)()
     })
@@ -25,7 +23,7 @@ const describeQueries: Describe = (createHistory) => {
             expect(location.search).toEqual('')
             expect(location.query).toEqual(createQuery())
             expect(location.state).toBeUndefined()
-            expect(location.action).toEqual(POP)
+            expect(location.action).toEqual(CH.Actions.POP)
             expect(location.key).toBeNull()
 
             history.push({
@@ -39,7 +37,7 @@ const describeQueries: Describe = (createHistory) => {
             expect(location.search).toEqual('?the=query+value')
             expect(location.query).toEqual(createQuery({ the: 'query value' }))
             expect(location.state).toEqual({ the: 'state' })
-            expect(location.action).toEqual(PUSH)
+            expect(location.action).toEqual(CH.Actions.PUSH)
             expect(location.key).toBeDefined()
 
             history.push({
@@ -53,7 +51,7 @@ const describeQueries: Describe = (createHistory) => {
             expect(location.search).toEqual('?other=query+value')
             expect(location.query).toEqual(createQuery({ other: 'query value' }))
             expect(location.state).toEqual({ other: 'state' })
-            expect(location.action).toEqual(PUSH)
+            expect(location.action).toEqual(CH.Actions.PUSH)
             expect(location.key).toBeDefined()
 
             history.push({
@@ -67,7 +65,7 @@ const describeQueries: Describe = (createHistory) => {
             expect(location.search).toEqual('')
             expect(location.query).toEqual(createQuery())
             expect(location.state).toBeNull()
-            expect(location.action).toEqual(PUSH)
+            expect(location.action).toEqual(CH.Actions.PUSH)
             expect(location.key).toBeDefined()
           }
         ]
@@ -84,7 +82,7 @@ const describeQueries: Describe = (createHistory) => {
             expect(location.search).toEqual('')
             expect(location.query).toEqual(createQuery({}))
             expect(location.state).toBeUndefined()
-            expect(location.action).toEqual(POP)
+            expect(location.action).toEqual(CH.Actions.POP)
             expect(location.key).toBeNull()
 
             history.replace({
@@ -98,7 +96,7 @@ const describeQueries: Describe = (createHistory) => {
             expect(location.search).toEqual('?the=query+value')
             expect(location.query).toEqual(createQuery({ the: 'query value' }))
             expect(location.state).toEqual({ the: 'state' })
-            expect(location.action).toEqual(REPLACE)
+            expect(location.action).toEqual(CH.Actions.REPLACE)
             expect(location.key).toBeDefined()
 
             history.replace({
@@ -112,7 +110,7 @@ const describeQueries: Describe = (createHistory) => {
             expect(location.search).toEqual('?other=query+value')
             expect(location.query).toEqual(createQuery({ other: 'query value' }))
             expect(location.state).toEqual({ other: 'state' })
-            expect(location.action).toEqual(REPLACE)
+            expect(location.action).toEqual(CH.Actions.REPLACE)
             expect(location.key).toBeDefined()
           }
         ]
@@ -223,7 +221,9 @@ const describeQueries: Describe = (createHistory) => {
     let history
     beforeEach(() => {
       history = useQueries(createHistory)({
-        parseQueryString: () => 'PARSE_QUERY_STRING',
+        parseQueryString: () => ({
+          PARSE_QUERY_STRING: 'PARSE_QUERY_STRING'
+        }),
         stringifyQuery: () => 'STRINGIFY_QUERY'
       })
     })
@@ -234,9 +234,11 @@ const describeQueries: Describe = (createHistory) => {
           (location: Location) => {
             expect(location.pathname).toEqual('/')
             expect(location.search).toEqual('')
-            expect(location.query).toEqual('PARSE_QUERY_STRING')
+            expect(location.query).toEqual({
+              PARSE_QUERY_STRING: 'PARSE_QUERY_STRING'
+            })
             expect(location.state).toBeUndefined()
-            expect(location.action).toEqual(POP)
+            expect(location.action).toEqual(CH.Actions.POP)
             expect(location.key).toBeNull()
 
             history.push({
@@ -248,9 +250,11 @@ const describeQueries: Describe = (createHistory) => {
           (location: Location) => {
             expect(location.pathname).toEqual('/home')
             expect(location.search).toEqual('?STRINGIFY_QUERY')
-            expect(location.query).toEqual('PARSE_QUERY_STRING')
+            expect(location.query).toEqual({
+              PARSE_QUERY_STRING: 'PARSE_QUERY_STRING'
+            })
             expect(location.state).toEqual({ the: 'state' })
-            expect(location.action).toEqual(PUSH)
+            expect(location.action).toEqual(CH.Actions.PUSH)
             expect(location.key).toBeDefined()
           }
         ]
@@ -265,9 +269,11 @@ const describeQueries: Describe = (createHistory) => {
           (location: Location) => {
             expect(location.pathname).toEqual('/')
             expect(location.search).toEqual('')
-            expect(location.query).toEqual('PARSE_QUERY_STRING')
+            expect(location.query).toEqual({
+              PARSE_QUERY_STRING: 'PARSE_QUERY_STRING'
+            })
             expect(location.state).toBeUndefined()
-            expect(location.action).toEqual(POP)
+            expect(location.action).toEqual(CH.Actions.POP)
             expect(location.key).toBeNull()
 
             history.replace({
@@ -279,9 +285,11 @@ const describeQueries: Describe = (createHistory) => {
           (location: Location) => {
             expect(location.pathname).toEqual('/home')
             expect(location.search).toEqual('?STRINGIFY_QUERY')
-            expect(location.query).toEqual('PARSE_QUERY_STRING')
+            expect(location.query).toEqual({
+              PARSE_QUERY_STRING: 'PARSE_QUERY_STRING'
+            })
             expect(location.state).toEqual({ the: 'state' })
-            expect(location.action).toEqual(REPLACE)
+            expect(location.action).toEqual(CH.Actions.REPLACE)
             expect(location.key).toBeDefined()
           }
         ]

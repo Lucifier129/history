@@ -23,7 +23,9 @@ Then with a module bundler like [webpack](https://webpack.github.io/), use as yo
 
 ```js
 // using an ES6 transpiler, like babel
-import { createHistory } from 'history'
+import histrory from 'history'
+
+history.createHistory()
 
 // not using an ES6 transpiler
 var createHistory = require('history').createHistory
@@ -32,7 +34,7 @@ var createHistory = require('history').createHistory
 The UMD build is also available on [npmcdn](https://npmcdn.com):
 
 ```html
-<script src="https://npmcdn.com/history/umd/history.min.js"></script>
+<script src="https://npmcdn.com/history/dist/lib/index.js"></script>
 ```
 
 You can find the library on `window.History`.
@@ -42,9 +44,9 @@ You can find the library on `window.History`.
 A "history" encapsulates navigation between different screens in your app, and notifies listeners when the current screen changes.
 
 ```js
-import { createHistory } from 'history'
+import history from 'history'
 
-const history = createHistory()
+const history = history.createHistory()
 
 // Get the current location
 const location = history.getCurrentLocation()

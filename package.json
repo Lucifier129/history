@@ -1,6 +1,6 @@
 {
   "name": "create-history",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "Manage browser history with JavaScript",
   "repository": {
     "type": "git",
@@ -27,7 +27,7 @@
   "scripts": {
     "lint": "tslint  --project tsconfig.json -t codeFrame 'src/**/*.ts' 'test/**/*.ts'",
     "prebuild": "rimraf dist",
-    "build": "tsc --module commonjs",
+    "build": "tsc",
     "test": "jest",
     "test:coverage": "jest --coverage",
     "test:watch": "jest --coverage --watchAll",
@@ -41,8 +41,9 @@
     "prepare": "npm run test && npm run build"
   },
   "dependencies": {
+    "@types/querystringify": "^2.0.0",
     "invariant": "^2.2.4",
-    "query-string": "^4.2.2",
+    "querystringify": "^2.1.1",
     "warning": "^3.0.0"
   },
   "devDependencies": {

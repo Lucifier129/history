@@ -1,11 +1,8 @@
-/*
- * @Author: Ma Tianqi 
- * @Date: 2019-08-02 12:33:34 
- * @Last Modified by: Ma Tianqi
- * @Last Modified time: 2019-08-02 14:37:43
- */
 
-enum  Actions {
+/**
+ * History change state need this indication to distinguish which type.
+ */
+enum Actions {
   /**
    * Indicates that navigation was caused by a call to history.push.
    */
@@ -24,10 +21,9 @@ enum  Actions {
    */
   POP
 }
-export const PUSH: Actions = Actions.PUSH
-
-export const REPLACE: Actions = Actions.REPLACE
-
-export const POP: Actions = Actions.POP
 
 export default Actions
+
+export const PUSH = Actions.PUSH
+export const REPLACE = Actions.REPLACE
+export const POP = Actions.POP

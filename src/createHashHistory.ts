@@ -1,26 +1,34 @@
-/*
- * @Author: Ma Tianqi 
- * @Date: 2019-08-02 15:54:35 
- * @Last Modified by: Ma Tianqi
- * @Last Modified time: 2019-08-05 15:54:23
- */
 import warning from 'warning'
 import invariant from 'invariant'
 import { canUseDOM } from './ExecutionEnvironment'
 import { supportsGoWithoutReloadUsingHash } from './DOMUtils'
 import * as HashProtocol from './HashProtocol'
-import createHistory, { HistoryOptions, NativeHistory } from './createHistory'
-import { Location } from './LocationUtils'
+import createHistory from './createHistory'
+import CH, { Location } from './index'
+import { PathCoder, PathCoders } from './HashProtocol'
 
-export interface PathCoder {
-  encodePath: (path: string) => string
-  decodePath: (path: string) => string
+export type CreateHistory = CH.CreateHistory
+
+export type GetCurrentLocation = CH.GetCurrentLocation
+
+export type PushLocation = CH.PushLocation
+
+export interface ReplaceLocation {
+  (location: Location): void
 }
 
-export interface PathCoders {
-  hashbang: PathCoder
-  noslash: PathCoder
-  slash: PathCoder
+export interface StartListener {
+  (listener: Function, before: boolean): () => void
+}
+
+export type ListenBefore = CH.ListenBefore
+
+export type Listen = CH.Listen
+
+export type Go = CH.Go
+
+export interface CreateHref {
+  (path: string): string
 }
 
 const DefaultQueryKey: string = '_k'
@@ -43,14 +51,13 @@ const HashPathCoders: PathCoders = {
   }
 }
 
-const createHashHistory: (options?: HistoryOptions) => NativeHistory
-= (options = {}) => {
+const createHashHistory: CreateHistory = (options = {}) => {
   invariant(
     canUseDOM,
     'Hash history needs a DOM'
   )
 
-  let { queryKey, hashType } = options
+  let { queryKey, hashType }: CH.HistoryOptions = options
 
   // warning(
   //   queryKey !== false,
@@ -78,16 +85,16 @@ const createHashHistory: (options?: HistoryOptions) => NativeHistory
 
   const { getUserConfirmation } = HashProtocol
 
-  const getCurrentLocation: () => Location = () =>
+  const getCurrentLocation: GetCurrentLocation = () =>
     HashProtocol.getCurrentLocation(pathCoder, queryKey)
 
-  const pushLocation: (location: Location) => void = (location) =>
+  const pushLocation: PushLocation = (location) =>
     HashProtocol.pushLocation(location, pathCoder, queryKey)
 
-  const replaceLocation: (location: Location) => void = (location) =>
+  const replaceLocation: ReplaceLocation = (location) =>
     HashProtocol.replaceLocation(location, pathCoder, queryKey)
 
-  const history: NativeHistory = createHistory({
+  const history: CH.NativeHistory = createHistory({
     getUserConfirmation, // User may override in options
     ...options,
     getCurrentLocation,
@@ -99,8 +106,7 @@ const createHashHistory: (options?: HistoryOptions) => NativeHistory
   let listenerCount: number = 0
   let stopListener: Function
 
-  const startListener: (listener: Function, before: boolean) => () => void
-  = (listener, before) => {
+  const startListener: StartListener = (listener, before) => {
     if (++listenerCount === 1)
       stopListener = HashProtocol.startListener(
         history.transitionTo,
@@ -120,16 +126,15 @@ const createHashHistory: (options?: HistoryOptions) => NativeHistory
     }
   }
 
-  const listenBefore: (listener: Function) => void = (listener) =>
+  const listenBefore: ListenBefore = (listener) =>
     startListener(listener, true)
 
-  const listen: (listener: Function) => void = (listener) =>
+  const listen: Listen = (listener) =>
     startListener(listener, false)
 
   const goIsSupportedWithoutReload: boolean = supportsGoWithoutReloadUsingHash()
 
-  const go: (n: number) => void
-  = (n) => {
+  const go: Go = (n) => {
     warning(
       goIsSupportedWithoutReload,
       'Hash history go(n) causes a full page reload in this browser'
@@ -138,7 +143,7 @@ const createHashHistory: (options?: HistoryOptions) => NativeHistory
     history.go(n)
   }
 
-  const createHref: (path: string) => string = (path) =>
+  const createHref: CreateHref = (path) =>
     '#' + pathCoder.encodePath(history.createHref(path))
 
   return {

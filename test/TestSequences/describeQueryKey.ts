@@ -1,13 +1,10 @@
-import { PUSH, POP } from '../../src/Actions'
 import execSteps from './execSteps'
-
 import { Step, Done, Describe } from '../type'
-import { NativeHistory } from '../../src/createHistory'
-import { Location } from '../../src/LocationUtils'
+import CH, { Location } from '../../src'
 
 const describeQueryKey: Describe = (createHistory) => {
   describe('when queryKey == "a"', () => {
-    let history: NativeHistory
+    let history: CH.NativeHistory
     beforeEach(() => {
       history = createHistory({ queryKey: 'a' })
     })
@@ -18,7 +15,7 @@ const describeQueryKey: Describe = (createHistory) => {
           expect(location.pathname).toEqual('/')
           expect(location.search).toEqual('')
           expect(location.state).toBeUndefined()
-          expect(location.action).toEqual(POP)
+          expect(location.action).toEqual(CH.Actions.POP)
           expect(location.key).toBeNull()
 
           history.push({
@@ -31,7 +28,7 @@ const describeQueryKey: Describe = (createHistory) => {
           expect(location.pathname).toEqual('/home')
           expect(location.search).toEqual('?the=query')
           expect(location.state).toEqual({ the: 'state' })
-          expect(location.action).toEqual(PUSH)
+          expect(location.action).toEqual(CH.Actions.PUSH)
           expect(location.key).toBeDefined()
 
           history.goBack()
@@ -40,7 +37,7 @@ const describeQueryKey: Describe = (createHistory) => {
           expect(location.pathname).toEqual('/')
           expect(location.search).toEqual('')
           expect(location.state).toBeUndefined()
-          expect(location.action).toEqual(POP)
+          expect(location.action).toEqual(CH.Actions.POP)
           expect(location.key).toBeNull()
 
           history.goForward()
@@ -49,7 +46,7 @@ const describeQueryKey: Describe = (createHistory) => {
           expect(location.pathname).toEqual('/home')
           expect(location.search).toEqual('?the=query')
           expect(location.state).toEqual({ the: 'state' }) // State is present
-          expect(location.action).toEqual(POP)
+          expect(location.action).toEqual(CH.Actions.POP)
           expect(location.key).toBeDefined()
         }
       ]

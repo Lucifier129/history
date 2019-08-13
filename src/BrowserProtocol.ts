@@ -1,19 +1,44 @@
-/*
- * @Author: Ma Tianqi 
- * @Date: 2019-08-02 12:34:28 
- * @Last Modified by: Ma Tianqi
- * @Last Modified time: 2019-08-02 15:18:24
- */
-
-import { createLocation, Location } from './LocationUtils'
+import { createLocation } from './LocationUtils'
 import { addEventListener, removeEventListener } from './DOMUtils'
 import { saveState, readState } from './DOMStateStorage'
 import { createPath } from './PathUtils'
+import CH, { Location } from './index'
+
+export interface CreateBrowserLocation {
+  (historyState: any): Location;
+}
+
+export interface GetBrowserCurrentLocation {
+  (): Location;
+}
+export type GetUserConfirmation = CH.GetUserConfirmation
+export interface IsExtraneousPopstateEvent {
+  (event: any): boolean;
+}
+export interface StartListener {
+  (listener: Function): () => void;
+}
+
+export interface UpdateState {
+  (locationKey: Location, location: Location | string): void;
+}
+
+export interface UpdateLocation {
+  (
+    location: Location,
+    updateState?: UpdateState
+  ): void;
+}
+
+export type PushLocation = CH.PushLocation
+
+export type ReplaceLocation = CH.ReplaceLocation
+
+export type Go = CH.Go
 
 const PopStateEvent = 'popstate'
 
-const _createLocation: (historyState: any) => Location
-= (historyState) => {
+const _createLocation: CreateBrowserLocation = (historyState) => {
   const key = historyState && historyState.key
 
   return createLocation({
@@ -24,8 +49,8 @@ const _createLocation: (historyState: any) => Location
   }, undefined, key)
 }
 
-export const getCurrentLocation: () => Location
-= () => {
+
+export const getCurrentLocation: GetBrowserCurrentLocation = () => {
   let historyState: any
   try {
     historyState = window.history.state || {}
@@ -38,14 +63,16 @@ export const getCurrentLocation: () => Location
   return _createLocation(historyState)
 }
 
-export const getUserConfirmation: (message: string, callback: Function) => any
-= (message, callback) => callback(window.confirm(message)) // eslint-disable-line no-alert
 
-const isExtraneousPopstateEvent: (event: any) => boolean
-= event => event.state === undefined && navigator.userAgent.indexOf('CriOS') === -1
+export const getUserConfirmation: GetUserConfirmation
+  = (message, callback) => callback(window.confirm(message)) // eslint-disable-line no-alert
 
-export const startListener: (listener: Function) => () => void
-= (listener) => {
+
+const isExtraneousPopstateEvent: IsExtraneousPopstateEvent
+  = event => event.state === undefined && navigator.userAgent.indexOf('CriOS') === -1
+
+
+export const startListener: StartListener = (listener) => {
   const handlePopState = (event) => {
     if (isExtraneousPopstateEvent(event)) return // Ignore extraneous popstate events in WebKit
     listener(_createLocation(event.state))
@@ -57,8 +84,7 @@ export const startListener: (listener: Function) => () => void
     removeEventListener(window, PopStateEvent, handlePopState)
 }
 
-const updateLocation: (location: Location, updateState: (locationKey: Location, location: Location | string) => void) => void
-= (location, updateState) => {
+const updateLocation: UpdateLocation = (location, updateState) => {
   const { state, key } = location
 
   if (state !== undefined)
@@ -67,20 +93,21 @@ const updateLocation: (location: Location, updateState: (locationKey: Location, 
   updateState({ key }, createPath(location))
 }
 
-export const pushLocation: (location: Location) => void
-= (location) =>
-  updateLocation(location, (state: object, path: string) =>
-    window.history.pushState(state, null, path)
+export const pushLocation: PushLocation = (location) =>
+  updateLocation(
+    location, 
+    (state: object, path: string) =>
+      window.history.pushState(state, null, path)
   )
 
-export const replaceLocation: (location: Location) => void
-= (location) =>
+
+export const replaceLocation: ReplaceLocation = (location) =>
   updateLocation(location, (state: object, path: string) =>
     window.history.replaceState(state, null, path)
   )
 
-export const go: (n: number) => void
-= (n) => {
+
+export const go: Go = (n) => {
   if (n)
     window.history.go(n)
 }

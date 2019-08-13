@@ -1,12 +1,10 @@
-import { POP } from '../../src/Actions'
 import execSteps from './execSteps'
 import { Step, Done, Describe } from '../type'
-import { NativeHistory } from '../../src/createHistory'
-import { Location } from '../../src/LocationUtils'
+import CH, { Location } from '../../src'
 
 const describeInitialLocation: Describe = (createHistory) => {
   describe('on the initial POP', () => {
-    let history: NativeHistory
+    let history: CH.NativeHistory
     beforeEach(() => {
       history = createHistory()
     })
@@ -14,7 +12,7 @@ const describeInitialLocation: Describe = (createHistory) => {
     it('location does not have a key', (done: Done) => {
       const steps: Step[] = [
         (location: Location) => {
-          expect(location.action).toEqual(POP)
+          expect(location.action).toEqual(CH.Actions.POP)
           expect(location.key).toBeDefined()
         }
       ]

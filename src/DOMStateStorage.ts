@@ -1,10 +1,16 @@
-/*
- * @Author: Ma Tianqi 
- * @Date: 2019-08-02 14:52:21 
- * @Last Modified by: Ma Tianqi
- * @Last Modified time: 2019-08-05 14:52:03
- */
 import warning from 'warning'
+
+export interface CreateKey {
+  (key: string): string;
+}
+
+export interface SaveKey {
+  (key: string, state: object): void;
+}
+
+export interface ReadState {
+  (key: string): void;
+}
 
 const QuotaExceededErrors = {
   QuotaExceededError: true,
@@ -17,11 +23,10 @@ const SecurityErrors = {
 
 const KeyPrefix: string = '@@History/'
 
-export const createKey: (key: string) => string = (key) =>
+export const createKey: CreateKey = (key) =>
   KeyPrefix + key
 
-export const saveState: (key: string, state: object) => void
-= (key, state) => {
+export const saveState: SaveKey = (key, state) => {
   if (!window.sessionStorage) {
     // Session storage is not available or hidden.
     // sessionStorage is undefined in Internet Explorer when served via file protocol.
@@ -65,8 +70,7 @@ export const saveState: (key: string, state: object) => void
   }
 }
 
-export const readState: (key: string) => void
-= (key) => {
+export const readState: ReadState = (key) => {
   let json: string
   try {
     json = window.sessionStorage.getItem(createKey(key))

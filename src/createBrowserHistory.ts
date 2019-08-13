@@ -3,7 +3,8 @@ import { canUseDOM } from './ExecutionEnvironment'
 import * as BrowserProtocol from './BrowserProtocol'
 import * as RefreshProtocol from './RefreshProtocol'
 import { supportsHistory } from './DOMUtils'
-import createHistory, { HistoryOptions, NativeHistory } from './createHistory'
+import createHistory from './createHistory'
+import CH from './index'
 
 /**
  * Creates and returns a history object that uses HTML5's history API
@@ -15,8 +16,18 @@ import createHistory, { HistoryOptions, NativeHistory } from './createHistory'
  * page reloads will be used to preserve clean URLs. You can force this
  * behavior using { forceRefresh: true } in options.
  */
-const createBrowserHistory: (options: HistoryOptions) => NativeHistory
-= (options = {}) => {
+
+export type CreateHistory = CH.CreateHistory
+
+export interface StartListenner {
+  (listener: Function, before: boolean): Function
+}
+
+export type ListenBefore = CH.ListenBefore
+
+export type Listen = CH.Listen
+
+const createBrowserHistory: CreateHistory = (options = {}) => {
   invariant(
     canUseDOM,
     'Browser history needs a DOM'
@@ -34,7 +45,7 @@ const createBrowserHistory: (options: HistoryOptions) => NativeHistory
     go
   } = Protocol
 
-  const history = createHistory({
+  const history: CH.NativeHistory = createHistory({
     getUserConfirmation, // User may override in options
     ...options,
     getCurrentLocation,
@@ -46,8 +57,7 @@ const createBrowserHistory: (options: HistoryOptions) => NativeHistory
   let listenerCount: number = 0
   let stopListener: Function
 
-  const startListener: (listener: Function, before: boolean) => () => void
-  = (listener, before) => {
+  const startListener: StartListenner = (listener, before) => {
     if (++listenerCount === 1)
       stopListener = BrowserProtocol.startListener(
         history.transitionTo
@@ -65,10 +75,10 @@ const createBrowserHistory: (options: HistoryOptions) => NativeHistory
     }
   }
 
-  const listenBefore: (listener: Function) => () => void = (listener) =>
+  const listenBefore: ListenBefore = (listener) =>
     startListener(listener, true)
 
-  const listen: (listener: Function) => () => void = (listener) =>
+  const listen: Listen = (listener) =>
     startListener(listener, false)
 
   return {

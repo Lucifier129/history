@@ -1,18 +1,20 @@
-/*
- * @Author: Ma Tianqi 
- * @Date: 2019-08-02 16:43:03 
- * @Last Modified by: Ma Tianqi
- * @Last Modified time: 2019-08-02 16:48:24
- */
-
 import invariant from 'invariant'
 import { addEventListener, removeEventListener } from './DOMUtils'
 import { canUseDOM } from './ExecutionEnvironment'
-import CH, { NativeHistory, HistoryOptions } from './createHistory';
+import CH from './index'
 
-const startListener: (getPromptMessage: () => boolean) => () => void
-= (getPromptMessage) => {
-  const handleBeforeUnload: (event: Event) => boolean = (event) => {
+export interface StartListener {
+  (getPromptMessage: () => boolean): Function
+}
+export interface HandleBeforeUnload {
+  (event: Event): boolean
+}
+export interface UseBeforeUnload {
+  (createHistory: CH.CreateHistory): CH.CreateHistory
+}
+
+const startListener: StartListener = (getPromptMessage) => {
+  const handleBeforeUnload: HandleBeforeUnload = (event) => {
     const message: boolean = getPromptMessage()
 
     if (typeof message === 'string') {
@@ -34,34 +36,34 @@ const startListener: (getPromptMessage: () => boolean) => () => void
  * history objects that know how to use the beforeunload event in web
  * browsers to cancel navigation.
  */
-const useBeforeUnload: (createHistory: typeof CH) => (options: HistoryOptions) => NativeHistory = (createHistory) => {
+const useBeforeUnload: UseBeforeUnload = (createHistory) => {
   invariant(
     canUseDOM,
     'useBeforeUnload only works in DOM environments'
   )
 
-  return (options: HistoryOptions) => {
-    const history: NativeHistory = createHistory(options)
+  const ch = (options) => {
+    const history: CH.NativeHistory = createHistory(options)
 
-    let listeners: Function[] = []
+    let hooks: Function[] = []
     let stopListener: Function
 
     const getPromptMessage = () => {
       let message
-      for (let i = 0, len = listeners.length; message == null && i < len; ++i)
-        message = listeners[i].call(this)
+      for (let i = 0, len = hooks.length; message == null && i < len; ++i)
+        message = hooks[i].call(this)
 
       return message
     }
 
     const listenBeforeUnload = (listener) => {
-      if (listeners.push(listener) === 1)
+      if (hooks.push(listener) === 1)
         stopListener = startListener(getPromptMessage)
 
       return () => {
-        listeners = listeners.filter(item => item !== listener)
+        hooks= hooks.filter(item => item !== listener)
 
-        if (listeners.length === 0 && stopListener) {
+        if (hooks.length === 0 && stopListener) {
           stopListener()
           stopListener = null
         }
@@ -73,6 +75,8 @@ const useBeforeUnload: (createHistory: typeof CH) => (options: HistoryOptions) =
       listenBeforeUnload
     }
   }
+
+  return ch
 }
 
 export default useBeforeUnload

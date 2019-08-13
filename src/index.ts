@@ -1,21 +1,209 @@
-/*
- * @Author: Ma Tianqi 
- * @Date: 2019-08-02 14:30:37 
- * @Last Modified by: Ma Tianqi
- * @Last Modified time: 2019-08-02 17:00:24
- */
+import { locationsAreEqual as _locationsAreEqual } from './LocationUtils'
 
- import { locationsAreEqual as _locationsAreEqual } from './LocationUtils'
+import createHistory from './createBrowserHistory'
+import createHashHistory from './createHashHistory'
+import createMemoryHistory from './createMemoryHistory'
+
+import useBasename from './useBasename'
+import useBeforeUnload from './useBeforeUnload'
+import useQueries from './useQueries'
+
+import Actions from './Actions'
+
+import { PathCoder } from './HashProtocol'
+
+const CH = {
+  createHistory,
+  createHashHistory,
+  createMemoryHistory,
+
+  useBasename,
+  useBeforeUnload,
+  useQueries,
+
+  Actions
+}
 
 export const locationsAreEqual = _locationsAreEqual
-export { default as createHistory } from './createBrowserHistory'
-export { default as createHashHistory } from './createHashHistory'
-export { default as createMemoryHistory } from './createMemoryHistory'
 
-export { default as useBasename } from './useBasename'
-export { default as useBeforeUnload } from './useBeforeUnload'
-export { default as useQueries } from './useQueries'
+export default CH
 
-export { default as Actions } from './Actions'
+namespace CH {
+  /**
+   * Main data constructure.
+   *
+   * History @createHistory
+   *
+   * Which information need when we create a new history app.
+   */
 
+  export interface HistoryOptions {
+    getCurrentLocation?: GetCurrentLocation
+    getUserConfirmation?: GetUserConfirmation
+    pushLocation?: PushLocation
+    replaceLocation?: ReplaceLocation
+    go?: Go
+    keyLength?: number
+    forceRefresh?: boolean
+    queryKey?: string
+    hashType?: string
+    basename?: string
+    stringifyQuery?: StringifyQuery
+    parseQueryString?: ParseQueryString
+    entries?: Location[]
+    current?: number
+  }
 
+  export interface GetCurrentLocation {
+    (): Location
+    
+    (pathCoder?: PathCoder, queryKey?: string): Location
+  }
+  
+  export interface GetUserConfirmation {
+    (message: string, callback: Function): any
+  }
+
+  export interface PushLocation {
+    (location: Location): boolean | void
+
+    (
+      location: Location,
+      pathCoder?: PathCoder,
+      queryKey?: string
+    ): void
+  }
+
+  export interface ReplaceLocation {
+    (location: Location): boolean | void
+    
+    (
+      location: Location,
+      pathCoder?: PathCoder,
+      queryKey?: string
+    ): void
+  }
+
+  export interface Go {
+    (n: number): void
+  }
+
+  export interface StringifyQuery {
+    (query?: object): string
+  }
+
+  export interface ParseQueryString {
+    (query?: string): object
+  }
+  /**
+   * History app constructure
+   */
+  export interface NativeHistory {
+    getCurrentLocation: GetCurrentLocation
+    listenBefore: ListenBefore
+    listen: Listen
+    listenBeforeUnload?: ListenBeforeUnload
+    transitionTo: TransitionTo
+    push: Push
+    replace: Replace
+    go: Go
+    goBack: GoBack
+    goForward: GoForward
+    createKey: CreateKey
+    createPath: CreatePath
+    createHref: CreateHref
+    createLocation: CreateLocation
+  }
+
+  export interface CreateHistory {
+    (options?: CH.HistoryOptions): CH.NativeHistory;
+  }
+
+  export interface ListenBefore {
+    (hook: Function): Function
+  }
+
+  export interface Listen {
+    (hook: Function): Function;
+  }
+
+  export interface ListenBeforeUnload {
+    (hook: Function): Function
+  }
+
+  export interface TransitionTo {
+    (nextLocation: Location): void;
+  }
+
+  export interface Push {
+    (input: string | Location): Function | void;
+  }
+
+  export interface Replace {
+    (input: Location | string): Function | void;
+  }
+
+  export interface GoBack {
+    (): void;
+  }
+
+  export interface GoForward {
+    (): void;
+  }
+
+  export interface CreateKey {
+    (): string;
+  }
+
+  export interface CreatePath {
+    (location?: Location | string): string;
+  }
+
+  export interface CreateHref {
+    (location: Location | string): string;
+  }
+  
+  export interface CreateLocation {
+    (
+      location: Location | string,
+      action?: Actions,
+      key?: string
+    ): Location;
+  }
+
+  /**
+   * Hash History @createHashHistory
+   *
+   * Hash path (encode & decode)
+   */
+
+  /**
+   * Function Type Defined
+   *
+   * History @createHistory
+   *
+   * The types @History need
+   */
+  export interface HistoryGetCurrentLocation {
+    (): Location;
+  }
+
+  export interface HistoryPushLocation {
+    (nextLocation?: Location): boolean;
+  }
+
+  export interface HistoryReplaceLocation {
+    (location: Location): boolean;
+  }
+}
+
+export interface Location {
+  basename?: string;
+  pathname?: string;
+  search?: string;
+  hash?: string;
+  state?: any;
+  key?: string;
+  action?: any;
+  query?: object;
+}

@@ -2,7 +2,8 @@
   "compilerOptions": {
     "moduleResolution": "node",
     "target": "es5",
-    "module":"es2015",
+    "module":"commonjs",
+    "diagnostics": true,
     "lib": ["es2015", "es2016", "es2017", "dom", "esnext"],
     "jsx": "react",
     "strict": false,
@@ -13,6 +14,7 @@
     "allowSyntheticDefaultImports": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
+    // "emitDeclarationOnly": true,
     "declarationDir": "dist/types",
     "outDir": "dist/lib",
     "typeRoots": [

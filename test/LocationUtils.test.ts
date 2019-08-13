@@ -1,8 +1,6 @@
 import createHistory from '../src/createHistory'
 import { createLocation } from '../src/LocationUtils'
-import { POP } from '../src/Actions'
-
-import { Location } from '../src/LocationUtils'
+import CH, { Location } from '../src'
 
 describe('a location', () => {
   it('knows its pathname', () => {
@@ -38,7 +36,7 @@ describe('a location', () => {
 
   it('uses pop navigation by default', () => {
     const location: Location = createLocation()
-    expect(location.action).toBe(POP)
+    expect(location.action).toBe(CH.Actions.POP)
   })
 
   it('has a null key by default', () => {
