@@ -1,6 +1,6 @@
 {
   "name": "create-history",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "description": "Manage browser history with JavaScript",
   "repository": {
     "type": "git",
@@ -41,7 +41,6 @@
     "prepare": "npm run test && npm run build"
   },
   "dependencies": {
-    "@types/querystringify": "^2.0.0",
     "invariant": "^2.2.4",
     "querystringify": "^2.1.1",
     "warning": "^3.0.0"
@@ -51,6 +50,7 @@
     "@types/jest": "^23.0.1",
     "@types/node": "^12.6.9",
     "@types/warning": "^3.0.0",
+    "@types/querystringify": "^2.0.0",
     "jest": "^23.0.1",
     "rimraf": "^2.6.3",
     "ts-jest": "^23.0.1",
