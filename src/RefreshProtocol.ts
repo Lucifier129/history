@@ -1,26 +1,25 @@
-import { createLocation } from './LocationUtils'
+import { createLocation, NativeLocation } from './LocationUtils'
 import { createPath } from './PathUtils'
 import {
   getUserConfirmation as _getUserConfirmation,
   go as _go
 } from './BrowserProtocol'
-import CH, { Location } from './index'
 
 export interface GetCurrentLocation {
-  (): Location
+  (): NativeLocation
 }
 
 export type PushLocation = CH.PushLocation
 
 export interface ReplaceLocation {
-  (location: Location): boolean
+  (location: NativeLocation): boolean
 }
 
 export let getUserConfirmation = _getUserConfirmation
 export let go = _go
 
 export const getCurrentLocation: GetCurrentLocation = () =>
-  createLocation(window.location)
+  createLocation(window.location, )
 
 export const pushLocation: PushLocation = (location) => {
   window.location.href = createPath(location)

@@ -21,7 +21,7 @@ export const loopAsync: LoopAsync = (turns, work, callback) => {
   let hasNext: boolean = false
   let doneArgs: any[]
 
-  const done = (...args) => {
+  const done = (...args: any[]) => {
     isDone = true
 
     if (isSync) {

@@ -1,55 +1,151 @@
 import { loopAsync } from './AsyncUtils'
-import { createPath } from './PathUtils'
+import { createPath, CreatePath } from './PathUtils'
 import runTransitionHook from './runTransitionHook'
 import {
+  NativeLocation,
   createLocation as _createLocation,
   statesAreEqual,
   locationsAreEqual,
 } from './LocationUtils'
 import Actions, { POP, PUSH, REPLACE } from './Actions'
-import CH, { Location } from './index'
+import { PathCoder } from './HashProtocol'
+import { Hook } from './runTransitionHook'
 
-export type GetCurrentLocation = CH.GetCurrentLocation
+/**
+ * HistoryOptions
+ */
+export interface GetCurrentLocation {
+  (): NativeLocation
+}
 
-export type ListenBefore = CH.ListenBefore
+export interface GetUserConfirmation {
+  (message: string, callback: Function): any
+}
 
-export type Listen = CH.Listen
+export interface PushLocation {
+  (location: NativeLocation): boolean
+}
 
-export type TransitionTo = CH.TransitionTo
+export interface ReplaceLocation {
+  (location: NativeLocation): boolean
+}
 
-export type Push = CH.Push
+export interface Go {
+  (n: number): void
+}
 
-export type Replace = CH.Replace
+export interface StringifyQuery {
+  (query?: object): string
+}
 
-export type Go = CH.Go
+export interface ParseQueryString {
+  (query?: string): object
+}
 
-export type GoBack = CH.GoBack
+export interface HistoryOptions {
+  getCurrentLocation: GetCurrentLocation
+  getUserConfirmation?: GetUserConfirmation
+  pushLocation: PushLocation
+  replaceLocation: ReplaceLocation
+  go: Go
+  keyLength: number
+  forceRefresh: boolean
+  queryKey: string
+  hashType: string
+  basename: string
+  stringifyQuery: StringifyQuery
+  parseQueryString: ParseQueryString
+}
 
-export type GoForward = CH.GoForward
+/**
+ * NativeHistory
+ */
+export interface Unlisten {
+  (): void
+}
 
-export type CreateKey = CH.CreateKey
+export interface ListenBefore {
+  (hook: Hook): Unlisten
+}
 
-export type CreatePath = CH.CreatePath
+export interface Listen {
+  (hook: Hook): Unlisten;
+}
 
-export type CreateHref = CH.CreateHref
+export interface ListenBeforeUnload {
+  (hook: Hook): Unlisten
+}
 
-export type CreateLocation = CH.CreateLocation
+export interface TransitionTo {
+  (nextLocation: NativeLocation): void;
+}
 
-export type CreateHistory = CH.CreateHistory
+export interface Push {
+  (input: string | NativeLocation): Function | void;
+}
+
+export interface Replace {
+  (input: NativeLocation | string): Function | void;
+}
+
+export interface GoBack {
+  (): void;
+}
+
+export interface GoForward {
+  (): void;
+}
+
+export interface CreateKey {
+  (): string;
+}
+
+export interface CreateHref {
+  (location: NativeLocation | string): string;
+}
+
+export interface CreateLocation {
+  (
+    location: NativeLocation | string,
+    action?: Actions,
+    key?: string
+  ): NativeLocation;
+}
+
+export interface NativeHistory {
+  getCurrentLocation: GetCurrentLocation
+  listenBefore: ListenBefore
+  listen: Listen
+  listenBeforeUnload?: ListenBeforeUnload
+  transitionTo: TransitionTo
+  push: Push
+  replace: Replace
+  go: Go
+  goBack: GoBack
+  goForward: GoForward
+  createKey: CreateKey
+  createPath: CreatePath
+  createHref: CreateHref
+  createLocation: CreateLocation
+}
 
 export interface GetCurrentIndex {
   (): number;
 }
 
 export interface UpdateLocation {
-  (location: Location): void;
+  (location: NativeLocation): void;
 }
 
 export interface ConfirmTransitionTo {
-  (location: Location, callback: (ok: any) => void): void;
+  (location: NativeLocation, callback: (ok: any) => void): void;
 }
 
-const createHistory: CreateHistory = (options = {}) => {
+export interface CreateHistory {
+  (options: HistoryOptions): NativeHistory;
+}
+
+const createHistory: CreateHistory = (options) => {
   const {
     getCurrentLocation,
     getUserConfirmation,
@@ -59,18 +155,18 @@ const createHistory: CreateHistory = (options = {}) => {
     keyLength
   } = options
 
-  let currentLocation: Location
-  let pendingLocation: Location
-  let beforeHooks: Function[] = []
-  let hooks: Function[] = []
+  let currentLocation: NativeLocation
+  let pendingLocation: NativeLocation | null
+  let beforeHooks: Hook[] = []
+  let hooks: Hook[] = []
   let allKeys: string[] = []
 
   const getCurrentIndex: GetCurrentIndex = () => {
     if (pendingLocation && pendingLocation.action === Actions.POP)
-      return allKeys.indexOf(pendingLocation.key)
+      return allKeys.indexOf(pendingLocation.key || '')
 
     if (currentLocation)
-      return allKeys.indexOf(currentLocation.key)
+      return allKeys.indexOf(currentLocation.key || '')
 
     return -1
   }
@@ -112,7 +208,7 @@ const createHistory: CreateHistory = (options = {}) => {
       },
       (message) => {
         if (getUserConfirmation && typeof message === 'string') {
-          getUserConfirmation(message, (ok) => callback(ok !== false))
+          getUserConfirmation(message, (ok: boolean) => callback(ok !== false))
         } else {
           callback(message !== false)
         }
@@ -183,8 +279,8 @@ const createHistory: CreateHistory = (options = {}) => {
     createPath(location)
 
   const createLocation: CreateLocation = 
-    (location: Location, action: Actions, key: string = createKey()) =>
-    _createLocation(location, action, key)
+    (location: NativeLocation | string, action?: Actions, key: string = createKey()) =>
+    _createLocation(location, key, action)
 
   return {
     getCurrentLocation,

@@ -37,22 +37,6 @@ namespace CH {
    * Which information need when we create a new history app.
    */
 
-  export interface HistoryOptions {
-    getCurrentLocation?: GetCurrentLocation
-    getUserConfirmation?: GetUserConfirmation
-    pushLocation?: PushLocation
-    replaceLocation?: ReplaceLocation
-    go?: Go
-    keyLength?: number
-    forceRefresh?: boolean
-    queryKey?: string
-    hashType?: string
-    basename?: string
-    stringifyQuery?: StringifyQuery
-    parseQueryString?: ParseQueryString
-    entries?: Location[]
-    current?: number
-  }
 
   export interface GetCurrentLocation {
     (): Location
@@ -98,22 +82,7 @@ namespace CH {
   /**
    * History app constructure
    */
-  export interface NativeHistory {
-    getCurrentLocation: GetCurrentLocation
-    listenBefore: ListenBefore
-    listen: Listen
-    listenBeforeUnload?: ListenBeforeUnload
-    transitionTo: TransitionTo
-    push: Push
-    replace: Replace
-    go: Go
-    goBack: GoBack
-    goForward: GoForward
-    createKey: CreateKey
-    createPath: CreatePath
-    createHref: CreateHref
-    createLocation: CreateLocation
-  }
+  
 
   export interface CreateHistory {
     (options?: CH.HistoryOptions): CH.NativeHistory;
@@ -197,13 +166,3 @@ namespace CH {
   }
 }
 
-export interface Location {
-  basename?: string;
-  pathname?: string;
-  search?: string;
-  hash?: string;
-  state?: any;
-  key?: string;
-  action?: any;
-  query?: object;
-}

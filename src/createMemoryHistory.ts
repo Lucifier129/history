@@ -2,17 +2,16 @@ import warning from 'warning'
 import invariant from 'invariant'
 import { createLocation } from './LocationUtils'
 import { createPath, parsePath } from './PathUtils'
-import createHistory from './createHistory'
+import createHistory, { HistoryOptions } from './createHistory'
 import { POP } from './Actions'
-import CH, { Location } from './index'
 
 export interface Memo {
   [propName: string]: any
 }
 
-export interface MemoryOptions extends CH.HistoryOptions {
+export interface MemoryOptions extends HistoryOptions {
   entries?: any
-  current?: number
+  current: number
 }
 
 export interface CreateStateStorage {

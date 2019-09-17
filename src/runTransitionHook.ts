@@ -1,11 +1,19 @@
 import warning from 'warning'
-import { Location } from './index'
+import { NativeLocation } from './LocationUtils'
+
+export interface Callback {
+  (result: any): void
+}
+
+export interface Hook {
+  (location: NativeLocation, callback?: Callback): any
+}
 
 export interface RunTransitionHook {
   (
-    hook: Function, 
-    location: Location, 
-    callback: Function
+    hook: Hook, 
+    location: NativeLocation, 
+    callback?: Callback
   ): void
 }
 
@@ -15,7 +23,7 @@ const runTransitionHook: RunTransitionHook = (hook, location, callback) => {
   if (hook.length < 2) {
     // Assume the hook runs synchronously and automatically
     // call the callback with the return value.
-    callback(result)
+    callback && callback(result)
   } else {
     warning(
       result === undefined,

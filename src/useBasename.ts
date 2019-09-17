@@ -1,53 +1,37 @@
 import runTransitionHook from './runTransitionHook'
 import { parsePath } from './PathUtils'
-import CH, { Location } from './index'
+import { NativeLocation } from './LocationUtils'
+import {
+  CreateHistory,
+  HistoryOptions,
+  NativeHistory,
+  ListenBefore,
+  Listen,
+  Push,
+  Replace,
+  CreatePath,
+  CreateHref,
+  CreateLocation
+} from './createHistory'
 
 export interface UseBasename {
-  (createHistory: CH.CreateHistory): CH.CreateHistory
+  (createHistory: CreateHistory): CreateHistory
 }
 
 export interface AddBasename {
-  (location: Location): Location
+  (location: NativeLocation): NativeLocation
 }
 
 export interface PrePendBasename {
-  (location: Location): Location
+  (location: NativeLocation | string): NativeLocation | string
 }
 
 export interface GetCurrentLocation {
-  (): Location
+  (): NativeLocation
 }
 
-export interface ListenBefore {
-  (hook: Function): any
-}
-
-export interface Listen {
-  (listener: Function): any
-}
-
-export interface Push {
-  (location: Location): any
-}
-
-export interface Replace {
-  (location: Location): any
-}
-
-export interface CreatePath {
-  (location: Location): any
-}
-
-export interface CreateHref {
-  (location: Location): any
-}
-
-export interface CreateLocation {
-  (location: Location, ...args: any[]): Location
-}
-
-const useBasename: UseBasename = (createHistory) => (options: CH.HistoryOptions = {}) => {
-    const history: CH.NativeHistory = createHistory(options)
+const useBasename: UseBasename = (createHistory) => (options: HistoryOptions) => {
+    const history: NativeHistory = createHistory(options)
     const { basename } = options
 
     const addBasename: AddBasename = (location) => {
@@ -55,7 +39,7 @@ const useBasename: UseBasename = (createHistory) => (options: CH.HistoryOptions 
         return location
 
       if (basename && location.basename == null) {
-        if (location.pathname.indexOf(basename) === 0) {
+        if (location.pathname && location.pathname.indexOf(basename) === 0) {
           location.pathname = location.pathname.substring(basename.length)
           location.basename = basename
 
@@ -74,7 +58,7 @@ const useBasename: UseBasename = (createHistory) => (options: CH.HistoryOptions 
         return location
 
       const object = typeof location === 'string' ? parsePath(location) : location
-      const pname = object.pathname
+      const pname = object.pathname || ''
       const normalizedBasename = basename.slice(-1) === '/' ? basename : `${basename}/`
       const normalizedPathname = pname.charAt(0) === '/' ? pname.slice(1) : pname
       const pathname = normalizedBasename + normalizedPathname

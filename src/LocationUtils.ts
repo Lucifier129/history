@@ -1,40 +1,48 @@
 import invariant from 'invariant'
 import { parsePath } from './PathUtils'
 import Actions, { POP } from './Actions'
-import { Location } from './index'
+
+export interface NativeLocation {
+  basename?: string
+  pathname?: string
+  search?: string
+  hash?: string
+  state?: any
+  key: string
+  action?: Actions
+  query?: object
+}
 
 export interface CreateQuery {
-  (props?: object): object;
+  (props?: object): object
 }
 
 export interface CreateLocation {
   (
-    location?: Location | string,
-    action?: Actions,
-    key?: string
-  ): Location
+    location: NativeLocation | string,
+    key: string,
+    action?: Actions
+  ): NativeLocation
 }
 
 export interface IsDate {
-  (object: object): boolean;
+  (object: object): boolean
 }
 
 export interface StatesAreEqual {
-  (a: any, b: any): boolean;
+  (a: any, b: any): boolean
 }
 
 export interface LocationsAreEqual {
-  (a: Location, b: Location): boolean;
+  (a: NativeLocation, b: NativeLocation): boolean
 }
 
 export const createQuery: CreateQuery = (props) =>
   Object.assign(Object.create(null), props)
 
-export const createLocation: CreateLocation = (input = '/', action = POP, key = null) => {
-  const object: Location = typeof input === 'string' ? parsePath(input) : input
+export const createLocation: CreateLocation = (input = '/', key, action = POP) => {
+  const object: NativeLocation = typeof input === 'string' ? parsePath(input) : input
 
-  // console.log(input)
-  // console.log(object)
 
   const pathname: string = object.pathname || '/'
   const search: string = object.search || ''
