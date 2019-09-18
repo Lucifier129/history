@@ -1,7 +1,7 @@
 import CH from '../src/createHistory'
 
 export interface Step {
-  (location?: Location): void
+  (location?: NativeLocation): void
 }
 
 export interface Done {

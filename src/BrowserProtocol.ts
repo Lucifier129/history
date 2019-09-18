@@ -1,40 +1,47 @@
-import { createLocation } from './LocationUtils'
+import { createLocation, NativeLocation } from './LocationUtils'
 import { addEventListener, removeEventListener } from './DOMUtils'
 import { saveState, readState } from './DOMStateStorage'
 import { createPath } from './PathUtils'
-import CH, { Location } from './index'
+import { GetUserConfirmation, Go } from './createHistory'
 
 export interface CreateBrowserLocation {
-  (historyState: any): Location;
+  (historyState: any): NativeLocation
 }
 
 export interface GetBrowserCurrentLocation {
-  (): Location;
+  (): NativeLocation
 }
-export type GetUserConfirmation = CH.GetUserConfirmation
+
 export interface IsExtraneousPopstateEvent {
-  (event: any): boolean;
+  (event: any): boolean
 }
+
 export interface StartListener {
-  (listener: Function): () => void;
+  (listener: Function): () => void
 }
 
 export interface UpdateState {
-  (locationKey: Location, location: Location | string): void;
+  (state: object, path: string): void
 }
 
 export interface UpdateLocation {
   (
-    location: Location,
-    updateState?: UpdateState
-  ): void;
+    location: NativeLocation,
+    updateState: UpdateState
+  ): void
 }
 
-export type PushLocation = CH.PushLocation
+export interface PushLocation {
+  (location: NativeLocation): void
+}
 
-export type ReplaceLocation = CH.ReplaceLocation
+export interface ReplaceLocation {
+  (location: NativeLocation): void
+}
 
-export type Go = CH.Go
+export interface PopEventListener {
+  (event: PopStateEvent): void
+}
 
 const PopStateEvent = 'popstate'
 
@@ -46,9 +53,8 @@ const _createLocation: CreateBrowserLocation = (historyState) => {
     search: window.location.search,
     hash: window.location.hash,
     state: (key ? readState(key) : undefined)
-  }, undefined, key)
+  }, '', key)
 }
-
 
 export const getCurrentLocation: GetBrowserCurrentLocation = () => {
   let historyState: any
@@ -73,22 +79,23 @@ const isExtraneousPopstateEvent: IsExtraneousPopstateEvent
 
 
 export const startListener: StartListener = (listener) => {
-  const handlePopState = (event) => {
+  const handlePopState: PopEventListener = (event: PopStateEvent) => {
     if (isExtraneousPopstateEvent(event)) return // Ignore extraneous popstate events in WebKit
     listener(_createLocation(event.state))
   }
 
-  addEventListener(window, PopStateEvent, handlePopState)
+  addEventListener(window, PopStateEvent, handlePopState as EventListener)
 
   return () =>
-    removeEventListener(window, PopStateEvent, handlePopState)
+    removeEventListener(window, PopStateEvent, handlePopState as EventListener)
 }
 
 const updateLocation: UpdateLocation = (location, updateState) => {
   const { state, key } = location
 
-  if (state !== undefined)
+  if (state !== undefined) {
     saveState(key, state)
+  }
 
   updateState({ key }, createPath(location))
 }
@@ -97,13 +104,13 @@ export const pushLocation: PushLocation = (location) =>
   updateLocation(
     location, 
     (state: object, path: string) =>
-      window.history.pushState(state, null, path)
+      window.history.pushState(state, '', path)
   )
 
 
 export const replaceLocation: ReplaceLocation = (location) =>
   updateLocation(location, (state: object, path: string) =>
-    window.history.replaceState(state, null, path)
+    window.history.replaceState(state, '', path)
   )
 
 

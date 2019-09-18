@@ -1,5 +1,5 @@
 import warning from 'warning'
-import { createLocation } from './LocationUtils'
+import { createLocation, NativeLocation, DraftLocation } from './LocationUtils'
 import { addEventListener, removeEventListener } from './DOMUtils'
 import { saveState, readState } from './DOMStateStorage'
 import {
@@ -13,7 +13,6 @@ import {
   getUserConfirmation as _getUserConfirmation,
   go as _go
 } from './BrowserProtocol'
-import CH, { Location } from './index'
 
 export interface PathCoder {
   encodePath: (path: string) => string;
@@ -38,18 +37,20 @@ export interface ReplacePath {
   (path: string): void;
 }
 
-export type GetCurrentLocation = CH.GetCurrentLocation
+export interface PopEventListener {
+  (event: PopStateEvent): void
+}
+
+export interface StopListener {
+  (): void
+}
 
 export interface StartListener {
   (
     listener: Function,
     pathCoder: PathCoder,
     queryKey: string
-  ): HandleChange;
-}
-
-export interface HandleChange {
-  (): void;
+  ): StopListener;
 }
 
 export interface Update {
@@ -58,15 +59,24 @@ export interface Update {
 
 export interface UpdateLocation {
   (
-    location: Location,
-    pathCoder?: PathCoder,
-    queryKey?: string,
-    updateHash?: Update
+    location: NativeLocation,
+    pathCoder: PathCoder,
+    queryKey: string,
+    updateHash: Update
   ): void;
 }
-export type PushLocation = CH.PushLocation
 
-export type ReplaceLocation = CH.ReplaceLocation
+export interface GetCurrentLocation {
+  (pathCoder: PathCoder, queryKey: string): NativeLocation
+}
+
+export interface PushLocation {
+  (location: NativeLocation, pathCoder: PathCoder, queryKey: string): void
+}
+
+export interface ReplaceLocation {
+  (location: NativeLocation, pathCoder: PathCoder, queryKey: string): void
+}
 
 export let getUserConfirmation = _getUserConfirmation
 export let go = _go
@@ -92,7 +102,7 @@ const replaceHashPath: ReplacePath = (path) => {
   )
 }
 
-export const getCurrentLocation: GetCurrentLocation = (pathCoder?: PathCoder, queryKey?: string) => {
+export const getCurrentLocation: GetCurrentLocation = (pathCoder: PathCoder, queryKey: string) => {
   let path: string = pathCoder.decodePath(getHashPath())
   const key: string = getQueryStringValueFromPath(path, queryKey)
 
@@ -102,16 +112,16 @@ export const getCurrentLocation: GetCurrentLocation = (pathCoder?: PathCoder, qu
     state = readState(key)
   }
 
-  const init: Location = parsePath(path)
-  init.state = state
+  const init = parsePath(path)
+  let newInit: DraftLocation = Object.assign(init, { state })
 
-  return createLocation(init, undefined, key)
+  return createLocation(newInit, key)
 }
 
-let prevLocation: Location
+let prevLocation: NativeLocation
 
 export const startListener: StartListener = (listener, pathCoder, queryKey) => {
-  const handleHashChange: HandleChange = () => {
+  const handleHashChange: PopEventListener = () => {
     const path: string = getHashPath()
     const encodedPath: string = pathCoder.encodePath(path)
 
@@ -119,7 +129,7 @@ export const startListener: StartListener = (listener, pathCoder, queryKey) => {
       // Always be sure we have a properly-encoded hash.
       replaceHashPath(encodedPath)
     } else {
-      const currentLocation: Location = getCurrentLocation(pathCoder, queryKey)
+      const currentLocation: NativeLocation = getCurrentLocation(pathCoder, queryKey)
 
       // Ignore extraneous hashchange events
       if (prevLocation) {
@@ -153,10 +163,10 @@ export const startListener: StartListener = (listener, pathCoder, queryKey) => {
   if (path !== encodedPath)
     replaceHashPath(encodedPath)
 
-  addEventListener(window, HashChangeEvent, handleHashChange)
+  addEventListener(window, HashChangeEvent, handleHashChange as EventListener)
 
   return () =>
-    removeEventListener(window, HashChangeEvent, handleHashChange)
+    removeEventListener(window, HashChangeEvent, handleHashChange as EventListener)
 }
 
 const updateLocation: UpdateLocation = (location, pathCoder, queryKey, updateHash) => {
@@ -174,7 +184,7 @@ const updateLocation: UpdateLocation = (location, pathCoder, queryKey, updateHas
   updateHash(path)
 }
 
-export const pushLocation: PushLocation = (location: Location, pathCoder?: PathCoder, queryKey?: string) =>
+export const pushLocation: PushLocation = (location: NativeLocation, pathCoder: PathCoder, queryKey: string) =>
   updateLocation(location, pathCoder, queryKey, (path) => {
     if (getHashPath() !== path) {
       pushHashPath(path)
@@ -183,7 +193,7 @@ export const pushLocation: PushLocation = (location: Location, pathCoder?: PathC
     }
   })
 
-export const replaceLocation: ReplaceLocation = (location: Location, pathCoder?: PathCoder, queryKey?: string) =>
+export const replaceLocation: ReplaceLocation = (location: NativeLocation, pathCoder: PathCoder, queryKey: string) =>
   updateLocation(location, pathCoder, queryKey, (path) => {
     if (getHashPath() !== path)
       replaceHashPath(path)

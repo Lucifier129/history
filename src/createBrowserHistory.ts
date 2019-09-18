@@ -1,10 +1,17 @@
-import invariant from 'invariant'
-import { canUseDOM } from './ExecutionEnvironment'
-import * as BrowserProtocol from './BrowserProtocol'
-import * as RefreshProtocol from './RefreshProtocol'
-import { supportsHistory } from './DOMUtils'
-import createHistory from './createHistory'
-import CH from './index'
+import invariant from "invariant"
+import { canUseDOM } from "./ExecutionEnvironment"
+import * as BrowserProtocol from "./BrowserProtocol"
+import * as RefreshProtocol from "./RefreshProtocol"
+import { supportsHistory } from "./DOMUtils"
+import createHistory, {
+  CreateHistory,
+  NativeHistory,
+  Listen,
+  ListenBefore,
+  StartListener,
+  PushLocation,
+  ReplaceLocation
+} from "./createHistory"
 
 /**
  * Creates and returns a history object that uses HTML5's history API
@@ -17,25 +24,13 @@ import CH from './index'
  * behavior using { forceRefresh: true } in options.
  */
 
-export type CreateHistory = CH.CreateHistory
-
-export interface StartListenner {
-  (listener: Function, before: boolean): Function
-}
-
-export type ListenBefore = CH.ListenBefore
-
-export type Listen = CH.Listen
-
-const createBrowserHistory: CreateHistory = (options = {}) => {
-  invariant(
-    canUseDOM,
-    'Browser history needs a DOM'
-  )
+export const createBrowserHistory: CreateHistory = options => {
+  invariant(canUseDOM, "Browser history needs a DOM")
 
   const useRefresh: boolean = options.forceRefresh || !supportsHistory()
-  const Protocol: typeof RefreshProtocol | typeof BrowserProtocol = 
-    useRefresh ? RefreshProtocol : BrowserProtocol
+  const Protocol: typeof RefreshProtocol | typeof BrowserProtocol = useRefresh
+    ? RefreshProtocol
+    : BrowserProtocol
 
   const {
     getUserConfirmation,
@@ -45,23 +40,21 @@ const createBrowserHistory: CreateHistory = (options = {}) => {
     go
   } = Protocol
 
-  const history: CH.NativeHistory = createHistory({
+  const history: NativeHistory = createHistory({
     getUserConfirmation, // User may override in options
     ...options,
     getCurrentLocation,
-    pushLocation,
-    replaceLocation,
+    pushLocation: pushLocation as PushLocation,
+    replaceLocation: replaceLocation as ReplaceLocation,
     go
   })
 
   let listenerCount: number = 0
   let stopListener: Function
 
-  const startListener: StartListenner = (listener, before) => {
+  const startListener: StartListener = (listener, before) => {
     if (++listenerCount === 1)
-      stopListener = BrowserProtocol.startListener(
-        history.transitionTo
-      )
+      stopListener = BrowserProtocol.startListener(history.transitionTo)
 
     const unlisten = before
       ? history.listenBefore(listener)
@@ -70,16 +63,13 @@ const createBrowserHistory: CreateHistory = (options = {}) => {
     return () => {
       unlisten()
 
-      if (--listenerCount === 0)
-        stopListener()
+      if (--listenerCount === 0) stopListener()
     }
   }
 
-  const listenBefore: ListenBefore = (listener) =>
-    startListener(listener, true)
+  const listenBefore: ListenBefore = listener => startListener(listener, true)
 
-  const listen: Listen = (listener) =>
-    startListener(listener, false)
+  const listen: Listen = listener => startListener(listener, false)
 
   return {
     ...history,

@@ -1,5 +1,5 @@
 import warning from 'warning'
-import { NativeLocation } from './LocationUtils'
+import { BaseLocation, DraftLocation } from './LocationUtils'
 
 export interface AddQueryStringValueToPath {
   (path: string, key: string, value: string): string
@@ -10,7 +10,7 @@ export interface StripQueryStringValueFromPath {
 }
 
 export interface GetQueryStringValueFromPath {
-  (path: string, key: string): string | null
+  (path: string, key: string): string
 }
 
 export interface ExtractPath {
@@ -18,15 +18,15 @@ export interface ExtractPath {
 }
 
 export interface ParsePath {
-  (path: string): Partial<NativeLocation>
+  (path: string): BaseLocation
 }
 
 export interface CreatePath {
-  (location: Partial<NativeLocation> | string): string
+  (location: DraftLocation | string): string
 }
 
 export const addQueryStringValueToPath: AddQueryStringValueToPath = (path, key, value) => {
-  const { pathname, search, hash }: Partial<NativeLocation> = parsePath(path)
+  const { pathname, search, hash } = parsePath(path)
 
   return createPath({
     pathname,
@@ -36,7 +36,7 @@ export const addQueryStringValueToPath: AddQueryStringValueToPath = (path, key, 
 }
 
 export const stripQueryStringValueFromPath: StripQueryStringValueFromPath = (path, key) => {
-  const { pathname, search, hash }: Partial<NativeLocation> = parsePath(path)
+  const { pathname, search, hash } = parsePath(path)
 
   return createPath({
     pathname,
@@ -54,7 +54,7 @@ export const getQueryStringValueFromPath: GetQueryStringValueFromPath
 = (path, key) => {
   const { search } = parsePath(path)
   const match: RegExpMatchArray | null = search ? search.match(new RegExp(`[?&]${key}=([a-zA-Z0-9]+)`)) : null
-  return match && match[1]
+  return match ? match[1] : ''
 }
 
 const extractPath: ExtractPath = (path) => {

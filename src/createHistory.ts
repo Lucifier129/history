@@ -6,10 +6,12 @@ import {
   createLocation as _createLocation,
   statesAreEqual,
   locationsAreEqual,
+  DraftLocation,
+  BaseLocation,
 } from './LocationUtils'
 import Actions, { POP, PUSH, REPLACE } from './Actions'
-import { PathCoder } from './HashProtocol'
 import { Hook } from './runTransitionHook'
+import { PathCoders } from './HashProtocol'
 
 /**
  * HistoryOptions
@@ -35,11 +37,11 @@ export interface Go {
 }
 
 export interface StringifyQuery {
-  (query?: object): string
+  (query: object): string
 }
 
 export interface ParseQueryString {
-  (query?: string): object
+  (query: string): object
 }
 
 export interface HistoryOptions {
@@ -51,7 +53,7 @@ export interface HistoryOptions {
   keyLength: number
   forceRefresh: boolean
   queryKey: string
-  hashType: string
+  hashType: keyof PathCoders
   basename: string
   stringifyQuery: StringifyQuery
   parseQueryString: ParseQueryString
@@ -81,11 +83,11 @@ export interface TransitionTo {
 }
 
 export interface Push {
-  (input: string | NativeLocation): Function | void;
+  (input: DraftLocation | string): Function | void;
 }
 
 export interface Replace {
-  (input: NativeLocation | string): Function | void;
+  (input: DraftLocation | string): Function | void;
 }
 
 export interface GoBack {
@@ -101,12 +103,12 @@ export interface CreateKey {
 }
 
 export interface CreateHref {
-  (location: NativeLocation | string): string;
+  (location: BaseLocation | string): string;
 }
 
 export interface CreateLocation {
   (
-    location: NativeLocation | string,
+    location: DraftLocation | string,
     action?: Actions,
     key?: string
   ): NativeLocation;
@@ -143,6 +145,15 @@ export interface ConfirmTransitionTo {
 
 export interface CreateHistory {
   (options: HistoryOptions): NativeHistory;
+}
+
+// Share
+export interface StopListener {
+  (): void
+}
+
+export interface StartListener {
+  (listener: Hook, before: boolean): StopListener
 }
 
 const createHistory: CreateHistory = (options) => {
@@ -220,8 +231,9 @@ const createHistory: CreateHistory = (options) => {
     if (
       (currentLocation && locationsAreEqual(currentLocation, nextLocation)) ||
       (pendingLocation && locationsAreEqual(pendingLocation, nextLocation))
-    )
+    ) {
       return // Nothing to do
+    }
 
     pendingLocation = nextLocation
 
@@ -244,18 +256,21 @@ const createHistory: CreateHistory = (options) => {
         if (nextLocation.action === POP) {
           updateLocation(nextLocation)
         } else if (nextLocation.action === PUSH) {
-          if (pushLocation(nextLocation) !== false)
+          if (pushLocation(nextLocation) !== false) {
             updateLocation(nextLocation)
+          }
         } else if (nextLocation.action === REPLACE) {
-          if (replaceLocation(nextLocation) !== false)
+          if (replaceLocation(nextLocation) !== false) {
             updateLocation(nextLocation)
+          }
         }
       } else if (currentLocation && nextLocation.action === POP) {
         const prevIndex = allKeys.indexOf(currentLocation.key)
         const nextIndex = allKeys.indexOf(nextLocation.key)
 
-        if (prevIndex !== -1 && nextIndex !== -1)
+        if (prevIndex !== -1 && nextIndex !== -1) {
           go(prevIndex - nextIndex) // Restore the URL
+        }
       }
     })
   }
@@ -278,8 +293,7 @@ const createHistory: CreateHistory = (options) => {
   const createHref: CreateHref = (location) =>
     createPath(location)
 
-  const createLocation: CreateLocation = 
-    (location: NativeLocation | string, action?: Actions, key: string = createKey()) =>
+  const createLocation: CreateLocation = (location, action, key = createKey()) =>
     _createLocation(location, key, action)
 
   return {

@@ -2,7 +2,7 @@ export interface AddEventListener {
   (
     node: Element | Window,
     event: string,
-    listener: EventListenerOrEventListenerObject
+    listener: EventListener
   ): void;
 }
 
@@ -10,7 +10,7 @@ export interface RemoveEventListener {
   (
     node: Element | Window,
     event: string,
-    listener: EventListenerOrEventListenerObject
+    listener: EventListener
   ): void;
 }
 

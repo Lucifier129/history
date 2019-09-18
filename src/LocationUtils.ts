@@ -2,16 +2,22 @@ import invariant from 'invariant'
 import { parsePath } from './PathUtils'
 import Actions, { POP } from './Actions'
 
-export interface NativeLocation {
+export interface BaseLocation {
   basename?: string
-  pathname?: string
-  search?: string
-  hash?: string
-  state?: any
+  pathname: string
+  search: string
+  hash: string
+}
+
+export interface ExceptLocation  {
+  state: object | null
   key: string
-  action?: Actions
+  action: Actions
   query?: object
 }
+
+export type NativeLocation = BaseLocation & ExceptLocation
+export type DraftLocation = BaseLocation & Partial<ExceptLocation>
 
 export interface CreateQuery {
   (props?: object): object
@@ -19,7 +25,7 @@ export interface CreateQuery {
 
 export interface CreateLocation {
   (
-    location: NativeLocation | string,
+    location: DraftLocation | string,
     key: string,
     action?: Actions
   ): NativeLocation
@@ -41,13 +47,13 @@ export const createQuery: CreateQuery = (props) =>
   Object.assign(Object.create(null), props)
 
 export const createLocation: CreateLocation = (input = '/', key, action = POP) => {
-  const object: NativeLocation = typeof input === 'string' ? parsePath(input) : input
+  const object = typeof input === 'string' ? parsePath(input) : input
 
 
   const pathname: string = object.pathname || '/'
   const search: string = object.search || ''
   const hash: string = object.hash || ''
-  const state: string = object.state
+  const state: object | null = null
 
   return {
     pathname,

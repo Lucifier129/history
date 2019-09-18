@@ -1,6 +1,6 @@
 import runTransitionHook from './runTransitionHook'
-import { parsePath } from './PathUtils'
-import { NativeLocation } from './LocationUtils'
+import { parsePath, CreatePath } from './PathUtils'
+import { NativeLocation, BaseLocation, DraftLocation } from './LocationUtils'
 import {
   CreateHistory,
   HistoryOptions,
@@ -9,7 +9,6 @@ import {
   Listen,
   Push,
   Replace,
-  CreatePath,
   CreateHref,
   CreateLocation
 } from './createHistory'
@@ -23,7 +22,7 @@ export interface AddBasename {
 }
 
 export interface PrePendBasename {
-  (location: NativeLocation | string): NativeLocation | string
+  (location: DraftLocation | string): BaseLocation | string
 }
 
 export interface GetCurrentLocation {

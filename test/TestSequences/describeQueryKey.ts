@@ -1,6 +1,6 @@
 import execSteps from './execSteps'
 import { Step, Done, Describe } from '../type'
-import CH, { Location } from '../../src'
+import CH, { NativeLocation } from '../../src'
 
 const describeQueryKey: Describe = (createHistory) => {
   describe('when queryKey == "a"', () => {
@@ -11,7 +11,7 @@ const describeQueryKey: Describe = (createHistory) => {
 
     it('remembers state across transitions', (done: Done) => {
       const steps: Step[] = [
-        (location: Location) => {
+        (location: NativeLocation) => {
           expect(location.pathname).toEqual('/')
           expect(location.search).toEqual('')
           expect(location.state).toBeUndefined()
@@ -24,7 +24,7 @@ const describeQueryKey: Describe = (createHistory) => {
             state: { the: 'state' }
           })
         },
-        (location: Location) => {
+        (location: NativeLocation) => {
           expect(location.pathname).toEqual('/home')
           expect(location.search).toEqual('?the=query')
           expect(location.state).toEqual({ the: 'state' })
@@ -33,7 +33,7 @@ const describeQueryKey: Describe = (createHistory) => {
 
           history.goBack()
         },
-        (location: Location) => {
+        (location: NativeLocation) => {
           expect(location.pathname).toEqual('/')
           expect(location.search).toEqual('')
           expect(location.state).toBeUndefined()
@@ -42,7 +42,7 @@ const describeQueryKey: Describe = (createHistory) => {
 
           history.goForward()
         },
-        (location: Location) => {
+        (location: NativeLocation) => {
           expect(location.pathname).toEqual('/home')
           expect(location.search).toEqual('?the=query')
           expect(location.state).toEqual({ the: 'state' }) // State is present

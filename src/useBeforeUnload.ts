@@ -1,34 +1,45 @@
 import invariant from 'invariant'
 import { addEventListener, removeEventListener } from './DOMUtils'
 import { canUseDOM } from './ExecutionEnvironment'
-import CH from './index'
+import { CreateHistory, NativeHistory, ListenBeforeUnload } from './createHistory'
+
+
+export interface GetPromptMessage {
+  (): any
+}
+
+export interface StopListener {
+  (): void
+}
 
 export interface StartListener {
-  (getPromptMessage: () => boolean): Function
+  (getPromptMessage: GetPromptMessage): StopListener
 }
-export interface HandleBeforeUnload {
-  (event: Event): boolean
-}
+
 export interface UseBeforeUnload {
-  (createHistory: CH.CreateHistory): CH.CreateHistory
+  (createHistory: CreateHistory): CreateHistory
+}
+
+export interface BeforeUnloadEventListener {
+  (event: BeforeUnloadEvent): void
 }
 
 const startListener: StartListener = (getPromptMessage) => {
-  const handleBeforeUnload: HandleBeforeUnload = (event) => {
-    const message: boolean = getPromptMessage()
+  const handleBeforeUnload: BeforeUnloadEventListener = (event) => {
+    const message = getPromptMessage()
 
     if (typeof message === 'string') {
-      (event || window.event).returnValue = message
+      event.returnValue = message
       return message
     }
 
     return undefined
   }
 
-  addEventListener(window, 'beforeunload', handleBeforeUnload)
+  addEventListener(window, 'beforeunload', handleBeforeUnload as EventListener)
 
   return () =>
-    removeEventListener(window, 'beforeunload', handleBeforeUnload)
+    removeEventListener(window, 'beforeunload', handleBeforeUnload as EventListener)
 }
 
 /**
@@ -42,23 +53,24 @@ const useBeforeUnload: UseBeforeUnload = (createHistory) => {
     'useBeforeUnload only works in DOM environments'
   )
 
-  const ch = (options) => {
-    const history: CH.NativeHistory = createHistory(options)
+  const ch: CreateHistory = (options) => {
+    const history: NativeHistory = createHistory(options)
 
     let hooks: Function[] = []
-    let stopListener: Function
+    let stopListener: Function | null
 
     const getPromptMessage = () => {
       let message
       for (let i = 0, len = hooks.length; message == null && i < len; ++i)
-        message = hooks[i].call(this)
+        message = hooks[i]()
 
       return message
     }
 
-    const listenBeforeUnload = (listener) => {
-      if (hooks.push(listener) === 1)
+    const listenBeforeUnload: ListenBeforeUnload = (listener) => {
+      if (hooks.push(listener) === 1) {
         stopListener = startListener(getPromptMessage)
+      }
 
       return () => {
         hooks= hooks.filter(item => item !== listener)
