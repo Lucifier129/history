@@ -9,8 +9,7 @@ import createHistory, {
   Listen,
   ListenBefore,
   StartListener,
-  PushLocation,
-  ReplaceLocation
+  HistoryOptions
 } from "./createHistory"
 
 /**
@@ -44,10 +43,10 @@ export const createBrowserHistory: CreateHistory = options => {
     getUserConfirmation, // User may override in options
     ...options,
     getCurrentLocation,
-    pushLocation: pushLocation as PushLocation,
-    replaceLocation: replaceLocation as ReplaceLocation,
+    pushLocation,
+    replaceLocation,
     go
-  })
+  } as HistoryOptions)
 
   let listenerCount: number = 0
   let stopListener: Function

@@ -81,14 +81,9 @@ const useQueries: UseQueries = (createHistory) =>
     const encodeQuery: EncodeQuery = (location, query) => {
       if (query == null)
         return location
+
       const object: DraftLocation = typeof location === 'string' ? parsePath(location) : location
-      let newQuery: object = {}
-      for (let k in query) {
-        if (!!query[k]) {
-          newQuery[k] = query[k]
-        }
-      }
-      const queryString: string = stringifyQuery(newQuery)
+      const queryString: string = stringifyQuery(query)
       const search: string = queryString ? `?${queryString}` : ''
       return {
         ...object,
@@ -141,7 +136,7 @@ const useQueries: UseQueries = (createHistory) =>
       createPath,
       createHref,
       createLocation
-    }
+    } as NativeHistory
   }
 
 export default useQueries
