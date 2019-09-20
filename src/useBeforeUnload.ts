@@ -1,8 +1,7 @@
 import invariant from 'invariant'
 import { addEventListener, removeEventListener } from './DOMUtils'
-import { canUseDOM } from './ExecutionEnvironment'
-import { CreateHistory, NativeHistory, ListenBeforeUnload } from './createHistory'
-
+import { canUseDOM } from './DOMUtils'
+import { CreateHistory, NativeHistory, ListenBeforeUnload } from './type'
 
 export interface GetPromptMessage {
   (): any

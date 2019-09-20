@@ -16,7 +16,6 @@ import {
   parsePath
 } from './PathUtils'
 import { Hook } from "./runTransitionHook"
-import { PathCoders, PathCoder, HistoryOptions } from './type'
 import {
   NativeLocation,
   DraftLocation,
@@ -27,60 +26,28 @@ import {
 import { saveState, readState } from './DOMStateStorage'
 import Actions, { POP, PUSH, REPLACE } from './Actions'
 import runTransitionHook from './runTransitionHook'
+import {
+  PathCoders,
+  PathCoder,
+  HistoryOptions,
+  GetCurrentLocation,
+  Listen,
+  ListenBefore,
+  ListenBeforeUnload,
+  TransitionTo,
+  Push,
+  Replace,
+  Go,
+  GoBack,
+  GoForward,
+  CreateKey
+} from './type'
 
-interface GetCurrentLocation {
-  (): NativeLocation
+export interface CreateHref {
+  (path: string | DraftLocation): string
 }
 
-interface Unlisten {
-  (): void
-}
-
-interface ListenBefore {
-  (hook: Hook): Unlisten
-}
-
-interface Listen {
-  (hook: Hook): Unlisten;
-}
-
-interface ListenBeforeUnload {
-  (hook: Hook): Unlisten
-}
-
-interface TransitionTo {
-  (nextLocation: NativeLocation): void;
-}
-
-interface Push {
-  (input: DraftLocation | string): Function | void;
-}
-
-interface Replace {
-  (input: DraftLocation | string): Function | void;
-}
-
-interface Go {
-  (n: number): void
-}
-
-interface GoBack {
-  (): void;
-}
-
-interface GoForward {
-  (): void;
-}
-
-interface CreateKey {
-  (): string;
-}
-
-interface CreateHref {
-  (path: string): string
-}
-
-interface CreateLocation {
+export interface CreateLocation {
   (
     location: DraftLocation | string,
     action?: Actions,
@@ -88,7 +55,7 @@ interface CreateLocation {
   ): NativeLocation;
 }
 
-interface HashHistory {
+export interface HashHistory {
   getCurrentLocation: GetCurrentLocation
   listenBefore: ListenBefore
   listen: Listen
@@ -105,57 +72,57 @@ interface HashHistory {
   createLocation: CreateLocation
 }
 
-interface CreateHashHistory {
+export interface CreateHashHistory {
   (options: HistoryOptions): HashHistory
 }
 
 /**
  * Utils
  */
-interface PushLocation {
+export interface PushLocation {
   (location: NativeLocation): boolean
 }
 
-interface ReplaceLocation {
+export interface ReplaceLocation {
   (location: NativeLocation): boolean
 }
 
-interface GetUserConfirmation {
+export interface GetUserConfirmation {
   (message: string, callback: Function): any
 }
 
-interface StartListener {
+export interface StartListener {
   (listener: Hook, before: boolean): () => void
 }
 
-interface GetCurrentIndex {
+export interface GetCurrentIndex {
   (): number;
 }
 
-interface UpdateLocation {
+export interface UpdateLocation {
   (location: NativeLocation): void;
 }
 
-interface ConfirmTransitionTo {
+export interface ConfirmTransitionTo {
   (location: NativeLocation, callback: (ok: any) => void): void;
 }
 
 /**
  * Hash
  */
-interface PushPath {
+export interface PushPath {
   (path: string): string;
 }
 
-interface ReplacePath {
+export interface ReplacePath {
   (path: string): void;
 }
 
-interface Update {
+export interface Update {
   (path: string): void;
 }
 
-interface UpdateLocationHash {
+export interface UpdateLocationHash {
   (
     location: NativeLocation,
     pathCoder: PathCoder,
@@ -164,22 +131,22 @@ interface UpdateLocationHash {
   ): void;
 }
 
-interface PushLocationHash {
+export interface PushLocationHash {
   (location: NativeLocation, pathCoder: PathCoder, queryKey: string): boolean
 }
 
-interface ReplaceLocationHash {
+export interface ReplaceLocationHash {
   (location: NativeLocation, pathCoder: PathCoder, queryKey: string): boolean
 }
-interface GetPath {
+export interface GetPath {
   (): string;
 }
 
-interface GetCurrentLocationHash {
+export interface GetCurrentLocationHash {
   (pathCoder: PathCoder, queryKey: string): NativeLocation
 }
 
-interface CreateLocationHash {
+export interface CreateLocationHash {
   (
     location: DraftLocation | string,
     action?: Actions,
@@ -187,17 +154,17 @@ interface CreateLocationHash {
   ): NativeLocation;
 }
 
-interface PopEventListener {
+export interface PopEventListener {
   (event: PopStateEvent): void
 }
 
-interface StopListener {
+export interface StopListener {
   (): void
 }
 
-interface StartListenerHash {
+export interface StartListenerHash {
   (
-    listener: Function,
+    listener: Hook,
     pathCoder: PathCoder,
     queryKey: string
   ): StopListener;
@@ -386,7 +353,7 @@ const createHashHistory: CreateHashHistory = options => {
     replaceLocationHash(location, pathCoder, queryKey)
 
   let listenerCount: number = 0
-  let stopListener: Function
+  let stopListener: StopListener
 
   const startListener: StartListener = (listener, before) => {
     if (++listenerCount === 1)

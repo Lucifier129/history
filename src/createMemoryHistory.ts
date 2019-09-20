@@ -7,7 +7,6 @@ import {
   parsePath
 } from './PathUtils'
 import { Hook } from "./runTransitionHook"
-import { HistoryOptions } from './type'
 import {
   NativeLocation,
   DraftLocation,
@@ -19,60 +18,27 @@ import {
 import { ReadState, SaveState } from './DOMStateStorage'
 import Actions, { POP, PUSH, REPLACE } from './Actions'
 import runTransitionHook from './runTransitionHook'
+import {
+  HistoryOptions,
+  GetCurrentLocation,
+  Listen,
+  ListenBefore,
+  ListenBeforeUnload,
+  TransitionTo,
+  Push,
+  Replace,
+  Go,
+  GoBack,
+  GoForward,
+  CreateKey
+} from './type'
 
-interface GetCurrentLocation {
-  (): NativeLocation
-}
 
-interface Unlisten {
-  (): void
-}
-
-interface ListenBefore {
-  (hook: Hook): Unlisten
-}
-
-interface Listen {
-  (hook: Hook): Unlisten;
-}
-
-interface ListenBeforeUnload {
-  (hook: Hook): Unlisten
-}
-
-interface TransitionTo {
-  (nextLocation: NativeLocation): void;
-}
-
-interface Push {
-  (input: DraftLocation | string): Function | void;
-}
-
-interface Replace {
-  (input: DraftLocation | string): Function | void;
-}
-
-export interface Go {
-  (n: number): void
-}
-
-interface GoBack {
-  (): void;
-}
-
-interface GoForward {
-  (): void;
-}
-
-interface CreateKey {
-  (): string;
-}
-
-interface CreateHref {
+export interface CreateHref {
   (location: BaseLocation | string): string;
 }
 
-interface CreateLocation {
+export interface CreateLocation {
   (
     location: DraftLocation | string,
     action?: Actions,
@@ -80,7 +46,7 @@ interface CreateLocation {
   ): NativeLocation;
 }
 
-interface MemoryHistory {
+export interface MemoryHistory {
   getCurrentLocation: GetCurrentLocation
   listenBefore: ListenBefore
   listen: Listen
@@ -97,7 +63,7 @@ interface MemoryHistory {
   createLocation: CreateLocation
 }
 
-interface CreateMemoryHistory {
+export interface CreateMemoryHistory {
   (options: MemoryOptions): MemoryHistory
 }
 
@@ -119,33 +85,33 @@ export interface ConfirmTransitionTo {
   (location: NativeLocation, callback: (ok: any) => void): void;
 }
 
-interface PushLocation {
+export interface PushLocation {
   (location: NativeLocation): boolean
 }
 
-interface ReplaceLocation {
+export interface ReplaceLocation {
   (location: NativeLocation): boolean
 }
 
-interface Memo {
+export interface Memo {
   [propName: string]: object | null
 }
 
-interface Entry {
+export interface Entry {
   key: string,
   state: object | null
 }
 
-interface MemoryOptions extends HistoryOptions {
-  entries: any[]
-  current: number
+export interface MemoryOptions extends HistoryOptions {
+  entries?: any[]
+  current?: number
 }
 
-interface CreateStateStorage {
+export interface CreateStateStorage {
   (entries: NativeLocation[]): Memo
 }
 
-interface CanGo {
+export interface CanGo {
   (n: number): boolean
 }
 

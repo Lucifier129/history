@@ -19,83 +19,49 @@ import {
 } from './LocationUtils'
 import Actions, { POP, PUSH, REPLACE } from './Actions'
 import { Hook } from './runTransitionHook'
-import { HistoryOptions } from './type'
+import {
+  HistoryOptions,
+  GetCurrentLocation,
+  Listen,
+  ListenBefore,
+  ListenBeforeUnload,
+  TransitionTo,
+  Push,
+  Replace,
+  Go,
+  GoBack,
+  GoForward,
+  CreateKey
+} from './type'
 
 /**
  * BrowserHistoryOptions
  */
-interface GetCurrentLocation {
-  (): NativeLocation
-}
 
-interface GetUserConfirmationCB {
+export interface GetUserConfirmationCB {
   (ok: boolean): void
 }
 
-interface GetUserConfirmation {
+export interface GetUserConfirmation {
   (message: string, callback: GetUserConfirmationCB): void
 }
 
-interface PushLocation {
+export interface PushLocation {
   (location: NativeLocation): boolean
 }
 
-interface ReplaceLocation {
+export interface ReplaceLocation {
   (location: NativeLocation): boolean
-}
-
-interface Go {
-  (n: number): void
 }
 
 /**
  * NativeHistory
  */
-interface Unlisten {
-  (): void
-}
-
-interface ListenBefore {
-  (hook: Hook): Unlisten
-}
-
-interface Listen {
-  (hook: Hook): Unlisten
-}
-
-interface ListenBeforeUnload {
-  (hook: Hook): Unlisten
-}
-
-interface TransitionTo {
-  (nextLocation: NativeLocation): void
-}
-
-interface Push {
-  (input: DraftLocation | string): Function | void
-}
-
-interface Replace {
-  (input: DraftLocation | string): Function | void
-}
-
-interface GoBack {
-  (): void
-}
-
-interface GoForward {
-  (): void
-}
-
-interface CreateKey {
-  (): string
-}
-
-interface CreateHref {
+export interface CreateHref {
   (location: BaseLocation | string): string
 }
 
-interface CreateLocation {
+export interface CreateLocation {
   (
     location: DraftLocation | string,
     action?: Actions,
@@ -103,7 +69,7 @@ interface CreateLocation {
   ): NativeLocation
 }
 
-interface BrowserHistory {
+export interface BrowserHistory {
   getCurrentLocation: GetCurrentLocation
   listenBefore: ListenBefore
   listen: Listen
@@ -120,7 +86,7 @@ interface BrowserHistory {
   createLocation: CreateLocation
 }
 
-interface CreateBrowserHistory {
+export interface CreateBrowserHistory {
   (options: HistoryOptions): BrowserHistory
 }
 
@@ -130,53 +96,53 @@ interface CreateBrowserHistory {
 /**
  * Base Utils
  */
-interface UpdateLocation {
+export interface UpdateLocation {
   (location: NativeLocation): void;
 }
 
-interface StopListener {
+export interface StopListener {
   (): void
 }
 
-interface StartListenerBrowser {
-  (listener: Function): StopListener
+export interface StartListenerBrowser {
+  (listener: Hook): StopListener
 }
 
-interface CreateBrowserLocation {
+export interface CreateBrowserLocation {
   (historyState: any): NativeLocation
 }
 
 // Browser
-interface GetCurrentIndex {
+export interface GetCurrentIndex {
   (): number
 }
 
-interface UpdateState {
+export interface UpdateState {
   (state: object, path: string): void
 }
 
-interface UpdateLocationBrow {
+export interface UpdateLocationBrow {
   (
     location: NativeLocation,
     updateState: UpdateState
   ): void
 }
 
-interface ConfirmTransitionTo {
+export interface ConfirmTransitionTo {
   (location: NativeLocation, callback: (ok: any) => void): void
 }
 
-interface StartListener {
+export interface StartListener {
   (listener: Hook, before: boolean): StopListener
 }
 
-interface IsExtraneousPopstateEvent {
+export interface IsExtraneousPopstateEvent {
   (event: PopStateEvent): boolean
 }
 const isExtraneousPopstateEvent: IsExtraneousPopstateEvent
   = event => event.state === undefined && navigator.userAgent.indexOf('CriOS') === -1
 
-interface PopEventListener {
+export interface PopEventListener {
   (event: PopStateEvent): void
 }
 

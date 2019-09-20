@@ -11,7 +11,7 @@ import {
   Replace,
   CreateHref,
   CreateLocation
-} from './createHistory'
+} from './type'
 
 export interface UseBasename {
   (createHistory: CreateHistory): CreateHistory
@@ -22,7 +22,7 @@ export interface AddBasename {
 }
 
 export interface PrePendBasename {
-  (location: DraftLocation | string): BaseLocation | string
+  (location: string | DraftLocation): BaseLocation | string
 }
 
 export interface GetCurrentLocation {
@@ -91,7 +91,7 @@ const useBasename: UseBasename = (createHistory) => (options: HistoryOptions) =>
     const createPath: CreatePath = (location) =>
       history.createPath(prependBasename(location))
 
-    const createHref: CreateHref = (location) =>
+    const createHref: CreateHref = (location: DraftLocation) =>
       history.createHref(prependBasename(location))
 
     const createLocation: CreateLocation = (location, ...args) =>

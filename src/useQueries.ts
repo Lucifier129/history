@@ -2,7 +2,7 @@ import { parse, stringify } from 'querystringify'
 import runTransitionHook, { Hook } from './runTransitionHook'
 import { createQuery, NativeLocation, DraftLocation } from './LocationUtils'
 import { parsePath } from './PathUtils'
-import { CreateHistory, HistoryOptions, NativeHistory, ParseQueryString, GetCurrentLocation } from './createHistory'
+import { CreateHistory, HistoryOptions, NativeHistory, ParseQueryString, GetCurrentLocation } from './type'
 
 export interface DefaultStringifyQuery {
   (query: object): string
