@@ -30,7 +30,7 @@ export interface GetCurrentLocation {
 }
 
 const useBasename: UseBasename = (createHistory) => (options: HistoryOptions) => {
-    const history: NativeHistory = createHistory(options)
+    const history = createHistory(options)
     const { basename } = options
 
     const addBasename: AddBasename = (location) => {
