@@ -51,13 +51,13 @@ export interface ParseQueryString {
 }
 
 export interface HistoryOptions {
-  keyLength: number
-  forceRefresh: boolean
-  queryKey: string
-  hashType: keyof PathCoders
-  basename: string
-  stringifyQuery: StringifyQuery
-  parseQueryString: ParseQueryString
+  keyLength?: number
+  forceRefresh?: boolean
+  queryKey?: string
+  hashType?: keyof PathCoders
+  basename?: string
+  stringifyQuery?: StringifyQuery
+  parseQueryString?: ParseQueryString
 }
 
 export interface GetCurrentLocation {
