@@ -1,5 +1,10 @@
 import invariant from "invariant"
-import { supportsHistory, canUseDOM, addEventListener, removeEventListener } from "./DOMUtils"
+import {
+  supportsHistory,
+  canUseDOM,
+  addEventListener,
+  removeEventListener
+} from "./DOMUtils"
 import { loopAsync } from './AsyncUtils'
 import { createPath, CreatePath } from './PathUtils'
 import { saveState, readState } from './DOMStateStorage'
@@ -119,10 +124,26 @@ interface CreateBrowserHistory {
   (options: HistoryOptions): BrowserHistory
 }
 
-// Utils
-// Base
-export interface UpdateLocation {
+/**
+ * Utils
+ */ 
+/**
+ * Base Utils
+ */
+interface UpdateLocation {
   (location: NativeLocation): void;
+}
+
+interface StopListener {
+  (): void
+}
+
+interface StartListenerBrowser {
+  (listener: Function): StopListener
+}
+
+interface CreateBrowserLocation {
+  (historyState: any): NativeLocation
 }
 
 // Browser
@@ -161,40 +182,6 @@ interface PopEventListener {
 
 const PopStateEventState = 'popstate'
 
-interface CreateBrowserLocation {
-  (historyState: any): NativeLocation
-}
-
-const createBroserverLocation: CreateBrowserLocation = (historyState) => {
-  const key = historyState && historyState.key
-
-  return _createLocation({
-    pathname: window.location.pathname,
-    search: window.location.search,
-    hash: window.location.hash,
-    state: (key ? readState(key) : undefined)
-  }, '', key)
-}
-
-interface StopListener {
-  (): void
-}
-
-interface StartListenerBrowser {
-  (listener: Function): StopListener
-}
-
-const startListenerBrowser: StartListenerBrowser = (listener) => {
-  const handlePopState: PopEventListener = (event: PopStateEvent) => {
-    if (isExtraneousPopstateEvent(event)) return // Ignore extraneous popstate events in WebKit
-    listener(createBroserverLocation(event.state))
-  }
-
-  addEventListener(window, PopStateEventState, handlePopState as EventListener)
-
-  return () =>
-    removeEventListener(window, PopStateEventState, handlePopState as EventListener)
-}
 
 /**
  * Creates and returns a history object that uses HTML5's history API
@@ -210,16 +197,6 @@ const startListenerBrowser: StartListenerBrowser = (listener) => {
 const createBrowserHistory: CreateBrowserHistory = options => {
   invariant(canUseDOM, "Browser history needs a DOM")
 
-  const updateLocationBrow: UpdateLocationBrow = (location, updateState) => {
-    const { state, key } = location
-
-    if (state !== undefined) {
-      saveState(key, state)
-    }
-
-    updateState({ key }, createPath(location))
-  }
-
   // Default operator
   const getUserConfirmation: GetUserConfirmation
     = (message, callback) => callback(window.confirm(message)) // eslint-disable-line no-alert
@@ -231,6 +208,39 @@ const createBrowserHistory: CreateBrowserHistory = options => {
   }
 
   // Browser
+  const createBroserverLocation: CreateBrowserLocation = (historyState) => {
+    const key = historyState && historyState.key
+
+    return _createLocation({
+      pathname: window.location.pathname,
+      search: window.location.search,
+      hash: window.location.hash,
+      state: (key ? readState(key) : undefined)
+    }, '', key)
+  }
+
+  const startListenerBrowser: StartListenerBrowser = (listener) => {
+    const handlePopState: PopEventListener = (event: PopStateEvent) => {
+      if (isExtraneousPopstateEvent(event)) return // Ignore extraneous popstate events in WebKit
+      listener(createBroserverLocation(event.state))
+    }
+
+    addEventListener(window, PopStateEventState, handlePopState as EventListener)
+
+    return () =>
+      removeEventListener(window, PopStateEventState, handlePopState as EventListener)
+  }
+
+  const updateLocationBrow: UpdateLocationBrow = (location, updateState) => {
+    const { state, key } = location
+
+    if (state !== undefined) {
+      saveState(key, state)
+    }
+
+    updateState({ key }, createPath(location))
+  }
+
   const getCurrentLocationBrow: GetCurrentLocation = () => {
     let historyState: any
     try {
