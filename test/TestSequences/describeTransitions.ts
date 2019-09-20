@@ -1,11 +1,11 @@
 import execSteps from './execSteps'
-import CH, { NativeLocation } from '../../src'
+import { NativeLocation, Actions } from '../../src'
 
 import { Step, Done, Describe } from '../type'
 
 const describeTransitions: Describe = (createHistory) => {
   describe('a synchronous transition hook', () => {
-    let history: CH.NativeHistory
+    let history: any
     let unlistenBefore: Function
     beforeEach(() => {
       history = createHistory()
@@ -40,7 +40,7 @@ const describeTransitions: Describe = (createHistory) => {
   })
 
   describe('an asynchronous transition hook', () => {
-    let history: CH.NativeHistory
+    let history: any
     let unlistenBefore: Function
     beforeEach(() => {
       history = createHistory()
@@ -77,7 +77,7 @@ const describeTransitions: Describe = (createHistory) => {
 
   describe('when the user confirms a transition', () => {
     let location: NativeLocation
-    let history: CH.NativeHistory
+    let history: any
     let unlisten: Function
     let unlistenBefore: Function
     beforeEach(() => {
@@ -121,14 +121,14 @@ const describeTransitions: Describe = (createHistory) => {
       expect(location.pathname).toEqual('/home')
       expect(location.search).toEqual('?the=query')
       expect(location.state).toEqual({ the: 'state' })
-      expect(location.action).toEqual(CH.Actions.PUSH)
+      expect(location.action).toEqual(Actions.PUSH)
       expect(location.key).toBeDefined()
     })
   })
 
   describe('when the user cancels a transition', () => {
     let location: NativeLocation
-    let history: CH.NativeHistory
+    let history: any
     let unlisten: Function
     let unlistenBefore: Function
     beforeEach(() => {
@@ -167,7 +167,7 @@ const describeTransitions: Describe = (createHistory) => {
 
   describe('when the transition hook cancels a transition', () => {
     let location: NativeLocation
-    let history: CH.NativeHistory
+    let history: any
     let unlisten: Function
     let unlistenBefore: Function
     beforeEach(() => {

@@ -73,7 +73,7 @@ export interface HashHistory {
 }
 
 export interface CreateHashHistory {
-  (options: HistoryOptions): HashHistory
+  (options?: HistoryOptions): HashHistory
 }
 
 /**
@@ -173,10 +173,10 @@ export interface StartListenerHash {
 const HashChangeEvent: string = 'hashchange'
 
 
-const createHashHistory: CreateHashHistory = options => {
+const createHashHistory: CreateHashHistory = (options = {}) => {
   invariant(canUseDOM, "Hash history needs a DOM")
 
-  let { queryKey, hashType, keyLength } = options
+  let { queryKey, hashType = 'slash', keyLength }: HistoryOptions = options
 
   warning(
     queryKey !== 'false',
@@ -344,13 +344,13 @@ const createHashHistory: CreateHashHistory = options => {
   // Base
 
   const getCurrentLocation: GetCurrentLocation = () =>
-    getCurrentLocationHash(pathCoder, queryKey)
+    getCurrentLocationHash(pathCoder, queryKey || '')
 
   const pushLocation: PushLocation = location =>
-    pushLocationHash(location, pathCoder, queryKey)
+    pushLocationHash(location, pathCoder, queryKey || '')
 
   const replaceLocation: ReplaceLocation = location =>
-    replaceLocationHash(location, pathCoder, queryKey)
+    replaceLocationHash(location, pathCoder, queryKey || '')
 
   let listenerCount: number = 0
   let stopListener: StopListener
@@ -360,7 +360,7 @@ const createHashHistory: CreateHashHistory = options => {
       stopListener = startListenerHash(
         transitionTo,
         pathCoder,
-        queryKey
+        queryKey || ''
       )
 
     const unlisten = before

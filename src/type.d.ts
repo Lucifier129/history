@@ -58,6 +58,7 @@ export interface HistoryOptions {
   basename?: string
   stringifyQuery?: StringifyQuery
   parseQueryString?: ParseQueryString
+  [x: string]: any
 }
 
 export interface GetCurrentLocation {

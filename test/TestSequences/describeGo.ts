@@ -1,10 +1,10 @@
 import execSteps from './execSteps'
 import { Step, Done, Describe } from '../type'
-import CH, { NativeLocation } from '../../src'
+import { NativeLocation, Actions } from '../../src'
 
 const describeGo: Describe = (createHistory)  => {
   describe('go', () => {
-    let history: CH.NativeHistory
+    let history: any
     beforeEach(() => {
       history = createHistory()
     })
@@ -20,7 +20,7 @@ const describeGo: Describe = (createHistory)  => {
             expect(location.pathname).toEqual('/')
             expect(location.search).toEqual('')
             expect(location.state).toBeUndefined()
-            expect(location.action).toEqual(CH.Actions.POP)
+            expect(location.action).toEqual(Actions.POP)
             expect(location.key).toBeNull()
 
             history.push({
@@ -33,7 +33,7 @@ const describeGo: Describe = (createHistory)  => {
             expect(location.pathname).toEqual('/home')
             expect(location.search).toEqual('?the=query')
             expect(location.state).toEqual({ the: 'state' })
-            expect(location.action).toEqual(CH.Actions.PUSH)
+            expect(location.action).toEqual(Actions.PUSH)
             expect(location.key).toBeDefined()
 
             history.goBack()
@@ -42,7 +42,7 @@ const describeGo: Describe = (createHistory)  => {
             expect(location.pathname).toEqual('/')
             expect(location.search).toEqual('')
             expect(location.state).toBe(undefined)
-            expect(location.action).toEqual(CH.Actions.POP)
+            expect(location.action).toEqual(Actions.POP)
             expect(location.key).toBe(null)
           }
         ]
@@ -58,7 +58,7 @@ const describeGo: Describe = (createHistory)  => {
             expect(location.pathname).toEqual('/')
             expect(location.search).toEqual('')
             expect(location.state).toBeUndefined()
-            expect(location.action).toEqual(CH.Actions.POP)
+            expect(location.action).toEqual(Actions.POP)
             expect(location.key).toBeNull()
 
             history.push({
@@ -71,7 +71,7 @@ const describeGo: Describe = (createHistory)  => {
             expect(location.pathname).toEqual('/home')
             expect(location.search).toEqual('?the=query')
             expect(location.state).toEqual({ the: 'state' })
-            expect(location.action).toEqual(CH.Actions.PUSH)
+            expect(location.action).toEqual(Actions.PUSH)
             expect(location.key).toBeDefined()
 
             history.push({
@@ -84,7 +84,7 @@ const describeGo: Describe = (createHistory)  => {
             expect(location.pathname).toEqual('/person')
             expect(location.search).toEqual('?the=query')
             expect(location.state).toEqual({ the: 'state a' })
-            expect(location.action).toEqual(CH.Actions.PUSH)
+            expect(location.action).toEqual(Actions.PUSH)
             expect(location.key).toBeDefined()
 
             history.goBack()
@@ -93,7 +93,7 @@ const describeGo: Describe = (createHistory)  => {
             expect(location.pathname).toEqual('/home')
             expect(location.search).toEqual('?the=query')
             expect(location.state).toEqual({ the: 'state' })
-            expect(location.action).toEqual(CH.Actions.POP)
+            expect(location.action).toEqual(Actions.POP)
             expect(location.key).toBeDefined()
 
             history.goBack()
@@ -102,7 +102,7 @@ const describeGo: Describe = (createHistory)  => {
             expect(location.pathname).toEqual('/')
             expect(location.search).toEqual('')
             expect(location.state).toBeUndefined()
-            expect(location.action).toEqual(CH.Actions.POP)
+            expect(location.action).toEqual(Actions.POP)
             expect(location.key).toBeNull()
 
             history.goForward()
@@ -111,7 +111,7 @@ const describeGo: Describe = (createHistory)  => {
             expect(location.pathname).toEqual('/home')
             expect(location.search).toEqual('?the=query')
             expect(location.state).toEqual({ the: 'state' })
-            expect(location.action).toEqual(CH.Actions.POP)
+            expect(location.action).toEqual(Actions.POP)
             expect(location.key).toBeDefined()
           }
         ]

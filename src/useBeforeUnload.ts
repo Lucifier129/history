@@ -1,7 +1,7 @@
 import invariant from 'invariant'
 import { addEventListener, removeEventListener } from './DOMUtils'
 import { canUseDOM } from './DOMUtils'
-import { CreateHistory, NativeHistory, ListenBeforeUnload } from './type'
+import { CreateHistory, NativeHistory, ListenBeforeUnload, HistoryOptions } from './type'
 
 export interface GetPromptMessage {
   (): any
@@ -52,7 +52,7 @@ const useBeforeUnload: UseBeforeUnload = (createHistory) => {
     'useBeforeUnload only works in DOM environments'
   )
 
-  const ch: CreateHistory = (options) => {
+  const ch: CreateHistory = (options: HistoryOptions = { hashType: 'slash' }) => {
     const history: NativeHistory = createHistory(options)
 
     let hooks: Function[] = []

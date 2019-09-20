@@ -1,12 +1,13 @@
 import invariant from 'invariant'
 import { parsePath } from './PathUtils'
 import Actions, { POP } from './Actions'
+import { CreateKey } from './type'
 
 export interface BaseLocation {
   basename?: string
   pathname: string
-  search: string
-  hash: string
+  search?: string
+  hash?: string
 }
 
 export interface ExceptLocation  {
@@ -25,8 +26,8 @@ export interface CreateQuery {
 
 export interface CreateLocation {
   (
-    location: DraftLocation | string,
-    key: string,
+    location?: DraftLocation | string,
+    key?: string,
     action?: Actions
   ): NativeLocation
 }
@@ -46,7 +47,10 @@ export interface LocationsAreEqual {
 export const createQuery: CreateQuery = (props) =>
   Object.assign(Object.create(null), props)
 
-export const createLocation: CreateLocation = (input = '/', key, action = POP) => {
+const createKey: CreateKey = () =>
+  Math.random().toString(36).substr(2, 6)
+
+export const createLocation: CreateLocation = (input = '/', key = '', action = POP) => {
   const object = typeof input === 'string' ? parsePath(input) : input
 
 

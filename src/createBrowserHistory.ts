@@ -87,7 +87,7 @@ export interface BrowserHistory {
 }
 
 export interface CreateBrowserHistory {
-  (options: HistoryOptions): BrowserHistory
+  (options?: HistoryOptions): BrowserHistory
 }
 
 /**
@@ -150,6 +150,8 @@ const PopStateEventState = 'popstate'
 
 
 /**
+ * createBrowserHistory
+ * 
  * Creates and returns a history object that uses HTML5's history API
  * (pushState, replaceState, and the popstate event) to manage history.
  * This is the recommended method of managing history in browsers because
@@ -160,7 +162,7 @@ const PopStateEventState = 'popstate'
  * behavior using { forceRefresh: true } in options.
  */
 
-const createBrowserHistory: CreateBrowserHistory = options => {
+const createBrowserHistory: CreateBrowserHistory = (options = { hashType: 'slash' }) => {
   invariant(canUseDOM, "Browser history needs a DOM")
 
   // Default operator

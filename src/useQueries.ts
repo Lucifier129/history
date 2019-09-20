@@ -1,8 +1,19 @@
-import { parse, stringify } from 'querystringify'
-import runTransitionHook, { Hook } from './runTransitionHook'
-import { createQuery, NativeLocation, DraftLocation } from './LocationUtils'
-import { parsePath } from './PathUtils'
-import { CreateHistory, NativeHistory, ParseQueryString, GetCurrentLocation } from './type'
+import { parse, stringify } from "querystringify"
+import runTransitionHook, { Hook } from "./runTransitionHook"
+import {
+  createQuery,
+  NativeLocation,
+  DraftLocation,
+  BaseLocation
+} from "./LocationUtils"
+import { parsePath } from "./PathUtils"
+import {
+  CreateHistory,
+  NativeHistory,
+  ParseQueryString,
+  GetCurrentLocation,
+  HistoryOptions
+} from "./type"
 
 export interface DefaultStringifyQuery {
   (query: object): string
@@ -17,7 +28,7 @@ export interface DecodeQuery {
 }
 
 export interface EncodeQuery {
-  (location: DraftLocation, query: object): DraftLocation
+  (location: DraftLocation | string, query: object): DraftLocation
 }
 
 export interface ListenBefore {
@@ -29,27 +40,27 @@ export interface Listen {
 }
 
 export interface Push {
-  (location: DraftLocation): any
+  (location: DraftLocation | string): any
 }
 
 export interface Replace {
-  (location: DraftLocation): any
+  (location: DraftLocation | string): any
 }
 
 export interface CreatePath {
-  (location: DraftLocation): any
+  (location: DraftLocation | string): any
 }
 
 export interface CreateHref {
-  (location: DraftLocation): any
+  (location: DraftLocation | string): any
 }
 
 export interface CreateLocation {
-  (location: DraftLocation, ...args: any[]): NativeLocation
+  (location: DraftLocation | string, ...args: any[]): NativeLocation
 }
 
-const defaultStringifyQuery: DefaultStringifyQuery = (query) =>
-  stringify(query).replace(/%20/g, '+')
+const defaultStringifyQuery: DefaultStringifyQuery = query =>
+  stringify(query).replace(/%20/g, "+")
 
 const defaultParseQueryString: ParseQueryString = parse
 
@@ -57,34 +68,32 @@ const defaultParseQueryString: ParseQueryString = parse
  * Returns a new createHistory function that may be used to create
  * history objects that know how to handle URL queries.
  */
-const useQueries: UseQueries = (createHistory) =>
-  (options) => {
-    const history: NativeHistory = createHistory(options)
-    let { stringifyQuery, parseQueryString } = options
-
-    if (typeof stringifyQuery !== 'function')
-      stringifyQuery = defaultStringifyQuery
-
-    if (typeof parseQueryString !== 'function')
+const useQueries: UseQueries = createHistory => {
+  let ch: CreateHistory = (
+    options: HistoryOptions = { hashType: "slash" }
+  ) => {
+    const history = createHistory(options)
+    let {
+      stringifyQuery = defaultStringifyQuery,
       parseQueryString = defaultParseQueryString
+    } = options
 
-    const decodeQuery: DecodeQuery = (location) => {
-      if (!location)
-        return location
+    const decodeQuery: DecodeQuery = location => {
+      if (!location) return location
 
       if (location.query == null)
-        location.query = parseQueryString(location.search.substring(1))
+        location.query = parseQueryString(
+          location && location.search ? location.search.substring(1) : ""
+        )
 
       return location
     }
 
     const encodeQuery: EncodeQuery = (location, query) => {
-      if (query == null)
-        return location
-
-      const object: DraftLocation = typeof location === 'string' ? parsePath(location) : location
-      const queryString: string = stringifyQuery(query)
-      const search: string = queryString ? `?${queryString}` : ''
+      const object: BaseLocation =
+        typeof location === "string" ? parsePath(location) : location
+      const queryString: string = stringifyQuery(query || {})
+      const search: string = queryString ? `?${queryString}` : ""
       return {
         ...object,
         search
@@ -95,32 +104,57 @@ const useQueries: UseQueries = (createHistory) =>
     const getCurrentLocation: GetCurrentLocation = () =>
       decodeQuery(history.getCurrentLocation())
 
-    const listenBefore: ListenBefore = (hook) =>
-      history.listenBefore(
-        (location, callback) =>
-          runTransitionHook(hook, decodeQuery(location), callback)
+    const listenBefore: ListenBefore = hook =>
+      history.listenBefore((location, callback) =>
+        runTransitionHook(hook, decodeQuery(location), callback)
       )
 
-    const listen: Listen = (listener) =>
+    const listen: Listen = listener =>
       history.listen(location => listener(decodeQuery(location)))
 
     // Override all write methods with query-aware versions.
-    const push: Push = (location) =>
-      history.push(encodeQuery(location, location.query || {}))
+    const push: Push = location =>
+      history.push(
+        encodeQuery(
+          location,
+          typeof location === "string" ? {} : location.query || {}
+        )
+      )
 
-    const replace: Replace = (location) =>
-      history.replace(encodeQuery(location, location.query || {}))
+    const replace: Replace = location =>
+      history.replace(
+        encodeQuery(
+          location,
+          typeof location === "string" ? {} : location.query || {}
+        )
+      )
 
-    const createPath: CreatePath = (location) =>
-      history.createPath(encodeQuery(location, location.query || {}))
+    const createPath: CreatePath = location =>
+      history.createPath(
+        encodeQuery(
+          location,
+          typeof location === "string" ? {} : location.query || {}
+        )
+      )
 
-    const createHref: CreateHref = (location) =>
-      history.createHref(encodeQuery(location, location.query || {}))
+    const createHref: CreateHref = location =>
+      history.createHref(
+        encodeQuery(
+          location,
+          typeof location === "string" ? {} : location.query || {}
+        )
+      )
 
     const createLocation: CreateLocation = (location, ...args) => {
-      let newLocation: DraftLocation = encodeQuery(location, location.query || {})
-      let newLocationAfter: NativeLocation = history.createLocation(newLocation, ...args)
-      if (location.query)
+      let newLocation: DraftLocation = encodeQuery(
+        location,
+        typeof location === "string" ? {} : location.query || {}
+      )
+      let newLocationAfter: NativeLocation = history.createLocation(
+        newLocation,
+        ...args
+      )
+      if (typeof location !== "string" && location.query)
         newLocation.query = createQuery(location.query)
 
       return decodeQuery(newLocationAfter)
@@ -138,5 +172,7 @@ const useQueries: UseQueries = (createHistory) =>
       createLocation
     }
   }
+  return ch
+}
 
 export default useQueries

@@ -1,9 +1,9 @@
 import { Done, Describe } from '../type'
-import CH, { NativeLocation } from '../../src'
+import { NativeLocation } from '../../src'
 
 const describePopStateCancel: Describe = (createHistory) => {
   describe('when popstate transitons are canceled', () => {
-    let history: CH.NativeHistory
+    let history: any
     let unlistenBefore: Function
     beforeEach(() => {
       history = createHistory()

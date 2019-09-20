@@ -1,10 +1,10 @@
 import execSteps from './execSteps'
 import { Step, Done, Describe } from '../type'
-import CH, { NativeLocation } from '../../src'
+import { NativeLocation, Actions } from '../../src'
 
 const describeHashSupport: Describe = (createHistory) => {
   describe('when a URL with a hash is pushed', () => {
-    let history: CH.NativeHistory
+    let history: any
     beforeEach(() => {
       history = createHistory()
     })
@@ -16,7 +16,7 @@ const describeHashSupport: Describe = (createHistory) => {
           expect(location.search).toEqual('')
           expect(location.hash).toEqual('')
           expect(location.state).toBeUndefined()
-          expect(location.action).toEqual(CH.Actions.POP)
+          expect(location.action).toEqual(Actions.POP)
           expect(location.key).toBeNull()
 
           history.push({
@@ -31,7 +31,7 @@ const describeHashSupport: Describe = (createHistory) => {
           expect(location.search).toEqual('?the=query')
           expect(location.hash).toEqual('#the-hash')
           expect(location.state).toEqual({ the: 'state' })
-          expect(location.action).toEqual(CH.Actions.PUSH)
+          expect(location.action).toEqual(Actions.PUSH)
           expect(location.key).toBeDefined()
         }
       ]
@@ -46,7 +46,7 @@ const describeHashSupport: Describe = (createHistory) => {
           expect(location.search).toEqual('')
           expect(location.hash).toEqual('')
           expect(location.state).toBeUndefined()
-          expect(location.action).toEqual(CH.Actions.POP)
+          expect(location.action).toEqual(Actions.POP)
           expect(location.key).toBeNull()
 
           history.push('/#the-hash')
@@ -56,7 +56,7 @@ const describeHashSupport: Describe = (createHistory) => {
           expect(location.search).toEqual('')
           expect(location.hash).toEqual('#the-hash')
           expect(location.state).toBeUndefined()
-          expect(location.action).toEqual(CH.Actions.PUSH)
+          expect(location.action).toEqual(Actions.PUSH)
           expect(location.key).toBeDefined()
         }
       ]

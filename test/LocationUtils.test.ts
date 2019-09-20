@@ -1,6 +1,5 @@
-import createHistory from '../src/createHistory'
 import { createLocation } from '../src/LocationUtils'
-import CH, { NativeLocation } from '../src'
+import { NativeLocation, Actions } from '../src'
 
 describe('a location', () => {
   it('knows its pathname', () => {
@@ -29,31 +28,19 @@ describe('a location', () => {
     expect(location.search).toEqual('?redirect=https://example.com/')
   })
 
-  it('has undefined state by default', () => {
+  it('has null state by default', () => {
     const location: NativeLocation = createLocation()
-    expect(location.state).toBe(undefined)
+    expect(location.state).toBe(null)
   })
 
   it('uses pop navigation by default', () => {
     const location: NativeLocation = createLocation()
-    expect(location.action).toBe(CH.Actions.POP)
+    expect(location.action).toBe(Actions.POP)
   })
 
-  it('has a null key by default', () => {
+  it('has a "" key by default', () => {
     const location: NativeLocation = createLocation()
-    expect(location.key).toBe(null)
-  })
-
-  describe('created by a history object', () => {
-    let history
-    beforeEach(() => {
-      history = createHistory()
-    })
-
-    it('has a key by default', () => {
-      const location: NativeLocation = history.createLocation()
-      expect(location.key).toBeDefined()
-    })
+    expect(location.key).toBe('')
   })
 })
 

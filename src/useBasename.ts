@@ -4,7 +4,6 @@ import { NativeLocation, BaseLocation, DraftLocation } from './LocationUtils'
 import {
   CreateHistory,
   HistoryOptions,
-  NativeHistory,
   ListenBefore,
   Listen,
   Push,
@@ -29,7 +28,8 @@ export interface GetCurrentLocation {
   (): NativeLocation
 }
 
-const useBasename: UseBasename = (createHistory) => (options: HistoryOptions) => {
+const useBasename: UseBasename = (createHistory) => {
+  let ch: CreateHistory = (options: HistoryOptions = { hashType: 'slash' }) => {
     const history = createHistory(options)
     const { basename } = options
 
@@ -91,7 +91,7 @@ const useBasename: UseBasename = (createHistory) => (options: HistoryOptions) =>
     const createPath: CreatePath = (location) =>
       history.createPath(prependBasename(location))
 
-    const createHref: CreateHref = (location: DraftLocation) =>
+    const createHref: CreateHref = (location: DraftLocation | string) =>
       history.createHref(prependBasename(location))
 
     const createLocation: CreateLocation = (location, ...args) =>
@@ -109,5 +109,8 @@ const useBasename: UseBasename = (createHistory) => (options: HistoryOptions) =>
       createLocation
     }
   }
+
+  return ch
+}
 
 export default useBasename

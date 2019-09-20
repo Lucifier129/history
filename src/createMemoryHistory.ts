@@ -64,7 +64,7 @@ export interface MemoryHistory {
 }
 
 export interface CreateMemoryHistory {
-  (options: MemoryOptions): MemoryHistory
+  (options?: MemoryOptions): MemoryHistory
 }
 
 /**
@@ -127,7 +127,7 @@ const createStateStorage: CreateStateStorage = entries =>
       return memo
     }, {} as Memo)
 
-const createMemoryHistory: CreateMemoryHistory = options => {
+const createMemoryHistory: CreateMemoryHistory = (options = { hashType: 'slash' }) => {
 
   let { keyLength } = options
 
@@ -249,7 +249,7 @@ const createMemoryHistory: CreateMemoryHistory = options => {
     go(1)
 
   const createKey: CreateKey = () =>
-    Math.random().toString(36).substr(2, keyLength || 6)
+    Math.random().toString(36).substr(2, 6)
 
   const createHref: CreateHref = (location) =>
     createPath(location)
@@ -258,19 +258,23 @@ const createMemoryHistory: CreateMemoryHistory = options => {
     _createLocation(location, key, action)
 
   const getCurrentLocation: GetCurrentLocation = () => {
-    const entry: NativeLocation = entries[current]
-    const path: string = createPath(entry)
+    if (typeof entries[current] !== undefined) {
+      const entry: NativeLocation = entries[current]
+      const path: string = createPath(entry)
 
-    let key: string = ""
-    let state: object | null = null
-    if (entry && entry.key) {
-      key = entry.key
-      state = readState(key)
+      let key: string = ""
+      let state: object | null = null
+      if (entry && entry.key) {
+        key = entry.key
+        state = readState(key)
+      }
+  
+      const init: DraftLocation = parsePath(path)
+  
+      return _createLocation({ ...init, state }, key)
+    } else {
+      throw new Error('current location is not exist.')      
     }
-
-    const init: DraftLocation = parsePath(path)
-
-    return _createLocation({ ...init, state }, key)
   }
 
   const canGo: CanGo = n => {
@@ -318,7 +322,7 @@ const createMemoryHistory: CreateMemoryHistory = options => {
   }
 
 
-  let { entries, current } = options
+  let { entries = [], current = 0 } = options
 
   if (typeof entries === "string") {
     entries = [entries]

@@ -30,7 +30,7 @@ export const addQueryStringValueToPath: AddQueryStringValueToPath = (path, key, 
 
   return createPath({
     pathname,
-    search: search + (search && search.indexOf('?') === -1 ? '?' : '&') + key + '=' + value,
+    search: search + (search && search.indexOf('?') !== -1 ? '&' : '?') + key + '=' + value,
     hash
   })
 }

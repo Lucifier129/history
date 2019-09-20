@@ -22,6 +22,6 @@
     ]
   },
   "include": [
-    "src_old",
+    "src"
   ]
 }
