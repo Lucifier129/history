@@ -1,5 +1,5 @@
 import { Step, Done } from '../type'
-import CH from '../../src'
+import CH from '../../src_old'
 
 const execSteps: (
   steps: Step[],

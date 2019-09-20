@@ -43,7 +43,7 @@ export interface PopEventListener {
   (event: PopStateEvent): void
 }
 
-const PopStateEvent = 'popstate'
+const PopStateEventState = 'popstate'
 
 const _createLocation: CreateBrowserLocation = (historyState) => {
   const key = historyState && historyState.key
@@ -78,16 +78,17 @@ const isExtraneousPopstateEvent: IsExtraneousPopstateEvent
   = event => event.state === undefined && navigator.userAgent.indexOf('CriOS') === -1
 
 
+
 export const startListener: StartListener = (listener) => {
   const handlePopState: PopEventListener = (event: PopStateEvent) => {
     if (isExtraneousPopstateEvent(event)) return // Ignore extraneous popstate events in WebKit
     listener(_createLocation(event.state))
   }
 
-  addEventListener(window, PopStateEvent, handlePopState as EventListener)
+  addEventListener(window, PopStateEventState, handlePopState as EventListener)
 
   return () =>
-    removeEventListener(window, PopStateEvent, handlePopState as EventListener)
+    removeEventListener(window, PopStateEventState, handlePopState as EventListener)
 }
 
 const updateLocation: UpdateLocation = (location, updateState) => {
@@ -100,18 +101,24 @@ const updateLocation: UpdateLocation = (location, updateState) => {
   updateState({ key }, createPath(location))
 }
 
-export const pushLocation: PushLocation = (location) =>
+export const pushLocation: PushLocation = (location) => {
   updateLocation(
     location, 
     (state: object, path: string) =>
       window.history.pushState(state, '', path)
   )
+  return true
+}
+  
 
 
-export const replaceLocation: ReplaceLocation = (location) =>
+export const replaceLocation: ReplaceLocation = (location) => {
   updateLocation(location, (state: object, path: string) =>
     window.history.replaceState(state, '', path)
   )
+  return true
+}
+  
 
 
 export const go: Go = (n) => {

@@ -60,7 +60,3 @@ export const supportsHistory: SupportsHistory = () => {
  */
 export const supportsGoWithoutReloadUsingHash: SupportsGoWithoutReloadUsingHash = () =>
   window.navigator.userAgent.indexOf('Firefox') === -1
-
-export const canUseDOM: boolean = !!(
-  typeof window !== 'undefined' && window.document && window.document.createElement
-)

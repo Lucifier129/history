@@ -1,4 +1,4 @@
-import CH from '../src/createHistory'
+import CH from '../src_old/createHistory'
 
 export interface Step {
   (location?: NativeLocation): void

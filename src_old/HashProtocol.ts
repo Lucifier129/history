@@ -70,6 +70,7 @@ export interface GetCurrentLocation {
   (pathCoder: PathCoder, queryKey: string): NativeLocation
 }
 
+
 export interface PushLocation {
   (location: NativeLocation, pathCoder: PathCoder, queryKey: string): void
 }

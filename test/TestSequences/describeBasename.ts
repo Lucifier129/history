@@ -1,7 +1,7 @@
-import useBasename from '../../src/useBasename'
+import useBasename from '../../src_old/useBasename'
 import execSteps from './execSteps'
 import { Step, Done, Describe } from '../type'
-import CH, { NativeLocation } from '../../src'
+import CH, { NativeLocation } from '../../src_old'
 
 const stripHash: (path: string) => string = (path) =>
   path.replace(/^#/, '')
