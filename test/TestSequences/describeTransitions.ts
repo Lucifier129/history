@@ -2,6 +2,7 @@ import execSteps from './execSteps'
 import { NativeLocation, Actions } from '../../src'
 
 import { Step, Done, Describe } from '../type'
+import { DraftLocation } from '../../src/LocationUtils';
 
 const describeTransitions: Describe = (createHistory) => {
   describe('a synchronous transition hook', () => {
@@ -26,7 +27,7 @@ const describeTransitions: Describe = (createHistory) => {
             state: { the: 'state' }
           })
         },
-        (location: NativeLocation) => {
+        (location: DraftLocation) => {
           expect(nextLocation).toBe(location)
         }
       ]
@@ -61,7 +62,7 @@ const describeTransitions: Describe = (createHistory) => {
             state: { the: 'state' }
           })
         },
-        (location: NativeLocation) => {
+        (location: DraftLocation) => {
           expect(nextLocation).toBe(location)
         }
       ]
@@ -81,16 +82,19 @@ const describeTransitions: Describe = (createHistory) => {
     let unlisten: Function
     let unlistenBefore: Function
     beforeEach(() => {
-      location = null
 
       const confirmationMessage: string = 'Are you sure?'
 
-      history = createHistory({
-        getUserConfirmation(message, callback) {
+      let options = {
+        getUserConfirmation(message: string, callback: Function) {
           expect(message).toBe(confirmationMessage)
-          callback(true)
+          callback(false)
         }
-      })
+      }
+
+      history = createHistory(options)
+
+      location = history.getCurrentLocation()
 
       unlistenBefore = history.listenBefore(() => confirmationMessage)
 
@@ -132,16 +136,18 @@ const describeTransitions: Describe = (createHistory) => {
     let unlisten: Function
     let unlistenBefore: Function
     beforeEach(() => {
-      location = null
 
       const confirmationMessage: string = 'Are you sure?'
 
-      history = createHistory({
-        getUserConfirmation(message, callback) {
+      let options = {
+        getUserConfirmation(message: string, callback: Function) {
           expect(message).toBe(confirmationMessage)
           callback(false)
         }
-      })
+      }
+
+      history = createHistory(options)
+      location = history.getCurrentLocation()
 
       unlistenBefore = history.listenBefore(() => confirmationMessage)
 
@@ -171,9 +177,9 @@ const describeTransitions: Describe = (createHistory) => {
     let unlisten: Function
     let unlistenBefore: Function
     beforeEach(() => {
-      location = null
 
       history = createHistory()
+      location = history.getCurrentLocation()
 
       unlistenBefore = history.listenBefore(() => false)
 

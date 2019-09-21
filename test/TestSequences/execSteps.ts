@@ -8,14 +8,14 @@ const execSteps: (
   let index: number = 0
   let unlisten: Function
 
-  const cleanup = (...args) => {
+  const cleanup = (...args: any[]) => {
     unlisten()
     done(...args)
   }
 
-  const execNextStep = (...args) => {
+  const execNextStep = (location: any) => {
     try {
-      steps[index++](...args)
+      steps[index++](location)
 
       if (index === steps.length)
         cleanup()

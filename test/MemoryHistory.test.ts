@@ -23,7 +23,7 @@ describe('memory history', () => {
     it('clears rest of stack so the user cannot go forward', () => {
       const history = createMemoryHistory()
 
-      let location: NativeLocation
+      let location: NativeLocation = history.getCurrentLocation()
       history.listen((loc: NativeLocation) => {
         location = loc
       })
