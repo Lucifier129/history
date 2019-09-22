@@ -1,6 +1,6 @@
 import execSteps from './execSteps'
 import { Step, Done, Describe } from '../type'
-import { DraftLocation, Actions } from '../../src'
+import { NativeLocation, Actions } from '../../src'
 
 const describeGo: Describe = (createHistory)  => {
   describe('go', () => {
@@ -16,12 +16,12 @@ const describeGo: Describe = (createHistory)  => {
     describe('back', () => {
       it('calls change listeners with the previous location', (done: Done) => {
         const steps: Step[] = [
-          (location: DraftLocation) => {
+          (location: NativeLocation) => {
             expect(location.pathname).toEqual('/')
             expect(location.search).toEqual('')
-            expect(location.state).toBeNull()
+            expect(location.state).toBeUndefined()
             expect(location.action).toEqual(Actions.POP)
-            expect(location.key).toBe('')
+            expect(location.key).toBeNull()
 
             history.push({
               pathname: '/home',
@@ -29,7 +29,7 @@ const describeGo: Describe = (createHistory)  => {
               state: { the: 'state' }
             })
           },
-          (location: DraftLocation) => {
+          (location: NativeLocation) => {
             expect(location.pathname).toEqual('/home')
             expect(location.search).toEqual('?the=query')
             expect(location.state).toEqual({ the: 'state' })
@@ -38,7 +38,7 @@ const describeGo: Describe = (createHistory)  => {
 
             history.goBack()
           },
-          (location: DraftLocation) => {
+          (location: NativeLocation) => {
             expect(location.pathname).toEqual('/')
             expect(location.search).toEqual('')
             expect(location.state).toBe(undefined)
@@ -54,12 +54,12 @@ const describeGo: Describe = (createHistory)  => {
     describe('forward', () => {
       it('calls change listeners with the next location', (done: Done) => {
         const steps: Step[] = [
-          (location: DraftLocation) => {
+          (location: NativeLocation) => {
             expect(location.pathname).toEqual('/')
             expect(location.search).toEqual('')
-            expect(location.state).toBeNull()
+            expect(location.state).toBeUndefined()
             expect(location.action).toEqual(Actions.POP)
-            expect(location.key).toBe('')
+            expect(location.key).toBeNull()
 
             history.push({
               pathname: '/home',
@@ -67,7 +67,7 @@ const describeGo: Describe = (createHistory)  => {
               state: { the: 'state' }
             })
           },
-          (location: DraftLocation) => {
+          (location: NativeLocation) => {
             expect(location.pathname).toEqual('/home')
             expect(location.search).toEqual('?the=query')
             expect(location.state).toEqual({ the: 'state' })
@@ -80,7 +80,7 @@ const describeGo: Describe = (createHistory)  => {
               state: { the: 'state a' }
             })
           },
-          (location: DraftLocation) => {
+          (location: NativeLocation) => {
             expect(location.pathname).toEqual('/person')
             expect(location.search).toEqual('?the=query')
             expect(location.state).toEqual({ the: 'state a' })
@@ -89,7 +89,7 @@ const describeGo: Describe = (createHistory)  => {
 
             history.goBack()
           },
-          (location: DraftLocation) => {
+          (location: NativeLocation) => {
             expect(location.pathname).toEqual('/home')
             expect(location.search).toEqual('?the=query')
             expect(location.state).toEqual({ the: 'state' })
@@ -98,7 +98,7 @@ const describeGo: Describe = (createHistory)  => {
 
             history.goBack()
           },
-          (location: DraftLocation) => {
+          (location: NativeLocation) => {
             expect(location.pathname).toEqual('/')
             expect(location.search).toEqual('')
             expect(location.state).toBeUndefined()
@@ -107,7 +107,7 @@ const describeGo: Describe = (createHistory)  => {
 
             history.goForward()
           },
-          (location: DraftLocation) => {
+          (location: NativeLocation) => {
             expect(location.pathname).toEqual('/home')
             expect(location.search).toEqual('?the=query')
             expect(location.state).toEqual({ the: 'state' })

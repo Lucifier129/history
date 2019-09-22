@@ -2,7 +2,7 @@ import execSteps from './execSteps'
 import { NativeLocation, Actions } from '../../src'
 
 import { Step, Done, Describe } from '../type'
-import { DraftLocation } from '../../src/LocationUtils';
+import { BaseLocation } from '../../src/LocationUtils';
 
 const describeTransitions: Describe = (createHistory) => {
   describe('a synchronous transition hook', () => {
@@ -27,7 +27,7 @@ const describeTransitions: Describe = (createHistory) => {
             state: { the: 'state' }
           })
         },
-        (location: DraftLocation) => {
+        (location: BaseLocation) => {
           expect(nextLocation).toBe(location)
         }
       ]
@@ -62,7 +62,7 @@ const describeTransitions: Describe = (createHistory) => {
             state: { the: 'state' }
           })
         },
-        (location: DraftLocation) => {
+        (location: BaseLocation) => {
           expect(nextLocation).toBe(location)
         }
       ]

@@ -1,6 +1,7 @@
 import invariant from 'invariant'
 import { parsePath } from './PathUtils'
 import Actions, { POP } from './Actions'
+import { BLFromNL } from './type';
 
 export interface BaseLocation {
   pathname?: string
@@ -22,12 +23,12 @@ export interface CreateKey {
   (): string
 }
 
-export interface CreateLocation {
+export interface CreateLocation<BL extends BaseLocation = BaseLocation, NL extends NativeLocation = NativeLocation> {
   (
-    location?: BaseLocation | string,
+    location?: BL | string,
     action?: Actions,
     key?: string
-  ): NativeLocation
+  ): NL
 }
 
 export interface IsDate {

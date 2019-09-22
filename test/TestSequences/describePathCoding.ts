@@ -1,6 +1,6 @@
 import execSteps from './execSteps'
 import { Step, Done, Describe } from '../type'
-import { DraftLocation, Actions } from '../../src'
+import { NativeLocation, Actions } from '../../src'
 
 const describePathCoding: Describe = (createHistory) => {
   describe('with the "hashbang" hashType', () => {
@@ -24,7 +24,7 @@ const describePathCoding: Describe = (createHistory) => {
     describe('navigation', () => {
       it('calls change listeners with the correct location', (done: Done) => {
         const steps: Step[] = [
-          (location: DraftLocation) => {
+          (location: NativeLocation) => {
             expect(location.pathname).toEqual('/')
             expect(location.search).toEqual('')
             expect(location.state).toBeUndefined()
@@ -39,7 +39,7 @@ const describePathCoding: Describe = (createHistory) => {
               state: { the: 'state' }
             })
           },
-          (location: DraftLocation) => {
+          (location: NativeLocation) => {
             expect(location.pathname).toEqual('/home')
             expect(location.search).toEqual('?the=query')
             expect(location.state).toEqual({ the: 'state' })
@@ -50,7 +50,7 @@ const describePathCoding: Describe = (createHistory) => {
 
             history.goBack()
           },
-          (location: DraftLocation) => {
+          (location: NativeLocation) => {
             expect(location.pathname).toEqual('/')
             expect(location.search).toEqual('')
             expect(location.state).toBeUndefined()
@@ -61,7 +61,7 @@ const describePathCoding: Describe = (createHistory) => {
 
             history.goForward()
           },
-          (location: DraftLocation) => {
+          (location: NativeLocation) => {
             expect(location.pathname).toEqual('/home')
             expect(location.search).toEqual('?the=query')
             expect(location.state).toEqual({ the: 'state' })
@@ -98,7 +98,7 @@ const describePathCoding: Describe = (createHistory) => {
     describe('navigation', () => {
       it('calls change listeners with the correct location', (done: Done) => {
         const steps: Step[] = [
-          (location: DraftLocation) => {
+          (location: NativeLocation) => {
             expect(location.pathname).toEqual('/')
             expect(location.search).toEqual('')
             expect(location.state).toBeUndefined()
@@ -114,7 +114,7 @@ const describePathCoding: Describe = (createHistory) => {
               state: { the: 'state' }
             })
           },
-          (location: DraftLocation) => {
+          (location: NativeLocation) => {
             expect(location.pathname).toEqual('/home')
             expect(location.search).toEqual('?the=query')
             expect(location.state).toEqual({ the: 'state' })
@@ -125,7 +125,7 @@ const describePathCoding: Describe = (createHistory) => {
 
             history.goBack()
           },
-          (location: DraftLocation) => {
+          (location: NativeLocation) => {
             expect(location.pathname).toEqual('/')
             expect(location.search).toEqual('')
             expect(location.state).toBeUndefined()
@@ -137,7 +137,7 @@ const describePathCoding: Describe = (createHistory) => {
 
             history.goForward()
           },
-          (location: DraftLocation) => {
+          (location: NativeLocation) => {
             expect(location.pathname).toEqual('/home')
             expect(location.search).toEqual('?the=query')
             expect(location.state).toEqual({ the: 'state' })
@@ -174,7 +174,7 @@ const describePathCoding: Describe = (createHistory) => {
     describe('navigation', () => {
       it('calls change listeners with the correct location', (done: Done) => {
         const steps: Step[] = [
-          (location: DraftLocation) => {
+          (location: NativeLocation) => {
             expect(location.pathname).toEqual('/')
             expect(location.search).toEqual('')
             expect(location.state).toBeUndefined()
@@ -189,7 +189,7 @@ const describePathCoding: Describe = (createHistory) => {
               state: { the: 'state' }
             })
           },
-          (location: DraftLocation) => {
+          (location: NativeLocation) => {
             expect(location.pathname).toEqual('/home')
             expect(location.search).toEqual('?the=query')
             expect(location.state).toEqual({ the: 'state' })
@@ -200,7 +200,7 @@ const describePathCoding: Describe = (createHistory) => {
 
             history.goBack()
           },
-          (location: DraftLocation) => {
+          (location: NativeLocation) => {
             expect(location.pathname).toEqual('/')
             expect(location.search).toEqual('')
             expect(location.state).toBeUndefined()
@@ -211,7 +211,7 @@ const describePathCoding: Describe = (createHistory) => {
 
             history.goForward()
           },
-          (location: DraftLocation) => {
+          (location: NativeLocation) => {
             expect(location.pathname).toEqual('/home')
             expect(location.search).toEqual('?the=query')
             expect(location.state).toEqual({ the: 'state' })

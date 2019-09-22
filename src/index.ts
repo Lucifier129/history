@@ -6,8 +6,12 @@ export { default as createMemoryHistory } from './createMemoryHistory'
 
 export { MemoryOptions } from './createMemoryHistory'
 
-export { BaseLocation, NativeLocation, DraftLocation } from './LocationUtils'
+export { BaseLocation, NativeLocation } from './LocationUtils'
 
-export { HistoryOptions, CreateHistory }  from './type'
+export { HistoryOptions, CreateHistory, NativeHistory }  from './type'
 
 export { default as Actions } from './Actions'
+
+export { WithBasename } from './useBasename';
+
+export { WithQuery } from './useQueries';

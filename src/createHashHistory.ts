@@ -19,6 +19,7 @@ import { Hook } from "./runTransitionHook"
 import {
   NativeLocation,
   BaseLocation,
+  CreateLocation,
   CreateKey,
   createLocation as _createLocation,
   statesAreEqual,
@@ -41,7 +42,6 @@ import {
   GoBack,
   GoForward,
   CreateHref,
-  CreateLocation,
   NativeHistory
 } from './type'
 import { WithBasename } from './useBasename'

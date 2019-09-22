@@ -1,7 +1,7 @@
-import { DraftLocation, CreateHistory } from '../src'
+import { NativeLocation, CreateHistory } from '../src'
 
 export interface Step {
-  (location: DraftLocation): void
+  (location: NativeLocation): void
 }
 
 export interface Done {

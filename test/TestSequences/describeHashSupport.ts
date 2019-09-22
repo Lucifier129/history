@@ -1,6 +1,6 @@
 import execSteps from './execSteps'
 import { Step, Done, Describe } from '../type'
-import { DraftLocation, Actions } from '../../src'
+import { NativeLocation, Actions } from '../../src'
 
 const describeHashSupport: Describe = (createHistory) => {
   describe('when a URL with a hash is pushed', () => {
@@ -11,7 +11,7 @@ const describeHashSupport: Describe = (createHistory) => {
 
     it('preserves the hash', (done: Done) => {
       const steps: Step[] = [
-        (location: DraftLocation) => {
+        (location: NativeLocation) => {
           expect(location.pathname).toEqual('/')
           expect(location.search).toEqual('')
           expect(location.hash).toEqual('')
@@ -26,7 +26,7 @@ const describeHashSupport: Describe = (createHistory) => {
             state: { the: 'state' }
           })
         },
-        (location: DraftLocation) => {
+        (location: NativeLocation) => {
           expect(location.pathname).toEqual('/home')
           expect(location.search).toEqual('?the=query')
           expect(location.hash).toEqual('#the-hash')
@@ -41,7 +41,7 @@ const describeHashSupport: Describe = (createHistory) => {
 
     it('does not convert PUSH to REPLACE if path does not change', (done: Done) => {
       const steps: Step[] = [
-        (location: DraftLocation) => {
+        (location: NativeLocation) => {
           expect(location.pathname).toEqual('/')
           expect(location.search).toEqual('')
           expect(location.hash).toEqual('')
@@ -51,7 +51,7 @@ const describeHashSupport: Describe = (createHistory) => {
 
           history.push('/#the-hash')
         },
-        (location: DraftLocation) => {
+        (location: NativeLocation) => {
           expect(location.pathname).toEqual('/')
           expect(location.search).toEqual('')
           expect(location.hash).toEqual('#the-hash')

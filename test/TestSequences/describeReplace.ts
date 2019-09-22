@@ -1,6 +1,6 @@
 import execSteps from './execSteps'
 import { Step, Done, Describe } from '../type'
-import { DraftLocation, Actions } from '../../src'
+import { BaseLocation, Actions } from '../../src'
 
 const describeReplace: Describe = (createHistory) => {
   describe('replace', () => {
@@ -12,7 +12,7 @@ const describeReplace: Describe = (createHistory) => {
     describe('with a path string', () => {
       it('calls change listeners with the new location', (done: Done) => {
         const steps: Step[] = [
-          (location: DraftLocation) => {
+          (location: BaseLocation) => {
             expect(location.pathname).toEqual('/')
             expect(location.search).toEqual('')
             expect(location.state).toBeUndefined()
@@ -20,7 +20,7 @@ const describeReplace: Describe = (createHistory) => {
 
             history.replace('/home?the=query')
           },
-          (location: DraftLocation) => {
+          (location: BaseLocation) => {
             expect(location.pathname).toEqual('/home')
             expect(location.search).toEqual('?the=query')
             expect(location.state).toBeUndefined()
@@ -35,7 +35,7 @@ const describeReplace: Describe = (createHistory) => {
     describe('with a path object', () => {
       it('calls change listeners with the new location', (done: Done) => {
         const steps: Step[] = [
-          (location: DraftLocation) => {
+          (location: BaseLocation) => {
             expect(location.pathname).toEqual('/')
             expect(location.search).toEqual('')
             expect(location.state).toBeUndefined()
@@ -47,7 +47,7 @@ const describeReplace: Describe = (createHistory) => {
               state: { the: 'state' }
             })
           },
-          (location: DraftLocation) => {
+          (location: BaseLocation) => {
             expect(location.pathname).toEqual('/home')
             expect(location.search).toEqual('?the=query')
             expect(location.state).toEqual({ the: 'state' })
@@ -59,10 +59,10 @@ const describeReplace: Describe = (createHistory) => {
       })
 
       it('correctly merges with old location', (done: Done) => {
-        let oldLocation: DraftLocation
+        let oldLocation: BaseLocation
 
         const steps: Step[] = [
-          (location: DraftLocation) => {
+          (location: BaseLocation) => {
             expect(location.pathname).toEqual('/')
             expect(location.search).toEqual('')
             expect(location.state).toBeUndefined()
@@ -76,7 +76,7 @@ const describeReplace: Describe = (createHistory) => {
               state: { the: 'state' }
             })
           },
-          (location: DraftLocation) => {
+          (location: BaseLocation) => {
             expect(location.pathname).toEqual(oldLocation.pathname)
             expect(location.search).toEqual('?the=query')
             expect(location.state).toEqual({ the: 'state' })

@@ -13,6 +13,7 @@ import {
   BaseLocation,
   NativeLocation,
   CreateKey,
+  CreateLocation,
   createLocation as _createLocation,
   statesAreEqual,
   locationsAreEqual
@@ -31,7 +32,6 @@ import {
   GoBack,
   GoForward,
   CreateHref,
-  CreateLocation,
   NativeHistory
 } from './type'
 

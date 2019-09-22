@@ -5,14 +5,14 @@ export interface Callback {
   (result: any): void
 }
 
-export interface Hook {
-  (location: NativeLocation, callback?: Callback): any
+export interface Hook<NL extends NativeLocation = NativeLocation> {
+  (location: NL, callback?: Callback): any
 }
 
-export interface RunTransitionHook {
+export interface RunTransitionHook<NL extends NativeLocation = NativeLocation> {
   (
-    hook: Hook, 
-    location: NativeLocation, 
+    hook: Hook<NL>, 
+    location: NL, 
     callback?: Callback
   ): void
 }
