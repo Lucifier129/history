@@ -5,11 +5,11 @@ export interface AppendPrefix {
 }
 
 export interface SaveState {
-  (key: string, state: object | null): void;
+  (key: string, state: any): void;
 }
 
 export interface ReadState {
-  (key: string): object | null;
+  (key: string): any;
 }
 
 const QuotaExceededErrors = [
@@ -84,7 +84,7 @@ export const readState: ReadState = (key) => {
         '[history] Unable to read state; sessionStorage is not available due to security settings'
       )
 
-      return null
+      return undefined
     }
   }
 
@@ -97,5 +97,5 @@ export const readState: ReadState = (key) => {
     }
   }
 
-  return null
+  return undefined
 }

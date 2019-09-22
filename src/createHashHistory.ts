@@ -18,7 +18,8 @@ import {
 import { Hook } from "./runTransitionHook"
 import {
   NativeLocation,
-  DraftLocation,
+  BaseLocation,
+  CreateKey,
   createLocation as _createLocation,
   statesAreEqual,
   locationsAreEqual
@@ -33,47 +34,20 @@ import {
   GetCurrentLocation,
   Listen,
   ListenBefore,
-  ListenBeforeUnload,
   TransitionTo,
   Push,
   Replace,
   Go,
   GoBack,
   GoForward,
-  CreateKey
+  CreateHref,
+  CreateLocation,
+  NativeHistory
 } from './type'
-
-export interface CreateHref {
-  (path: string | DraftLocation): string
-}
-
-export interface CreateLocation {
-  (
-    location: DraftLocation | string,
-    action?: Actions,
-    key?: string
-  ): NativeLocation;
-}
-
-export interface HashHistory {
-  getCurrentLocation: GetCurrentLocation
-  listenBefore: ListenBefore
-  listen: Listen
-  listenBeforeUnload?: ListenBeforeUnload
-  transitionTo: TransitionTo
-  push: Push
-  replace: Replace
-  go: Go
-  goBack: GoBack
-  goForward: GoForward
-  createKey: CreateKey
-  createPath: CreatePath
-  createHref: CreateHref
-  createLocation: CreateLocation
-}
+import { WithBasename } from './useBasename'
 
 export interface CreateHashHistory {
-  (options?: HistoryOptions): HashHistory
+  (options?: HistoryOptions): NativeHistory
 }
 
 /**
@@ -144,14 +118,6 @@ export interface GetPath {
 
 export interface GetCurrentLocationHash {
   (pathCoder: PathCoder, queryKey: string): NativeLocation
-}
-
-export interface CreateLocationHash {
-  (
-    location: DraftLocation | string,
-    action?: Actions,
-    key?: string
-  ): NativeLocation;
 }
 
 export interface PopEventListener {
@@ -233,7 +199,7 @@ const createHashHistory: CreateHashHistory = (options = {}) => {
   }
 
 
-  let prevLocation: NativeLocation
+  let prevLocation: WithBasename<NativeLocation>
   const updateLocationHash: UpdateLocationHash = (location, pathCoder, queryKey, updateHash) => {
     const { state, key } = location
 
@@ -287,9 +253,9 @@ const createHashHistory: CreateHashHistory = (options = {}) => {
     }
 
     const init = parsePath(path)
-    let newInit: DraftLocation = Object.assign(init, { state })
+    let newInit: BaseLocation = Object.assign(init, { state })
 
-    return _createLocation(newInit, key)
+    return _createLocation(newInit, undefined, key)
   }
 
   const startListenerHash: StartListenerHash = (listener, pathCoder, queryKey) => {
@@ -503,7 +469,7 @@ const createHashHistory: CreateHashHistory = (options = {}) => {
     Math.random().toString(36).substr(2, keyLength || 6)
 
   const createLocation: CreateLocation = (location, action, key = createKey()) =>
-    _createLocation(location, key, action)
+    _createLocation(location, action, key)
 
   const listenBefore: ListenBefore = listener => startListener(listener, true)
 

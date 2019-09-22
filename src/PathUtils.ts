@@ -1,5 +1,6 @@
 import warning from 'warning'
-import { BaseLocation, DraftLocation } from './LocationUtils'
+import { BaseLocation } from './LocationUtils'
+import { WithBasename } from './useBasename'
 
 export interface AddQueryStringValueToPath {
   (path: string, key: string, value: string): string
@@ -22,7 +23,7 @@ export interface ParsePath {
 }
 
 export interface CreatePath {
-  (location: DraftLocation | string): string
+  (location: WithBasename<BaseLocation> | string): string
 }
 
 export const addQueryStringValueToPath: AddQueryStringValueToPath = (path, key, value) => {
@@ -105,10 +106,12 @@ export const parsePath: ParsePath = (path) => {
 }
 
 export const createPath: CreatePath = (location) => {
-  if (typeof location === 'string')
+  if (typeof location === 'string') {
     return location
+  }
 
   const { basename, pathname, search, hash } = location
+
   let path = (basename || '') + pathname
 
   if (search && search !== '?')

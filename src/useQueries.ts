@@ -1,19 +1,20 @@
 import { parse, stringify } from "querystringify"
-import runTransitionHook, { Hook } from "./runTransitionHook"
+import runTransitionHook, { Callback } from "./runTransitionHook"
 import {
   createQuery,
   NativeLocation,
-  DraftLocation,
   BaseLocation
 } from "./LocationUtils"
 import { parsePath } from "./PathUtils"
 import {
   CreateHistory,
-  NativeHistory,
   ParseQueryString,
-  GetCurrentLocation,
   HistoryOptions
 } from "./type"
+
+export type WithQuery<L extends BaseLocation> = L & {
+  query?: object
+}
 
 export interface DefaultStringifyQuery {
   (query: object): string
@@ -24,11 +25,19 @@ export interface UseQueries {
 }
 
 export interface DecodeQuery {
-  (location: NativeLocation): NativeLocation
+  (location: WithQuery<NativeLocation>): WithQuery<NativeLocation>
 }
 
 export interface EncodeQuery {
-  (location: DraftLocation | string, query: object): DraftLocation
+  (location: WithQuery<BaseLocation> | string, query: object): WithQuery<BaseLocation>
+}
+
+export interface GetCurrentLocation {
+  (): WithQuery<NativeLocation>
+}
+
+export interface Hook {
+  (location: WithQuery<NativeLocation>, callback?: Callback): any
 }
 
 export interface ListenBefore {
@@ -40,23 +49,23 @@ export interface Listen {
 }
 
 export interface Push {
-  (location: DraftLocation | string): any
+  (location: WithQuery<BaseLocation> | string): any
 }
 
 export interface Replace {
-  (location: DraftLocation | string): any
+  (location: WithQuery<BaseLocation> | string): any
 }
 
 export interface CreatePath {
-  (location: DraftLocation | string): any
+  (location: WithQuery<BaseLocation> | string): any
 }
 
 export interface CreateHref {
-  (location: DraftLocation | string): any
+  (location: WithQuery<BaseLocation> | string): any
 }
 
 export interface CreateLocation {
-  (location: DraftLocation | string, ...args: any[]): NativeLocation
+  (location: WithQuery<BaseLocation> | string, ...args: any[]): WithQuery<NativeLocation>
 }
 
 const defaultStringifyQuery: DefaultStringifyQuery = query =>
@@ -81,7 +90,7 @@ const useQueries: UseQueries = createHistory => {
     const decodeQuery: DecodeQuery = location => {
       if (!location) return location
 
-      if (location.query == null)
+      if (location.query === null || location.query === undefined)
         location.query = parseQueryString(
           location && location.search ? location.search.substring(1) : ""
         )
@@ -146,7 +155,7 @@ const useQueries: UseQueries = createHistory => {
       )
 
     const createLocation: CreateLocation = (location, ...args) => {
-      let newLocation: DraftLocation = encodeQuery(
+      let newLocation = encodeQuery(
         location,
         typeof location === "string" ? {} : location.query || {}
       )

@@ -1,35 +1,7 @@
+import Actions from './Actions'
 import { Hook } from "./runTransitionHook"
-import { NativeLocation, DraftLocation } from "./LocationUtils"
-
-import {
-  BrowserHistory,
-  CreateBrowserHistory,
-  CreateHref as CFB,
-  CreateLocation as CLB
-} from "./createBrowserHistory"
-import {
-  HashHistory,
-  CreateHashHistory,
-  CreateHref as CFH,
-  CreateLocation as CLH
-} from "./createHashHistory"
-import {
-  MemoryHistory,
-  CreateMemoryHistory,
-  CreateHref as CFM,
-  CreateLocation as CLM
-} from "./createMemoryHistory"
-
-export type CreateHistory =
-  | CreateBrowserHistory
-  | CreateHashHistory
-  | CreateMemoryHistory
-
-export type NativeHistory = BrowserHistory | HashHistory | MemoryHistory
-
-export type CreateHref = CFB | CFH | CFM
-
-export type CreateLocation = CLB | CLH | CLM
+import { NativeLocation, BaseLocation, CreateKey } from './LocationUtils';
+import { CreatePath } from './PathUtils'
 
 export interface PathCoder {
   encodePath: (path: string) => string
@@ -86,11 +58,11 @@ export interface TransitionTo {
 }
 
 export interface Push {
-  (input: DraftLocation | string): Function | void
+  (input: BaseLocation | string): Function | void
 }
 
 export interface Replace {
-  (input: DraftLocation | string): Function | void
+  (input: BaseLocation | string): Function | void
 }
 
 export interface Go {
@@ -105,6 +77,35 @@ export interface GoForward {
   (): void
 }
 
-export interface CreateKey {
-  (): string
+export interface CreateHref {
+  (location: BaseLocation | string): string;
+}
+
+export interface CreateLocation {
+  (
+    location: BaseLocation | string,
+    action?: Actions,
+    key?: string
+  ): NativeLocation;
+}
+
+export interface NativeHistory {
+  getCurrentLocation: GetCurrentLocation
+  listenBefore: ListenBefore
+  listen: Listen
+  listenBeforeUnload?: ListenBeforeUnload
+  transitionTo: TransitionTo
+  push: Push
+  replace: Replace
+  go: Go
+  goBack: GoBack
+  goForward: GoForward
+  createKey: CreateKey
+  createPath: CreatePath
+  createHref: CreateHref
+  createLocation: CreateLocation
+}
+
+export interface CreateHistory {
+  (options?: HistoryOptions): NativeHistory
 }

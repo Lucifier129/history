@@ -9,8 +9,8 @@ import {
 import { Hook } from "./runTransitionHook"
 import {
   NativeLocation,
-  DraftLocation,
   BaseLocation,
+  CreateKey,
   createLocation as _createLocation,
   statesAreEqual,
   locationsAreEqual
@@ -23,48 +23,19 @@ import {
   GetCurrentLocation,
   Listen,
   ListenBefore,
-  ListenBeforeUnload,
   TransitionTo,
   Push,
   Replace,
   Go,
   GoBack,
   GoForward,
-  CreateKey
+  CreateHref,
+  CreateLocation,
+  NativeHistory
 } from './type'
 
-
-export interface CreateHref {
-  (location: BaseLocation | string): string;
-}
-
-export interface CreateLocation {
-  (
-    location: DraftLocation | string,
-    action?: Actions,
-    key?: string
-  ): NativeLocation;
-}
-
-export interface MemoryHistory {
-  getCurrentLocation: GetCurrentLocation
-  listenBefore: ListenBefore
-  listen: Listen
-  listenBeforeUnload?: ListenBeforeUnload
-  transitionTo: TransitionTo
-  push: Push
-  replace: Replace
-  go: Go
-  goBack: GoBack
-  goForward: GoForward
-  createKey: CreateKey
-  createPath: CreatePath
-  createHref: CreateHref
-  createLocation: CreateLocation
-}
-
 export interface CreateMemoryHistory {
-  (options?: MemoryOptions): MemoryHistory
+  (options?: MemoryOptions): NativeHistory
 }
 
 /**
@@ -255,7 +226,7 @@ const createMemoryHistory: CreateMemoryHistory = (options = { hashType: 'slash' 
     createPath(location)
 
   const createLocation: CreateLocation = (location, action, key = createKey()) =>
-    _createLocation(location, key, action)
+    _createLocation(location, action, key)
 
   const getCurrentLocation: GetCurrentLocation = () => {
     if (typeof entries[current] !== undefined) {
@@ -269,9 +240,9 @@ const createMemoryHistory: CreateMemoryHistory = (options = { hashType: 'slash' 
         state = readState(key)
       }
   
-      const init: DraftLocation = parsePath(path)
+      const init: BaseLocation = parsePath(path)
   
-      return _createLocation({ ...init, state }, key)
+      return _createLocation({ ...init, state }, undefined, key)
     } else {
       throw new Error('current location is not exist.')      
     }
@@ -330,7 +301,7 @@ const createMemoryHistory: CreateMemoryHistory = (options = { hashType: 'slash' 
     entries = ["/"]
   }
 
-  entries = entries.map(entry => _createLocation(entry, ""))
+  entries = entries.map(entry => _createLocation(entry))
 
   if (current == null) {
     current = entries.length - 1

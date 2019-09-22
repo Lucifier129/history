@@ -10,12 +10,12 @@ import { createPath, CreatePath } from './PathUtils'
 import { saveState, readState } from './DOMStateStorage'
 import runTransitionHook from './runTransitionHook'
 import {
+  BaseLocation,
   NativeLocation,
+  CreateKey,
   createLocation as _createLocation,
   statesAreEqual,
-  locationsAreEqual,
-  DraftLocation,
-  BaseLocation,
+  locationsAreEqual
 } from './LocationUtils'
 import Actions, { POP, PUSH, REPLACE } from './Actions'
 import { Hook } from './runTransitionHook'
@@ -24,14 +24,15 @@ import {
   GetCurrentLocation,
   Listen,
   ListenBefore,
-  ListenBeforeUnload,
   TransitionTo,
   Push,
   Replace,
   Go,
   GoBack,
   GoForward,
-  CreateKey
+  CreateHref,
+  CreateLocation,
+  NativeHistory
 } from './type'
 
 /**
@@ -54,40 +55,8 @@ export interface ReplaceLocation {
   (location: NativeLocation): boolean
 }
 
-/**
- * NativeHistory
- */
-export interface CreateHref {
-  (location: BaseLocation | string): string
-}
-
-export interface CreateLocation {
-  (
-    location: DraftLocation | string,
-    action?: Actions,
-    key?: string
-  ): NativeLocation
-}
-
-export interface BrowserHistory {
-  getCurrentLocation: GetCurrentLocation
-  listenBefore: ListenBefore
-  listen: Listen
-  listenBeforeUnload?: ListenBeforeUnload
-  transitionTo: TransitionTo
-  push: Push
-  replace: Replace
-  go: Go
-  goBack: GoBack
-  goForward: GoForward
-  createKey: CreateKey
-  createPath: CreatePath
-  createHref: CreateHref
-  createLocation: CreateLocation
-}
-
 export interface CreateBrowserHistory {
-  (options?: HistoryOptions): BrowserHistory
+  (options?: HistoryOptions): NativeHistory
 }
 
 /**
@@ -148,7 +117,6 @@ export interface PopEventListener {
 
 const PopStateEventState = 'popstate'
 
-
 /**
  * createBrowserHistory
  * 
@@ -177,14 +145,14 @@ const createBrowserHistory: CreateBrowserHistory = (options = { hashType: 'slash
 
   // Browser
   const createBroserverLocation: CreateBrowserLocation = (historyState) => {
-    const key = historyState && historyState.key
+    const key: string = historyState && historyState.key
 
     return _createLocation({
       pathname: window.location.pathname,
       search: window.location.search,
       hash: window.location.hash,
       state: (key ? readState(key) : undefined)
-    }, '', key)
+    }, undefined, key)
   }
 
   const startListenerBrowser: StartListenerBrowser = (listener) => {
@@ -240,7 +208,7 @@ const createBrowserHistory: CreateBrowserHistory = (options = { hashType: 'slash
 
   // Refresh
   const getCurrentLocationRefresh: GetCurrentLocation = () => {
-    return _createLocation(window.location, '')
+    return _createLocation(window.location)
   }
 
   const pushLocationRefresh: PushLocation = (location) => {
@@ -384,7 +352,7 @@ const createBrowserHistory: CreateBrowserHistory = (options = { hashType: 'slash
     createPath(location)
 
   const createLocation: CreateLocation = (location, action, key = createKey()) =>
-    _createLocation(location, key, action)
+    _createLocation(location, action, key)
 
 
   let listenerCount: number = 0

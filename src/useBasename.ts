@@ -1,36 +1,68 @@
-import runTransitionHook from './runTransitionHook'
+import runTransitionHook, { Callback } from './runTransitionHook'
 import { parsePath, CreatePath } from './PathUtils'
-import { NativeLocation, BaseLocation, DraftLocation } from './LocationUtils'
+import { NativeLocation, BaseLocation } from './LocationUtils';
 import {
+  NativeHistory,
   CreateHistory,
   HistoryOptions,
-  ListenBefore,
-  Listen,
-  Push,
-  Replace,
-  CreateHref,
-  CreateLocation
 } from './type'
+
+export type WithBasename<L extends BaseLocation> = L & {
+  basename?: string
+}
 
 export interface UseBasename {
   (createHistory: CreateHistory): CreateHistory
 }
 
 export interface AddBasename {
-  (location: NativeLocation): NativeLocation
+  (location: WithBasename<NativeLocation>): WithBasename<NativeLocation>
 }
 
 export interface PrePendBasename {
-  (location: string | DraftLocation): BaseLocation | string
+  (location: BaseLocation | string): BaseLocation | string
 }
 
+
 export interface GetCurrentLocation {
-  (): NativeLocation
+  (): WithBasename<NativeLocation>
+}
+
+export interface Hook {
+  (location: WithBasename<NativeLocation>, callback?: Callback): any
+}
+
+export interface ListenBefore {
+  (hook: Hook): any
+}
+
+export interface Listen {
+  (listener: Hook): any
+}
+
+export interface Push {
+  (location: WithBasename<BaseLocation> | string): any
+}
+
+export interface Replace {
+  (location: WithBasename<BaseLocation> | string): any
+}
+
+export interface CreatePath {
+  (location: WithBasename<BaseLocation> | string): any
+}
+
+export interface CreateHref {
+  (location: WithBasename<BaseLocation> | string): any
+}
+
+export interface CreateLocation {
+  (location: WithBasename<BaseLocation> | string, ...args: any[]): WithBasename<NativeLocation>
 }
 
 const useBasename: UseBasename = (createHistory) => {
   let ch: CreateHistory = (options: HistoryOptions = { hashType: 'slash' }) => {
-    const history = createHistory(options)
+    const history: NativeHistory = createHistory(options)
     const { basename } = options
 
     const addBasename: AddBasename = (location) => {
@@ -91,7 +123,7 @@ const useBasename: UseBasename = (createHistory) => {
     const createPath: CreatePath = (location) =>
       history.createPath(prependBasename(location))
 
-    const createHref: CreateHref = (location: DraftLocation | string) =>
+    const createHref: CreateHref = (location: BaseLocation | string) =>
       history.createHref(prependBasename(location))
 
     const createLocation: CreateLocation = (location, ...args) =>
