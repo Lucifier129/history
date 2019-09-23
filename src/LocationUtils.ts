@@ -1,19 +1,7 @@
 import invariant from 'invariant'
 import { parsePath } from './PathUtils'
 import Actions, { POP } from './Actions'
-import { BLFromNL } from './type';
-
-export interface BaseLocation {
-  pathname?: string
-  search?: string
-  hash?: string
-  state?: any
-}
-
-export interface NativeLocation extends Required<BaseLocation> {
-  key: string
-  action: Actions
-}
+import { BaseLocation, NativeLocation } from './type'
 
 export interface CreateQuery {
   (props?: object): object

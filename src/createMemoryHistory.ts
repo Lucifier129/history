@@ -8,8 +8,6 @@ import {
 } from './PathUtils'
 import { Hook } from "./runTransitionHook"
 import {
-  NativeLocation,
-  BaseLocation,
   CreateKey,
   CreateLocation,
   createLocation as _createLocation,
@@ -20,6 +18,8 @@ import { ReadState, SaveState } from './DOMStateStorage'
 import Actions, { POP, PUSH, REPLACE } from './Actions'
 import runTransitionHook from './runTransitionHook'
 import {
+  NativeLocation,
+  BaseLocation,
   HistoryOptions,
   GetCurrentLocation,
   Listen,
@@ -31,12 +31,8 @@ import {
   GoBack,
   GoForward,
   CreateHref,
-  NativeHistory
+  CreateHistory
 } from './type'
-
-export interface CreateMemoryHistory {
-  (options?: MemoryOptions): NativeHistory
-}
 
 /**
  * Utils
@@ -73,11 +69,6 @@ export interface Entry {
   state: object | null
 }
 
-export interface MemoryOptions extends HistoryOptions {
-  entries?: any[]
-  current?: number
-}
-
 export interface CreateStateStorage {
   (entries: NativeLocation[]): Memo
 }
@@ -98,9 +89,7 @@ const createStateStorage: CreateStateStorage = entries =>
       return memo
     }, {} as Memo)
 
-const createMemoryHistory: CreateMemoryHistory = (options = { hashType: 'slash' }) => {
-
-  let { keyLength } = options
+const createMemoryHistory: CreateHistory<'NORMAL'> = (options = { hashType: 'slash' }) => {
 
   let currentLocation: NativeLocation
   let pendingLocation: NativeLocation | null

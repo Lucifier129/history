@@ -1,8 +1,7 @@
 import execSteps from './execSteps'
-import { NativeLocation, Actions } from '../../src'
+import { NativeLocation, Actions, BaseLocation } from '../../src'
 
-import { Step, Done, Describe } from '../type'
-import { BaseLocation } from '../../src/LocationUtils';
+import { Step, Done, Describe, } from '../type'
 
 const describeTransitions: Describe = (createHistory) => {
   describe('a synchronous transition hook', () => {

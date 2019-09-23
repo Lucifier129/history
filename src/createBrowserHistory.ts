@@ -10,8 +10,6 @@ import { createPath, CreatePath } from './PathUtils'
 import { saveState, readState } from './DOMStateStorage'
 import runTransitionHook from './runTransitionHook'
 import {
-  BaseLocation,
-  NativeLocation,
   CreateKey,
   CreateLocation,
   createLocation as _createLocation,
@@ -21,7 +19,7 @@ import {
 import Actions, { POP, PUSH, REPLACE } from './Actions'
 import { Hook } from './runTransitionHook'
 import {
-  HistoryOptions,
+  NativeLocation,
   GetCurrentLocation,
   Listen,
   ListenBefore,
@@ -32,20 +30,13 @@ import {
   GoBack,
   GoForward,
   CreateHref,
-  NativeHistory
+  CreateHistory,
+  GetUserConfirmation
 } from './type'
 
 /**
  * BrowserHistoryOptions
  */
-
-export interface GetUserConfirmationCB {
-  (ok: boolean): void
-}
-
-export interface GetUserConfirmation {
-  (message: string, callback: GetUserConfirmationCB): void
-}
 
 export interface PushLocation {
   (location: NativeLocation): boolean
@@ -53,10 +44,6 @@ export interface PushLocation {
 
 export interface ReplaceLocation {
   (location: NativeLocation): boolean
-}
-
-export interface CreateBrowserHistory {
-  (options?: HistoryOptions): NativeHistory
 }
 
 /**
@@ -130,14 +117,15 @@ const PopStateEventState = 'popstate'
  * behavior using { forceRefresh: true } in options.
  */
 
-const createBrowserHistory: CreateBrowserHistory = (options = { hashType: 'slash' }) => {
+const createBrowserHistory: CreateHistory<'NORMAL'> = (options = { hashType: 'slash' }) => {
   invariant(canUseDOM, "Browser history needs a DOM")
 
   // Default operator
-  const getUserConfirmation: GetUserConfirmation
+  const defaultGetUserConfirmation: GetUserConfirmation
     = (message, callback) => callback(window.confirm(message)) // eslint-disable-line no-alert
 
-
+  const getUserConfirmation: GetUserConfirmation = options.getUserConfirmation || defaultGetUserConfirmation
+  
   const go: Go = (n) => {
     if (n)
       window.history.go(n)

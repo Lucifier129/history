@@ -9,5 +9,5 @@ export interface Done {
 }
 
 export interface Describe {
-  (createHistory: CreateHistory): void
+  (createHistory: CreateHistory<any>): void
 }

@@ -1,7 +1,74 @@
 import Actions from './Actions'
 import { Hook } from "./runTransitionHook"
-import { NativeLocation, BaseLocation, CreateKey, CreateLocation } from './LocationUtils';
+import { CreateKey, CreateLocation } from './LocationUtils';
 import { CreatePath } from './PathUtils'
+
+export interface BaseLocation {
+  pathname?: string
+  search?: string
+  hash?: string
+  state?: any
+}
+
+export interface NativeLocation extends Required<BaseLocation> {
+  key: string
+  action: Actions
+}
+
+export interface BLWithBasename extends BaseLocation {
+  basename?: string
+}
+
+export interface NLWithBasename extends NativeLocation {
+  basename?: string
+}
+
+export interface BLWithQuery extends BaseLocation {
+  query?: object
+}
+
+export interface NLWithQuery extends NativeLocation {
+  query?: object
+}
+
+export interface BLWithBQ extends BaseLocation {
+  basename?: string
+  query?: object
+}
+
+export interface NLWithBQ extends NativeLocation {
+  basename?: string
+  query?: object
+}
+
+export interface LocationTypeMap {
+  NORMAL: {
+    Base: BaseLocation,
+    Native: NativeLocation
+  },
+  BASENAME: {
+    Base: BLWithBasename,
+    Native: NLWithBasename
+  },
+  QUERY: {
+    Base: BLWithQuery,
+    Native: NLWithQuery
+  },
+  BQ: {
+    Base: BLWithBQ,
+    Native: NLWithBQ
+  }
+}
+
+export type LocationType = keyof LocationTypeMap
+
+export type LocationTypeLoader<FLT extends 'NORMAL' | 'BASENAME' | 'QUERY', CLT extends 'BASENAME' | 'QUERY'> = CLT extends 'BASENAME'
+  ? FLT extends 'NORMAL' | 'BASENAME'
+    ? 'BASENAME'
+    : 'BQ'
+  : FLT extends 'NORMAL' | 'QUERY'
+    ? 'QUERY'
+    : 'BQ'
 
 export interface PathCoder {
   encodePath: (path: string) => string
@@ -22,6 +89,10 @@ export interface ParseQueryString {
   (query: string): object
 }
 
+export interface GetUserConfirmation {
+  (message: string, callback: Function): void
+}
+
 export interface HistoryOptions {
   keyLength?: number
   forceRefresh?: boolean
@@ -30,6 +101,9 @@ export interface HistoryOptions {
   basename?: string
   stringifyQuery?: StringifyQuery
   parseQueryString?: ParseQueryString
+  entries?: any[]
+  current?: number
+  getUserConfirmation?: GetUserConfirmation
 }
 
 export interface GetCurrentLocation<NL extends NativeLocation = NativeLocation> {
@@ -97,18 +171,8 @@ export interface NativeHistory<BL extends BaseLocation = BaseLocation, NL extend
   createLocation: CreateLocation<BL, NL>
 }
 
-export interface CreateHistory<BL extends BaseLocation = BaseLocation, NL extends NativeLocation = NativeLocation> {
-  (options?: HistoryOptions): NativeHistory<BL, NL>
+export interface CreateHistory<LT extends LocationType> {
+  (options?: HistoryOptions): NativeHistory<LocationTypeMap[LT]['Base'], LocationTypeMap[LT]['Native']>
 }
 
-export type NHFromCH<CH extends CreateHistory> = CH extends (...args: any[]) => infer NH ? NH : never
-
-export type GCLFromNH<NH extends NativeHistory> = Pick<NH, 'getCurrentLocation'>[keyof Pick<NH, 'getCurrentLocation'>] extends GetCurrentLocation<NativeLocation> ? Pick<NH, 'getCurrentLocation'>[keyof Pick<NH, 'getCurrentLocation'>] : never
-
-export type NLFromGCL<GCL extends GetCurrentLocation<NativeLocation>> = GCL extends (...args: any[]) => infer NL ? NL : never
-
-export type BLFromNL<NL extends NativeLocation> = Partial<Pick<NL, Exclude<keyof NL, 'action' | 'key'>>>
-
-export type NLFromCH<CH extends CreateHistory> = NLFromGCL<GCLFromNH<NHFromCH<CH>>>
-
-export type BLFromCH<CH extends CreateHistory> = BLFromNL<NLFromCH<CH>>
+export type LTFromCH<CH extends CreateHistory<any>> = CH extends CreateHistory<infer LT> ? LT : never

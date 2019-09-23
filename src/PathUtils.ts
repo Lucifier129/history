@@ -1,6 +1,5 @@
 import warning from 'warning'
-import { BaseLocation } from './LocationUtils';
-import { WithBasename } from './useBasename'
+import { BLWithBQ } from './type';
 
 export interface AddQueryStringValueToPath {
   (path: string, key: string, value: string | null): string
@@ -19,11 +18,11 @@ export interface ExtractPath {
 }
 
 export interface ParsePath {
-  (path: string): BaseLocation
+  (path: string): BLWithBQ
 }
 
-export interface CreatePath<BL extends BaseLocation = BaseLocation> {
-  (location: WithBasename<BL> | string): string
+export interface CreatePath {
+  (location: BLWithBQ | string): string
 }
 
 export const addQueryStringValueToPath: AddQueryStringValueToPath = (path, key, value) => {

@@ -17,8 +17,6 @@ import {
 } from './PathUtils'
 import { Hook } from "./runTransitionHook"
 import {
-  NativeLocation,
-  BaseLocation,
   CreateLocation,
   CreateKey,
   createLocation as _createLocation,
@@ -29,6 +27,9 @@ import { saveState, readState } from './DOMStateStorage'
 import Actions, { POP, PUSH, REPLACE } from './Actions'
 import runTransitionHook from './runTransitionHook'
 import {
+  NativeLocation,
+  BaseLocation,
+  NLWithBQ,
   PathCoders,
   PathCoder,
   HistoryOptions,
@@ -42,13 +43,9 @@ import {
   GoBack,
   GoForward,
   CreateHref,
-  NativeHistory
+  CreateHistory,
+  GetUserConfirmation
 } from './type'
-import { WithBasename } from './useBasename'
-
-export interface CreateHashHistory {
-  (options?: HistoryOptions): NativeHistory
-}
 
 /**
  * Utils
@@ -59,10 +56,6 @@ export interface PushLocation {
 
 export interface ReplaceLocation {
   (location: NativeLocation): boolean
-}
-
-export interface GetUserConfirmation {
-  (message: string, callback: Function): any
 }
 
 export interface StartListener {
@@ -139,7 +132,7 @@ export interface StartListenerHash {
 const HashChangeEvent: string = 'hashchange'
 
 
-const createHashHistory: CreateHashHistory = (options = {}) => {
+const createHashHistory: CreateHistory<'NORMAL'> = (options = {}) => {
   invariant(canUseDOM, "Hash history needs a DOM")
 
   let { queryKey, hashType = 'slash', keyLength }: HistoryOptions = options
@@ -183,8 +176,10 @@ const createHashHistory: CreateHashHistory = (options = {}) => {
   }
 
   // Base
-  const getUserConfirmation: GetUserConfirmation
+  const defaultGetUserConfirmation: GetUserConfirmation
     = (message, callback) => callback(window.confirm(message)) // eslint-disable-line no-alert
+    
+  const getUserConfirmation: GetUserConfirmation = options.getUserConfirmation || defaultGetUserConfirmation
 
   // Hash
   const pushHashPath: PushPath = (path) =>
@@ -199,7 +194,7 @@ const createHashHistory: CreateHashHistory = (options = {}) => {
   }
 
 
-  let prevLocation: WithBasename<NativeLocation>
+  let prevLocation: NLWithBQ
   const updateLocationHash: UpdateLocationHash = (location, pathCoder, queryKey, updateHash) => {
     const { state, key } = location
 

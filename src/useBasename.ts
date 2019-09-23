@@ -1,7 +1,7 @@
 import warning from 'warning'
 import { Callback, RunTransitionHook } from './runTransitionHook'
 import { parsePath, CreatePath } from './PathUtils'
-import { NativeLocation, BaseLocation, CreateLocation } from './LocationUtils';
+import { CreateLocation } from './LocationUtils';
 import Actions from './Actions';
 import {
   HistoryOptions,
@@ -17,21 +17,19 @@ import {
   Replace,
   CreateHref,
   CreateHistory,
-  NLFromCH,
-  BLFromCH
+  NativeLocation,
+  BaseLocation,
+  LocationTypeLoader,
+  LocationTypeMap,
+  LTFromCH
 } from './type'
 
-
-export type WithBasename<L extends BaseLocation> = L & {
-  basename?: string
-}
-
 export interface UseBasename {
-  <CH extends CreateHistory>(createHistory: CH): CreateHistory<NLFromCH<CH>>
+  <CH extends CreateHistory<any>>(createHistory: CH): CreateHistory<LocationTypeLoader<LTFromCH<CH>, 'BASENAME'>>
 }
 
 export interface AddBasename<NL extends NativeLocation> {
-  (location: WithBasename<NL>): WithBasename<NL>
+  (location: NL): NL
 }
 
 export interface PrePendBasename<BL extends BaseLocation> {
@@ -39,8 +37,10 @@ export interface PrePendBasename<BL extends BaseLocation> {
 }
 
 
-const useBasename: UseBasename = <BL extends BaseLocation = BaseLocation, NL extends NativeLocation = NativeLocation>(createHistory: CreateHistory<BL, NL>) => {
-  let ch: CreateHistory<WithBasename<BL>, WithBasename<NL>> = (options: HistoryOptions = { hashType: 'slash' }) => {
+const useBasename: UseBasename = <CH extends CreateHistory<any>>(createHistory: CH) => {
+  type BL = LocationTypeMap[LocationTypeLoader<LTFromCH<CH>, 'BASENAME'>]['Base']
+  type NL = LocationTypeMap[LocationTypeLoader<LTFromCH<CH>, 'BASENAME'>]['Native']
+  let ch: CreateHistory<LocationTypeLoader<LTFromCH<CH>, 'BASENAME'>> = (options: HistoryOptions = { hashType: 'slash' }) => {
     const history = createHistory(options)
     const { basename } = options
 
@@ -118,7 +118,7 @@ const useBasename: UseBasename = <BL extends BaseLocation = BaseLocation, NL ext
     const replace: Replace<BL> = (location) =>
       history.replace(prependBasename(location))
 
-    const createPath: CreatePath<BL> = (location) =>
+    const createPath: CreatePath = (location) =>
       history.createPath(prependBasename(location))
 
     const createHref: CreateHref<BL> = (location) =>

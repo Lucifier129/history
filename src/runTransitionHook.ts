@@ -1,5 +1,5 @@
 import warning from 'warning'
-import { NativeLocation } from './LocationUtils'
+import { NativeLocation } from './type'
 
 export interface Callback {
   (result: any): void
