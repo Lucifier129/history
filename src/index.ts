@@ -18,4 +18,10 @@ export {
   NLWithBQ
 }  from './type'
 
+export { default as useBasename } from './useBasename'
+
+export { default as useBeforeUnload } from './useBeforeUnload'
+
+export { default as useQueries } from './useQueries'
+
 export { default as Actions } from './Actions'
