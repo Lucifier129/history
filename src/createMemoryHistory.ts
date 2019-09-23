@@ -20,7 +20,7 @@ import runTransitionHook from './runTransitionHook'
 import {
   NativeLocation,
   BaseLocation,
-  HistoryOptions,
+  GetUserConfirmation,
   GetCurrentLocation,
   Listen,
   ListenBefore,
@@ -90,6 +90,10 @@ const createStateStorage: CreateStateStorage = entries =>
     }, {} as Memo)
 
 const createMemoryHistory: CreateHistory<'NORMAL'> = (options = { hashType: 'slash' }) => {
+  const defaultGetUserConfirmation: GetUserConfirmation
+  = (message, callback) => callback(window.confirm(message)) // eslint-disable-line no-alert
+
+  const getUserConfirmation: GetUserConfirmation = options.getUserConfirmation || defaultGetUserConfirmation
 
   let currentLocation: NativeLocation
   let pendingLocation: NativeLocation | null
@@ -143,7 +147,11 @@ const createMemoryHistory: CreateHistory<'NORMAL'> = (options = { hashType: 'sla
         )
       },
       (message) => {
-        callback(message !== false)
+        if (getUserConfirmation && typeof message === 'string') {
+          getUserConfirmation(message, (ok: boolean) => callback(ok !== false))
+        } else {
+          callback(message !== false)
+        }
       }
     )
   }
