@@ -22,10 +22,6 @@ import {
   CreateHref
 } from "./type"
 
-export type WithQuery<L extends BaseLocation> = L & {
-  query?: object
-}
-
 export interface DefaultStringifyQuery {
   (query: object): string
 }
