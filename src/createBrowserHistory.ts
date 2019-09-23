@@ -289,8 +289,6 @@ const createBrowserHistory: CreateHistory<'NORMAL'> = (options = { hashType: 'sl
 
       pendingLocation = null
 
-      console.log(ok)
-
       if (ok) {
         // Treat PUSH to same path like REPLACE to be consistent with browsers
         if (nextLocation.action === PUSH) {

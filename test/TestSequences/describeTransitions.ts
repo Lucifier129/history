@@ -87,7 +87,7 @@ const describeTransitions: Describe = (createHistory) => {
       let options = {
         getUserConfirmation(message: string, callback: Function) {
           expect(message).toBe(confirmationMessage)
-          callback(false)
+          callback(true)
         }
       }
 
@@ -166,7 +166,7 @@ const describeTransitions: Describe = (createHistory) => {
     it('does not update the location', () => {
       const prevLocation: NativeLocation = location
       history.push('/home')
-      expect(prevLocation).toBe(location)
+      expect(location).toBe(prevLocation)
     })
   })
 
@@ -198,7 +198,7 @@ const describeTransitions: Describe = (createHistory) => {
     it('does not update the location', () => {
       const prevLocation: NativeLocation = location
       history.push('/home')
-      expect(prevLocation).toBe(location)
+      expect(location).toBe(prevLocation)
     })
   })
 }

@@ -13,7 +13,7 @@ export interface RunTransitionHook<NL extends NativeLocation = NativeLocation> {
   (
     hook: Hook<NL>, 
     location: NL, 
-    callback?: Callback
+    callback: Callback
   ): void
 }
 
@@ -23,7 +23,7 @@ const runTransitionHook: RunTransitionHook = (hook, location, callback) => {
   if (hook.length < 2) {
     // Assume the hook runs synchronously and automatically
     // call the callback with the return value.
-    callback && callback(result)
+    callback(result)
   } else {
     warning(
       result === undefined,
