@@ -4,6 +4,18 @@ export { default as createHashHistory } from './createHashHistory'
 
 export { default as createMemoryHistory } from './createMemoryHistory'
 
-export { HistoryOptions, CreateHistory, NativeHistory, BaseLocation, NativeLocation }  from './type'
+export {
+  HistoryOptions,
+  CreateHistory,
+  NativeHistory,
+  BaseLocation,
+  NativeLocation,
+  BLWithBasename,
+  NLWithBasename,
+  BLWithQuery,
+  NLWithQuery,
+  BLWithBQ,
+  NLWithBQ
+}  from './type'
 
 export { default as Actions } from './Actions'

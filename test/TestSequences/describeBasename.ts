@@ -1,7 +1,7 @@
 import useBasename from '../../src/useBasename'
 import execSteps from './execSteps'
 import { Step, Done, Describe } from '../type'
-import { NativeLocation, Actions, WithBasename } from '../../src'
+import { Actions, NLWithBasename } from '../../src'
 
 const stripHash: (path: string) => string = (path) =>
   path.replace(/^#/, '')
@@ -20,7 +20,7 @@ const describeBasename: Describe = (createHistory) => {
     describe('in push', () => {
       it('works with string', (done: Done) => {
         const steps: Step[] = [
-          (location: WithBasename<NativeLocation>) => {
+          (location: NLWithBasename) => {
             expect(location.pathname).toEqual('/')
             expect(location.search).toEqual('')
             expect(location.state).toBeUndefined()
@@ -30,7 +30,7 @@ const describeBasename: Describe = (createHistory) => {
 
             history.push('/home')
           },
-          (location: WithBasename<NativeLocation>) => {
+          (location: NLWithBasename) => {
             expect(location.pathname).toEqual('/home')
             expect(location.search).toEqual('')
             expect(location.state).toBeUndefined()
@@ -45,7 +45,7 @@ const describeBasename: Describe = (createHistory) => {
 
       it('works with object', (done: Done) => {
         const steps = [
-          (location: WithBasename<NativeLocation>) => {
+          (location: NLWithBasename) => {
             expect(location.pathname).toEqual('/')
             expect(location.search).toEqual('')
             expect(location.state).toBeUndefined()
@@ -58,7 +58,7 @@ const describeBasename: Describe = (createHistory) => {
               state: { the: 'state' }
             })
           },
-          (location: WithBasename<NativeLocation>) => {
+          (location: NLWithBasename) => {
             expect(location.pathname).toEqual('/home')
             expect(location.search).toEqual('')
             expect(location.state).toEqual({ the: 'state' })
@@ -73,7 +73,7 @@ const describeBasename: Describe = (createHistory) => {
               state: location.state
             })
           },
-          (location: WithBasename<NativeLocation>) => {
+          (location: NLWithBasename) => {
             expect(location.pathname).toEqual('/foo')
             expect(location.search).toEqual('')
             expect(location.state).toEqual({ the: 'state' })
@@ -90,7 +90,7 @@ const describeBasename: Describe = (createHistory) => {
     describe('in replace', () => {
       it('works with string', (done: Done) => {
         const steps = [
-          (location: WithBasename<NativeLocation>) => {
+          (location: NLWithBasename) => {
             expect(location.pathname).toEqual('/')
             expect(location.search).toEqual('')
             expect(location.state).toBeUndefined()
@@ -100,7 +100,7 @@ const describeBasename: Describe = (createHistory) => {
 
             history.replace('/home')
           },
-          (location: WithBasename<NativeLocation>) => {
+          (location: NLWithBasename) => {
             expect(location.pathname).toEqual('/home')
             expect(location.search).toEqual('')
             expect(location.state).toBeUndefined()
@@ -115,7 +115,7 @@ const describeBasename: Describe = (createHistory) => {
 
       it('works with object', (done: Done) => {
         const steps = [
-          (location: WithBasename<NativeLocation>) => {
+          (location: NLWithBasename) => {
             expect(location.pathname).toEqual('/')
             expect(location.search).toEqual('')
             expect(location.state).toBeUndefined()
@@ -128,7 +128,7 @@ const describeBasename: Describe = (createHistory) => {
               state: { the: 'state' }
             })
           },
-          (location: WithBasename<NativeLocation>) => {
+          (location: NLWithBasename) => {
             expect(location.pathname).toEqual('/home')
             expect(location.search).toEqual('')
             expect(location.state).toEqual({ the: 'state' })
@@ -143,7 +143,7 @@ const describeBasename: Describe = (createHistory) => {
               state: location.state
             })
           },
-          (location: WithBasename<NativeLocation>) => {
+          (location: NLWithBasename) => {
             expect(location.pathname).toEqual('/foo')
             expect(location.search).toEqual('')
             expect(location.state).toEqual({ the: 'state' })

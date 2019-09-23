@@ -1,10 +1,10 @@
 import execSteps from './execSteps'
 import { Step, Done, Describe } from '../type'
-import { NativeLocation, Actions } from '../../src'
+import { NativeLocation, Actions, NativeHistory } from '../../src'
 
 const describeGo: Describe = (createHistory)  => {
   describe('go', () => {
-    let history: any
+    let history: NativeHistory
     beforeEach(() => {
       history = createHistory()
     })

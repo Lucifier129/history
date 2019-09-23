@@ -1,7 +1,8 @@
+import { NativeHistory } from '../../src'
 import { Describe } from '../type'
 
 const describeListen: Describe = (createHistory) => {
-  let history: any
+  let history: NativeHistory
   let unlisten: Function
   beforeEach(() => {
     history = createHistory()

@@ -1,11 +1,11 @@
 import execSteps from './execSteps'
-import { NativeLocation, Actions, BaseLocation } from '../../src'
+import { NativeLocation, Actions, NativeHistory } from '../../src'
 
 import { Step, Done, Describe, } from '../type'
 
 const describeTransitions: Describe = (createHistory) => {
   describe('a synchronous transition hook', () => {
-    let history: any
+    let history: NativeHistory
     let unlistenBefore: Function
     beforeEach(() => {
       history = createHistory()
@@ -26,7 +26,7 @@ const describeTransitions: Describe = (createHistory) => {
             state: { the: 'state' }
           })
         },
-        (location: BaseLocation) => {
+        (location: NativeLocation) => {
           expect(nextLocation).toBe(location)
         }
       ]
@@ -40,7 +40,7 @@ const describeTransitions: Describe = (createHistory) => {
   })
 
   describe('an asynchronous transition hook', () => {
-    let history: any
+    let history: NativeHistory
     let unlistenBefore: Function
     beforeEach(() => {
       history = createHistory()
@@ -61,7 +61,7 @@ const describeTransitions: Describe = (createHistory) => {
             state: { the: 'state' }
           })
         },
-        (location: BaseLocation) => {
+        (location: NativeLocation) => {
           expect(nextLocation).toBe(location)
         }
       ]
@@ -77,7 +77,7 @@ const describeTransitions: Describe = (createHistory) => {
 
   describe('when the user confirms a transition', () => {
     let location: NativeLocation
-    let history: any
+    let history: NativeHistory
     let unlisten: Function
     let unlistenBefore: Function
     beforeEach(() => {
@@ -131,7 +131,7 @@ const describeTransitions: Describe = (createHistory) => {
 
   describe('when the user cancels a transition', () => {
     let location: NativeLocation
-    let history: any
+    let history: NativeHistory
     let unlisten: Function
     let unlistenBefore: Function
     beforeEach(() => {
@@ -172,7 +172,7 @@ const describeTransitions: Describe = (createHistory) => {
 
   describe('when the transition hook cancels a transition', () => {
     let location: NativeLocation
-    let history: any
+    let history: NativeHistory
     let unlisten: Function
     let unlistenBefore: Function
     beforeEach(() => {
