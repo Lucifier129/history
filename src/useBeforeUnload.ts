@@ -1,7 +1,14 @@
-import invariant from 'invariant'
-import { addEventListener, removeEventListener } from './DOMUtils'
-import { canUseDOM } from './DOMUtils'
-import { CreateHistory, NativeHistory, ListenBeforeUnload, HistoryOptions } from './type'
+import invariant from "invariant"
+import { addEventListener, removeEventListener } from "./DOMUtils"
+import { canUseDOM } from "./DOMUtils"
+import {
+  CreateHistory,
+  NativeHistory,
+  ListenBeforeUnload,
+  HistoryOptions,
+  LTFromCH,
+  LocationTypeMap
+} from "./type"
 
 export interface GetPromptMessage {
   (): any
@@ -16,18 +23,20 @@ export interface StartListener {
 }
 
 export interface UseBeforeUnload {
-  (createHistory: CreateHistory): CreateHistory
+  <CH extends CreateHistory<any>>(createHistory: CH): CreateHistory<
+    LTFromCH<CH>
+  >
 }
 
 export interface BeforeUnloadEventListener {
   (event: BeforeUnloadEvent): void
 }
 
-const startListener: StartListener = (getPromptMessage) => {
-  const handleBeforeUnload: BeforeUnloadEventListener = (event) => {
+const startListener: StartListener = getPromptMessage => {
+  const handleBeforeUnload: BeforeUnloadEventListener = event => {
     const message = getPromptMessage()
 
-    if (typeof message === 'string') {
+    if (typeof message === "string") {
       event.returnValue = message
       return message
     }
@@ -35,10 +44,14 @@ const startListener: StartListener = (getPromptMessage) => {
     return undefined
   }
 
-  addEventListener(window, 'beforeunload', handleBeforeUnload as EventListener)
+  addEventListener(window, "beforeunload", handleBeforeUnload as EventListener)
 
   return () =>
-    removeEventListener(window, 'beforeunload', handleBeforeUnload as EventListener)
+    removeEventListener(
+      window,
+      "beforeunload",
+      handleBeforeUnload as EventListener
+    )
 }
 
 /**
@@ -46,15 +59,16 @@ const startListener: StartListener = (getPromptMessage) => {
  * history objects that know how to use the beforeunload event in web
  * browsers to cancel navigation.
  */
-const useBeforeUnload: UseBeforeUnload = (createHistory) => {
-  invariant(
-    canUseDOM,
-    'useBeforeUnload only works in DOM environments'
-  )
+const useBeforeUnload: UseBeforeUnload = <CH extends CreateHistory<any>>(
+  createHistory: CH
+) => {
+  invariant(canUseDOM, "useBeforeUnload only works in DOM environments")
 
-  const ch: CreateHistory = (options: HistoryOptions = { hashType: 'slash' }) => {
+  const ch: CreateHistory<LTFromCH<CH>> = (
+    options: HistoryOptions = { hashType: "slash" }
+  ) => {
     const history: NativeHistory = createHistory(options)
-
+    type NL = LocationTypeMap[LTFromCH<CH>]["Native"]
     let hooks: Function[] = []
     let stopListener: Function | null
 
@@ -66,13 +80,13 @@ const useBeforeUnload: UseBeforeUnload = (createHistory) => {
       return message
     }
 
-    const listenBeforeUnload: ListenBeforeUnload = (listener) => {
+    const listenBeforeUnload: ListenBeforeUnload<NL> = listener => {
       if (hooks.push(listener) === 1) {
         stopListener = startListener(getPromptMessage)
       }
 
       return () => {
-        hooks= hooks.filter(item => item !== listener)
+        hooks = hooks.filter(item => item !== listener)
 
         if (hooks.length === 0 && stopListener) {
           stopListener()
