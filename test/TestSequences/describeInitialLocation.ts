@@ -4,7 +4,7 @@ import { NativeLocation, Actions, NativeHistory } from '../../src'
 
 const describeInitialLocation: Describe = (createHistory) => {
   describe('on the initial POP', () => {
-    let history: NativeHistory
+    let history: NativeHistory = createHistory()
     beforeEach(() => {
       history = createHistory()
     })

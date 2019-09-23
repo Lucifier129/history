@@ -4,7 +4,9 @@ import { NativeLocation, Actions, NativeHistory } from '../../src'
 
 const describePathCoding: Describe = (createHistory) => {
   describe('with the "hashbang" hashType', () => {
-    let history: NativeHistory
+    let history: NativeHistory = createHistory({
+      hashType: 'hashbang'
+    })
     beforeEach(() => {
       history = createHistory({
         hashType: 'hashbang'
@@ -29,7 +31,7 @@ const describePathCoding: Describe = (createHistory) => {
             expect(location.search).toEqual('')
             expect(location.state).toBeUndefined()
             expect(location.action).toEqual(Actions.POP)
-            expect(location.key).toBeNull()
+            expect(location.key).toBe('')
 
             expect(window.location.hash).toEqual('#!')
 
@@ -55,7 +57,7 @@ const describePathCoding: Describe = (createHistory) => {
             expect(location.search).toEqual('')
             expect(location.state).toBeUndefined()
             expect(location.action).toEqual(Actions.POP)
-            expect(location.key).toBeNull()
+            expect(location.key).toBe('')
 
             expect(window.location.hash).toEqual('#!')
 
@@ -78,7 +80,9 @@ const describePathCoding: Describe = (createHistory) => {
   })
 
   describe('with the "noslash" hashType', () => {
-    let history: NativeHistory
+    let history: NativeHistory = createHistory({
+      hashType: 'noslash'
+    })
     beforeEach(() => {
       history = createHistory({
         hashType: 'noslash'
@@ -103,7 +107,7 @@ const describePathCoding: Describe = (createHistory) => {
             expect(location.search).toEqual('')
             expect(location.state).toBeUndefined()
             expect(location.action).toEqual(Actions.POP)
-            expect(location.key).toBeNull()
+            expect(location.key).toBe('')
 
             // IE 10+ gives us "#", everyone else gives us ""
             expect(window.location.hash).toMatch(/^#?$/)
@@ -130,7 +134,7 @@ const describePathCoding: Describe = (createHistory) => {
             expect(location.search).toEqual('')
             expect(location.state).toBeUndefined()
             expect(location.action).toEqual(Actions.POP)
-            expect(location.key).toBeNull()
+            expect(location.key).toBe('')
 
             // IE 10+ gives us "#", everyone else gives us ""
             expect(window.location.hash).toMatch(/^#?$/)
@@ -154,7 +158,9 @@ const describePathCoding: Describe = (createHistory) => {
   })
 
   describe('with the "slash" hashType', () => {
-    let history: NativeHistory
+    let history: NativeHistory = createHistory({
+      hashType: 'slash'
+    })
     beforeEach(() => {
       history = createHistory({
         hashType: 'slash'
@@ -179,7 +185,7 @@ const describePathCoding: Describe = (createHistory) => {
             expect(location.search).toEqual('')
             expect(location.state).toBeUndefined()
             expect(location.action).toEqual(Actions.POP)
-            expect(location.key).toBeNull()
+            expect(location.key).toBe('')
 
             expect(window.location.hash).toEqual('#/')
 
@@ -205,7 +211,7 @@ const describePathCoding: Describe = (createHistory) => {
             expect(location.search).toEqual('')
             expect(location.state).toBeUndefined()
             expect(location.action).toEqual(Actions.POP)
-            expect(location.key).toBeNull()
+            expect(location.key).toBe('')
 
             expect(window.location.hash).toEqual('#/')
 

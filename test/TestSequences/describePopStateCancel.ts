@@ -3,7 +3,7 @@ import { NativeLocation, NativeHistory } from '../../src'
 
 const describePopStateCancel: Describe = (createHistory) => {
   describe('when popstate transitons are canceled', () => {
-    let history: NativeHistory
+    let history: NativeHistory = createHistory()
     let unlistenBefore: Function
     beforeEach(() => {
       history = createHistory()

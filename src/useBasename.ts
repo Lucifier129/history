@@ -5,11 +5,6 @@ import { CreateLocation } from './LocationUtils';
 import Actions from './Actions';
 import {
   HistoryOptions,
-  ListenBeforeUnload,
-  Go,
-  GoBack,
-  GoForward,
-  TransitionTo,
   GetCurrentLocation,
   Listen,
   ListenBefore,
@@ -48,8 +43,8 @@ const useBasename: UseBasename = <CH extends CreateHistory<any>>(createHistory: 
       if (!location)
         return location
 
-      if (basename && location.basename == null) {
-        if (location.pathname && location.pathname.indexOf(basename) === 0) {
+      if (basename && !location.basename) {
+        if (location.pathname.indexOf(basename) === 0) {
           location.pathname = location.pathname.substring(basename.length)
           location.basename = basename
 
@@ -68,17 +63,15 @@ const useBasename: UseBasename = <CH extends CreateHistory<any>>(createHistory: 
         return location
       
       const object = typeof location === 'string' ? parsePath(location) : location
-      const pname = object.pathname || ''
+      const pname = object.pathname || basename
       const normalizedBasename = basename.slice(-1) === '/' ? basename : `${basename}/`
       const normalizedPathname = pname.charAt(0) === '/' ? pname.slice(1) : pname
       const pathname = normalizedBasename + normalizedPathname
 
-      let result: BL = {
+      return {
         ...object,
         pathname
       }
-
-      return result
     }
 
     // Override all read methods with basename-aware versions.
@@ -125,7 +118,7 @@ const useBasename: UseBasename = <CH extends CreateHistory<any>>(createHistory: 
       history.createHref(prependBasename(location))
 
     const createLocation: CreateLocation<BL, NL> = (location, action, key) =>
-      addBasename(history.createLocation(location, action, key))
+      addBasename(history.createLocation(prependBasename(location), action, key))
 
     return {
       ...history,

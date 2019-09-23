@@ -5,7 +5,7 @@ import { Step, Done, Describe } from '../type'
 
 const describePush: Describe = (createHistory) => {
   describe('push', () => {
-    let history: NativeHistory
+    let history: NativeHistory = createHistory()
     beforeEach(() => {
       history = createHistory()
     })
@@ -18,7 +18,7 @@ const describePush: Describe = (createHistory) => {
             expect(location.search).toEqual('')
             expect(location.state).toBeUndefined()
             expect(location.action).toEqual(Actions.POP)
-            expect(location.key).toBeNull()
+            expect(location.key).toBe('')
 
             history.push('/home?the=query')
           },
@@ -54,7 +54,7 @@ const describePush: Describe = (createHistory) => {
             expect(location.search).toEqual('')
             expect(location.state).toBeUndefined()
             expect(location.action).toEqual(Actions.POP)
-            expect(location.key).toBeNull()
+            expect(location.key).toBe('')
 
             history.push({
               pathname: '/home',
@@ -83,7 +83,7 @@ const describePush: Describe = (createHistory) => {
             expect(location.search).toEqual('')
             expect(location.state).toBeUndefined()
             expect(location.action).toEqual(Actions.POP)
-            expect(location.key).toBeNull()
+            expect(location.key).toBe('')
 
             oldLocation = location
 
@@ -113,7 +113,7 @@ const describePush: Describe = (createHistory) => {
             expect(location.search).toEqual('')
             expect(location.state).toBeUndefined()
             expect(location.action).toEqual(Actions.POP)
-            expect(location.key).toBeNull()
+            expect(location.key).toBe('')
 
             history.push({
               pathname: '/home',
@@ -153,7 +153,7 @@ const describePush: Describe = (createHistory) => {
             expect(location.search).toEqual('')
             expect(location.state).toBeUndefined()
             expect(location.action).toEqual(Actions.POP)
-            expect(location.key).toBeNull()
+            expect(location.key).toBe('')
 
             history.push({
               pathname: '/home',

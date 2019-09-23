@@ -61,12 +61,12 @@ export interface ReplaceLocation {
 }
 
 export interface Memo {
-  [propName: string]: object | null
+  [propName: string]: any
 }
 
 export interface Entry {
   key: string,
-  state: object | null
+  state: any
 }
 
 export interface CreateStateStorage {
@@ -223,7 +223,7 @@ const createMemoryHistory: CreateHistory<'NORMAL'> = (options = { hashType: 'sla
       const path: string = createPath(entry)
 
       let key: string = ""
-      let state: object | null = null
+      let state: any = undefined
       if (entry && entry.key) {
         key = entry.key
         state = readState(key)
@@ -281,27 +281,26 @@ const createMemoryHistory: CreateHistory<'NORMAL'> = (options = { hashType: 'sla
     return true
   }
 
+  let entriesBefore: (string | NativeLocation | BaseLocation)[]
 
-  let { entries = [], current = 0 } = options
-
-  if (typeof entries === "string") {
-    entries = [entries]
-  } else if (!Array.isArray(entries)) {
-    entries = ["/"]
-  }
-
-  entries = entries.map(entry => _createLocation(entry))
-
-  if (current == null) {
-    current = entries.length - 1
+  if (typeof options.entries === "string") {
+    entriesBefore = [options.entries]
+  } else if (!Array.isArray(options.entries)) {
+    entriesBefore = ['/']
   } else {
-    invariant(
-      current >= 0 && current < entries.length,
-      "Current index must be >= 0 and < %s, was %s",
-      entries.length,
-      current
-    )
+    entriesBefore = options.entries
   }
+
+  let entries = entriesBefore.map(entry => _createLocation(entry))
+
+  let current = options.current || entries.length - 1
+
+  invariant(
+    current >= 0 && current < entries.length,
+    "Current index must be >= 0 and < %s, was %s",
+    entries.length,
+    current
+  )
 
   const storage: Memo = createStateStorage(entries)
 

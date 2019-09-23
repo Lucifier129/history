@@ -4,7 +4,7 @@ import { NativeLocation, Actions, NativeHistory } from '../../src'
 
 const describeReplace: Describe = (createHistory) => {
   describe('replace', () => {
-    let history: NativeHistory
+    let history: NativeHistory = createHistory()
     beforeEach(() => {
       history = createHistory()
     })

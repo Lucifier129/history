@@ -5,7 +5,7 @@ import { Step, Done, Describe, } from '../type'
 
 const describeTransitions: Describe = (createHistory) => {
   describe('a synchronous transition hook', () => {
-    let history: NativeHistory
+    let history: NativeHistory = createHistory()
     let unlistenBefore: Function
     beforeEach(() => {
       history = createHistory()
@@ -40,7 +40,7 @@ const describeTransitions: Describe = (createHistory) => {
   })
 
   describe('an asynchronous transition hook', () => {
-    let history: NativeHistory
+    let history: NativeHistory = createHistory()
     let unlistenBefore: Function
     beforeEach(() => {
       history = createHistory()
@@ -66,9 +66,9 @@ const describeTransitions: Describe = (createHistory) => {
         }
       ]
 
-      unlistenBefore = history.listenBefore((location: NativeLocation, callback: Function) => {
+      unlistenBefore = history.listenBefore((location: NativeLocation, callback?: Function) => {
         nextLocation = location
-        setTimeout(callback)
+        callback && setTimeout(callback)
       })
 
       execSteps(steps, history, done)
@@ -77,7 +77,7 @@ const describeTransitions: Describe = (createHistory) => {
 
   describe('when the user confirms a transition', () => {
     let location: NativeLocation
-    let history: NativeHistory
+    let history: NativeHistory = createHistory()
     let unlisten: Function
     let unlistenBefore: Function
     beforeEach(() => {
@@ -131,7 +131,7 @@ const describeTransitions: Describe = (createHistory) => {
 
   describe('when the user cancels a transition', () => {
     let location: NativeLocation
-    let history: NativeHistory
+    let history: NativeHistory = createHistory()
     let unlisten: Function
     let unlistenBefore: Function
     beforeEach(() => {
@@ -172,7 +172,7 @@ const describeTransitions: Describe = (createHistory) => {
 
   describe('when the transition hook cancels a transition', () => {
     let location: NativeLocation
-    let history: NativeHistory
+    let history: NativeHistory = createHistory()
     let unlisten: Function
     let unlistenBefore: Function
     beforeEach(() => {

@@ -4,7 +4,7 @@ import { NativeLocation, Actions, NativeHistory } from '../../src'
 
 const describeGo: Describe = (createHistory)  => {
   describe('go', () => {
-    let history: NativeHistory
+    let history: NativeHistory = createHistory()
     beforeEach(() => {
       history = createHistory()
     })
@@ -21,7 +21,7 @@ const describeGo: Describe = (createHistory)  => {
             expect(location.search).toEqual('')
             expect(location.state).toBeUndefined()
             expect(location.action).toEqual(Actions.POP)
-            expect(location.key).toBeNull()
+            expect(location.key).toBe('')
 
             history.push({
               pathname: '/home',
@@ -43,7 +43,7 @@ const describeGo: Describe = (createHistory)  => {
             expect(location.search).toEqual('')
             expect(location.state).toBe(undefined)
             expect(location.action).toEqual(Actions.POP)
-            expect(location.key).toBe(null)
+            expect(location.key).toBe('')
           }
         ]
 
@@ -59,7 +59,7 @@ const describeGo: Describe = (createHistory)  => {
             expect(location.search).toEqual('')
             expect(location.state).toBeUndefined()
             expect(location.action).toEqual(Actions.POP)
-            expect(location.key).toBeNull()
+            expect(location.key).toBe('')
 
             history.push({
               pathname: '/home',
@@ -103,7 +103,7 @@ const describeGo: Describe = (createHistory)  => {
             expect(location.search).toEqual('')
             expect(location.state).toBeUndefined()
             expect(location.action).toEqual(Actions.POP)
-            expect(location.key).toBeNull()
+            expect(location.key).toBe('')
 
             history.goForward()
           },

@@ -19,7 +19,8 @@ import {
   ListenBefore,
   Push,
   Replace,
-  CreateHref
+  CreateHref,
+  NLWithQuery
 } from "./type"
 
 export interface DefaultStringifyQuery {
@@ -35,7 +36,7 @@ export interface DecodeQuery<NL extends NativeLocation> {
 }
 
 export interface EncodeQuery<BL extends BaseLocation> {
-  (location: BL | string, query: object): BL
+  (location: BL | string, query: object | undefined): BL | string
 }
 
 const defaultStringifyQuery: DefaultStringifyQuery = query =>
@@ -59,21 +60,30 @@ const useQueries: UseQueries = <CH extends CreateHistory<any>>(createHistory: CH
       parseQueryString = defaultParseQueryString
     } = options
 
+    if (!stringifyQuery || typeof stringifyQuery !== 'function')
+      stringifyQuery = defaultStringifyQuery
+
+    if (!parseQueryString || typeof parseQueryString !== 'function')
+      parseQueryString = defaultParseQueryString
+
     const decodeQuery: DecodeQuery<NL> = location => {
       if (!location) return location
 
       if (location.query === null || location.query === undefined)
         location.query = parseQueryString(
-          location && location.search ? location.search.substring(1) : ""
+          location.search ? location.search.substring(1) : ""
         )
 
       return location
     }
 
     const encodeQuery: EncodeQuery<BL> = (location, query) => {
+      if (!query)
+        return location
+
       const object: BaseLocation =
         typeof location === "string" ? parsePath(location) : location
-      const queryString: string = stringifyQuery(query || {})
+      const queryString: string = stringifyQuery(query)
       const search: string = queryString ? `?${queryString}` : ""
       return {
         ...object,
@@ -98,7 +108,7 @@ const useQueries: UseQueries = <CH extends CreateHistory<any>>(createHistory: CH
       history.push(
         encodeQuery(
           location,
-          typeof location === "string" ? {} : location.query || {}
+          typeof location === "string" ? undefined : location.query
         )
       )
 
@@ -106,7 +116,7 @@ const useQueries: UseQueries = <CH extends CreateHistory<any>>(createHistory: CH
       history.replace(
         encodeQuery(
           location,
-          typeof location === "string" ? {} : location.query || {}
+          typeof location === "string" ? undefined : location.query
         )
       )
 
@@ -114,7 +124,7 @@ const useQueries: UseQueries = <CH extends CreateHistory<any>>(createHistory: CH
       history.createPath(
         encodeQuery(
           location,
-          typeof location === "string" ? {} : location.query || {}
+          typeof location === "string" ? undefined : location.query
         )
       )
 
@@ -122,21 +132,22 @@ const useQueries: UseQueries = <CH extends CreateHistory<any>>(createHistory: CH
       history.createHref(
         encodeQuery(
           location,
-          typeof location === "string" ? {} : location.query || {}
+          typeof location === "string" ? undefined : location.query
         )
       )
 
-    const createLocation: CreateLocation<BL, NL> = (location, ...args) => {
+    const createLocation: CreateLocation<BL, NL> = (location = '/', action, key) => {
       let newLocation = encodeQuery(
-        location || {},
-        typeof location === "string" ? {} : (location && location.query) || {}
+        location,
+        typeof location === "string" ? undefined : location.query
       )
-      let newLocationAfter: NativeLocation = history.createLocation(
+      let newLocationAfter: NLWithQuery = history.createLocation(
         newLocation,
-        ...args
+        action,
+        key
       )
-      if (typeof location !== "string" && ((location && location.query) || {}))
-        newLocation.query = createQuery((location && location.query) || {})
+      if (typeof location !== "string" && location.query)
+        newLocationAfter.query = createQuery(location.query)
 
       return decodeQuery(newLocationAfter)
     }

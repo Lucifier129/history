@@ -25,7 +25,7 @@ const describeBasename: Describe = (createHistory) => {
             expect(location.search).toEqual('')
             expect(location.state).toBeUndefined()
             expect(location.action).toEqual(Actions.POP)
-            expect(location.key).toBeNull()
+            expect(location.key).toBe('')
             expect(location.basename).toEqual('')
 
             history.push('/home')
@@ -50,7 +50,7 @@ const describeBasename: Describe = (createHistory) => {
             expect(location.search).toEqual('')
             expect(location.state).toBeUndefined()
             expect(location.action).toEqual(Actions.POP)
-            expect(location.key).toBeNull()
+            expect(location.key).toBe('')
             expect(location.basename).toEqual('')
 
             history.push({
@@ -95,7 +95,7 @@ const describeBasename: Describe = (createHistory) => {
             expect(location.search).toEqual('')
             expect(location.state).toBeUndefined()
             expect(location.action).toEqual(Actions.POP)
-            expect(location.key).toBeNull()
+            expect(location.key).toBe('')
             expect(location.basename).toEqual('')
 
             history.replace('/home')
@@ -120,7 +120,7 @@ const describeBasename: Describe = (createHistory) => {
             expect(location.search).toEqual('')
             expect(location.state).toBeUndefined()
             expect(location.action).toEqual(Actions.POP)
-            expect(location.key).toBeNull()
+            expect(location.key).toBe('')
             expect(location.basename).toEqual('')
 
             history.replace({

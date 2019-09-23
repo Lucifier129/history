@@ -4,7 +4,7 @@ import { NativeLocation, Actions, NativeHistory } from '../../src'
 
 const describeHashSupport: Describe = (createHistory) => {
   describe('when a URL with a hash is pushed', () => {
-    let history: NativeHistory
+    let history: NativeHistory = createHistory()
     beforeEach(() => {
       history = createHistory()
     })
@@ -17,7 +17,7 @@ const describeHashSupport: Describe = (createHistory) => {
           expect(location.hash).toEqual('')
           expect(location.state).toBeUndefined()
           expect(location.action).toEqual(Actions.POP)
-          expect(location.key).toBeNull()
+          expect(location.key).toBe('')
 
           history.push({
             pathname: '/home',
@@ -47,7 +47,7 @@ const describeHashSupport: Describe = (createHistory) => {
           expect(location.hash).toEqual('')
           expect(location.state).toBeUndefined()
           expect(location.action).toEqual(Actions.POP)
-          expect(location.key).toBeNull()
+          expect(location.key).toBe('')
 
           history.push('/#the-hash')
         },

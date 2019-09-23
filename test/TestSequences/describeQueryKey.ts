@@ -4,7 +4,7 @@ import { NativeLocation, Actions, NativeHistory } from '../../src'
 
 const describeQueryKey: Describe = (createHistory) => {
   describe('when queryKey == "a"', () => {
-    let history: NativeHistory
+    let history: NativeHistory = createHistory({ queryKey: 'a' })
     beforeEach(() => {
       history = createHistory({ queryKey: 'a' })
     })
@@ -16,7 +16,7 @@ const describeQueryKey: Describe = (createHistory) => {
           expect(location.search).toEqual('')
           expect(location.state).toBeUndefined()
           expect(location.action).toEqual(Actions.POP)
-          expect(location.key).toBeNull()
+          expect(location.key).toBe('')
 
           history.push({
             pathname: '/home',
@@ -38,7 +38,7 @@ const describeQueryKey: Describe = (createHistory) => {
           expect(location.search).toEqual('')
           expect(location.state).toBeUndefined()
           expect(location.action).toEqual(Actions.POP)
-          expect(location.key).toBeNull()
+          expect(location.key).toBe('')
 
           history.goForward()
         },

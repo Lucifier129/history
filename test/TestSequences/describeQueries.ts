@@ -24,7 +24,7 @@ const describeQueries: Describe = (createHistory) => {
             expect(location.query).toEqual(createQuery())
             expect(location.state).toBeUndefined()
             expect(location.action).toEqual(Actions.POP)
-            expect(location.key).toBeNull()
+            expect(location.key).toBe('')
 
             history.push({
               pathname: '/home',
@@ -83,7 +83,7 @@ const describeQueries: Describe = (createHistory) => {
             expect(location.query).toEqual(createQuery({}))
             expect(location.state).toBeUndefined()
             expect(location.action).toEqual(Actions.POP)
-            expect(location.key).toBeNull()
+            expect(location.key).toBe('')
 
             history.replace({
               pathname: '/home',
@@ -200,8 +200,8 @@ const describeQueries: Describe = (createHistory) => {
         })
 
         expect(location.pathname).toEqual('/the/path')
-        expect(location.query).toEqual(createQuery({ the: '' }))
-        expect(location.search).toEqual('')
+        expect(location.query).toEqual(createQuery({ the: undefined }))
+        expect(location.search).toEqual('?the=')
       })
     })
 

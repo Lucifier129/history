@@ -125,7 +125,7 @@ const createBrowserHistory: CreateHistory<'NORMAL'> = (options = { hashType: 'sl
     = (message, callback) => callback(window.confirm(message)) // eslint-disable-line no-alert
 
   const getUserConfirmation: GetUserConfirmation = options.getUserConfirmation || defaultGetUserConfirmation
-  
+
   const go: Go = (n) => {
     if (n)
       window.history.go(n)
@@ -133,7 +133,7 @@ const createBrowserHistory: CreateHistory<'NORMAL'> = (options = { hashType: 'sl
 
   // Browser
   const createBroserverLocation: CreateBrowserLocation = (historyState) => {
-    const key: string = historyState && historyState.key
+    const key: string = (historyState && historyState.key) || ''
 
     return _createLocation({
       pathname: window.location.pathname,
@@ -288,6 +288,8 @@ const createBrowserHistory: CreateHistory<'NORMAL'> = (options = { hashType: 'sl
         return // Transition was interrupted during confirmation
 
       pendingLocation = null
+
+      console.log(ok)
 
       if (ok) {
         // Treat PUSH to same path like REPLACE to be consistent with browsers

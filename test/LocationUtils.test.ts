@@ -30,7 +30,7 @@ describe('a location', () => {
 
   it('has null state by default', () => {
     const location: NativeLocation = createLocation()
-    expect(location.state).toBe(null)
+    expect(location.state).toBeUndefined()
   })
 
   it('uses pop navigation by default', () => {

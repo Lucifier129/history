@@ -2,15 +2,15 @@ import warning from 'warning'
 import { BLWithBQ } from './type';
 
 export interface AddQueryStringValueToPath {
-  (path: string, key: string, value: string | null): string
+  (path: string, key: string, value: string): string
 }
 
 export interface StripQueryStringValueFromPath {
-  (path: string, key?: string | null): string
+  (path: string, key?: string): string
 }
 
 export interface GetQueryStringValueFromPath {
-  (path: string, key: string | null): string
+  (path: string, key: string): string
 }
 
 export interface ExtractPath {
@@ -108,7 +108,7 @@ export const createPath: CreatePath = (location) => {
   if (typeof location === 'string') {
     return location
   }
-
+  location = location || {}
   const { basename, pathname, search, hash } = location
 
   let path = (basename || '') + pathname
