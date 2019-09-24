@@ -34,9 +34,6 @@ export interface LocationsAreEqual {
 export const createQuery: CreateQuery = (props) =>
   Object.assign(Object.create(null), props)
 
-const createKey: CreateKey = () =>
-  Math.random().toString(36).substr(2, 6)
-
 export const createLocation: CreateLocation = (input = '/', action = POP, key = '') => {
   const object = typeof input === 'string' ? parsePath(input) : input
 
@@ -44,6 +41,21 @@ export const createLocation: CreateLocation = (input = '/', action = POP, key = 
   const search: string = object.search || ''
   const hash: string = object.hash || ''
   const state: any = object.state
+
+  try {
+    location.pathname = decodeURI(location.pathname);
+  } catch (e) {
+    if (e instanceof URIError) {
+      throw new URIError(
+        'Pathname "' +
+          location.pathname +
+          '" could not be decoded. ' +
+          'This is likely caused by an invalid percent-encoding.'
+      );
+    } else {
+      throw e;
+    }
+  }
 
   return {
     pathname,
