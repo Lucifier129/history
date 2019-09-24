@@ -1,8 +1,20 @@
-export { default as createBrowserHistory } from './createBrowserHistory'
+import { default as _createBrowserHistory } from './createBrowserHistory'
 
-export { default as createHashHistory } from './createHashHistory'
+import { default as _createHashHistory } from './createHashHistory'
 
-export { default as createMemoryHistory } from './createMemoryHistory'
+import { default as _createMemoryHistory } from './createMemoryHistory'
+
+export const createBrowserHistory = _createBrowserHistory
+
+export const createHashHistory = _createHashHistory
+
+export const createMemoryHistory = _createMemoryHistory
+
+export default {
+  createBrowserHistory: _createBrowserHistory,
+  createHashHistory: _createHashHistory,
+  createMemoryHistory: _createMemoryHistory
+}
 
 export {
   HistoryOptions,
