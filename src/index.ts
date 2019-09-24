@@ -27,7 +27,10 @@ export {
   BLWithQuery,
   NLWithQuery,
   BLWithBQ,
-  NLWithBQ
+  NLWithBQ,
+  LocationType,
+  LocationTypeLoader,
+  LocationTypeMap
 }  from './type'
 
 export { default as useBasename } from './useBasename'
