@@ -122,10 +122,6 @@ export interface Listen<NL extends NativeLocation = NativeLocation> {
   (hook: Hook<NL>): Unlisten
 }
 
-export interface ListenBeforeUnload<NL extends NativeLocation = NativeLocation> {
-  (hook: Hook<NL>): Unlisten
-}
-
 export interface TransitionTo<NL extends NativeLocation = NativeLocation> {
   (nextLocation: NL): void
 }
@@ -158,7 +154,6 @@ export interface NativeHistory<BL extends BaseLocation = BaseLocation, NL extend
   getCurrentLocation: GetCurrentLocation<NL>
   listenBefore: ListenBefore<NL>
   listen: Listen<NL>
-  listenBeforeUnload?: ListenBeforeUnload<NL>
   transitionTo: TransitionTo<NL>
   push: Push<BL>
   replace: Replace<BL>

@@ -1,14 +1,34 @@
 import invariant from "invariant"
 import { addEventListener, removeEventListener } from "./DOMUtils"
+import { Hook } from './runTransitionHook'
 import { canUseDOM } from "./DOMUtils"
 import {
   CreateHistory,
   NativeHistory,
-  ListenBeforeUnload,
   HistoryOptions,
   LTFromCH,
-  LocationTypeMap
+  LocationTypeMap,
+  BaseLocation,
+  NativeLocation,
+  Unlisten,
+  LocationType
 } from "./type"
+
+export interface ListenBeforeUnload<NL extends NativeLocation = NativeLocation> {
+  (hook: Hook<NL>): Unlisten
+}
+
+export interface NativeHistoryWithBFOL<BL extends BaseLocation = BaseLocation, NL extends NativeLocation = NativeLocation> extends NativeHistory<BL, NL> {
+  listenBeforeUnload: ListenBeforeUnload<NL>
+}
+
+export interface CreateHistoryWithBFOL<LT extends LocationType> {
+  (options?: HistoryOptions): NativeHistoryWithBFOL<LocationTypeMap[LT]['Base'], LocationTypeMap[LT]['Native']>
+}
+
+export interface UseBeforeUnload {
+  <CH extends CreateHistory<any>>(createHistory: CH): CreateHistory<LTFromCH<CH>>
+}
 
 export interface GetPromptMessage {
   (): any
@@ -20,12 +40,6 @@ export interface StopListener {
 
 export interface StartListener {
   (getPromptMessage: GetPromptMessage): StopListener
-}
-
-export interface UseBeforeUnload {
-  <CH extends CreateHistory<any>>(createHistory: CH): CreateHistory<
-    LTFromCH<CH>
-  >
 }
 
 export interface BeforeUnloadEventListener {
