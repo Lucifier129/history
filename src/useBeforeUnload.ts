@@ -27,7 +27,7 @@ export interface CreateHistoryWithBFOL<LT extends LocationType> {
 }
 
 export interface UseBeforeUnload {
-  <CH extends CreateHistory<any>>(createHistory: CH): CreateHistory<LTFromCH<CH>>
+  <CH extends CreateHistory<any>>(createHistory: CH): CreateHistoryWithBFOL<LTFromCH<CH>>
 }
 
 export interface GetPromptMessage {
@@ -78,7 +78,7 @@ const useBeforeUnload: UseBeforeUnload = <CH extends CreateHistory<any>>(
 ) => {
   invariant(canUseDOM, "useBeforeUnload only works in DOM environments")
 
-  const ch: CreateHistory<LTFromCH<CH>> = (
+  const ch: CreateHistoryWithBFOL<LTFromCH<CH>> = (
     options: HistoryOptions = { hashType: "slash" }
   ) => {
     const history: NativeHistory = createHistory(options)
