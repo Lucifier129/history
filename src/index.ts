@@ -35,7 +35,7 @@ export {
 
 export { default as useBasename } from './useBasename'
 
-export { default as useBeforeUnload } from './useBeforeUnload'
+export { default as useBeforeUnload, NativeHistoryWithBFOL } from './useBeforeUnload'
 
 export { default as useQueries } from './useQueries'
 
