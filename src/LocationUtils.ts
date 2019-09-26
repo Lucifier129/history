@@ -1,7 +1,7 @@
 import invariant from 'invariant'
 import { parsePath } from './PathUtils'
 import Actions, { POP } from './Actions'
-import { BaseLocation, NativeLocation } from './type'
+import { BaseLocation, NativeLocation, GetUserConfirmation } from './type'
 
 export interface CreateQuery {
   (props?: object): object
@@ -66,6 +66,9 @@ export const createLocation: CreateLocation = (input = '/', action = POP, key = 
     key
   }
 }
+
+export const defaultGetUserConfirmation: GetUserConfirmation
+= (message, callback) => callback(window.confirm(message)) // eslint-disable-line no-alert
 
 const isDate: IsDate = (object) =>
   Object.prototype.toString.call(object) === '[object Date]'

@@ -9,7 +9,6 @@ import {
 } from "./DOMUtils"
 import {
   createPath,
-  CreatePath,
   addQueryStringValueToPath,
   stripQueryStringValueFromPath,
   getQueryStringValueFromPath,
@@ -21,7 +20,8 @@ import {
   CreateKey,
   createLocation as _createLocation,
   statesAreEqual,
-  locationsAreEqual
+  locationsAreEqual,
+  defaultGetUserConfirmation
 } from './LocationUtils'
 import { saveState, readState } from './DOMStateStorage'
 import Actions, { POP, PUSH, REPLACE } from './Actions'
@@ -176,9 +176,6 @@ const createHashHistory: CreateHistory<'NORMAL'> = (options = {}) => {
   }
 
   // Base
-  const defaultGetUserConfirmation: GetUserConfirmation
-    = (message, callback) => callback(window.confirm(message)) // eslint-disable-line no-alert
-    
   const getUserConfirmation: GetUserConfirmation = options.getUserConfirmation || defaultGetUserConfirmation
 
   // Hash

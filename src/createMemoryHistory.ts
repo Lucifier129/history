@@ -3,7 +3,6 @@ import invariant from "invariant"
 import { loopAsync } from './AsyncUtils'
 import {
   createPath,
-  CreatePath,
   parsePath
 } from './PathUtils'
 import { Hook } from "./runTransitionHook"
@@ -12,7 +11,8 @@ import {
   CreateLocation,
   createLocation as _createLocation,
   statesAreEqual,
-  locationsAreEqual
+  locationsAreEqual,
+  defaultGetUserConfirmation
 } from './LocationUtils'
 import { ReadState, SaveState } from './DOMStateStorage'
 import Actions, { POP, PUSH, REPLACE } from './Actions'
@@ -90,9 +90,6 @@ const createStateStorage: CreateStateStorage = entries =>
     }, {} as Memo)
 
 const createMemoryHistory: CreateHistory<'NORMAL'> = (options = { hashType: 'slash' }) => {
-  const defaultGetUserConfirmation: GetUserConfirmation
-  = (message, callback) => callback(window.confirm(message)) // eslint-disable-line no-alert
-
   const getUserConfirmation: GetUserConfirmation = options.getUserConfirmation || defaultGetUserConfirmation
 
   let currentLocation: NativeLocation

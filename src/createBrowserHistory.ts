@@ -14,7 +14,8 @@ import {
   CreateLocation,
   createLocation as _createLocation,
   statesAreEqual,
-  locationsAreEqual
+  locationsAreEqual,
+  defaultGetUserConfirmation
 } from './LocationUtils'
 import Actions, { POP, PUSH, REPLACE } from './Actions'
 import { Hook } from './runTransitionHook'
@@ -121,9 +122,6 @@ const createBrowserHistory: CreateHistory<'NORMAL'> = (options = { hashType: 'sl
   invariant(canUseDOM, "Browser history needs a DOM")
 
   // Default operator
-  const defaultGetUserConfirmation: GetUserConfirmation
-    = (message, callback) => callback(window.confirm(message)) // eslint-disable-line no-alert
-
   const getUserConfirmation: GetUserConfirmation = options.getUserConfirmation || defaultGetUserConfirmation
 
   const go: Go = (n) => {
