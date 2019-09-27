@@ -35,15 +35,15 @@ export const createQuery: CreateQuery = (props) =>
   Object.assign(Object.create(null), props)
 
 export const createLocation: CreateLocation = (input = '/', action = POP, key = '') => {
-  const object = typeof input === 'string' ? parsePath(input) : input
+  const location = typeof input === 'string' ? parsePath(input) : input
 
-  const pathname: string = object.pathname || '/'
-  const search: string = object.search || ''
-  const hash: string = object.hash || ''
-  const state: any = object.state
+  let pathname: string = location.pathname || '/'
+  const search: string = location.search || ''
+  const hash: string = location.hash || ''
+  const state: any = location.state
 
   try {
-    location.pathname = decodeURI(location.pathname);
+    pathname = decodeURI(pathname)
   } catch (e) {
     if (e instanceof URIError) {
       throw new URIError(
