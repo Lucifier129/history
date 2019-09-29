@@ -1,64 +1,64 @@
 import warning from 'warning'
-import { Location } from './index'
+import { BLWithBQ } from './type';
 
 export interface AddQueryStringValueToPath {
-  (path: string, key: string, value: string): string;
+  (path: string, key: string, value: string): string
 }
 
 export interface StripQueryStringValueFromPath {
-  (path: string, key?: string): string;
+  (path: string, key?: string): string
 }
 
 export interface GetQueryStringValueFromPath {
-  (path: string, key: string): string;
+  (path: string, key: string): string
 }
 
 export interface ExtractPath {
-  (path: string): string;
+  (path: string): string
 }
 
 export interface ParsePath {
-  (path: string): Location;
+  (path: string): BLWithBQ
 }
 
 export interface CreatePath {
-  (location?: Location | string): string;
+  (location: BLWithBQ | string): string
 }
 
 export const addQueryStringValueToPath: AddQueryStringValueToPath = (path, key, value) => {
-  const { pathname, search, hash }: Location = parsePath(path)
+  const { pathname, search, hash } = parsePath(path)
 
   return createPath({
     pathname,
-    search: search + (search.indexOf('?') === -1 ? '?' : '&') + key + '=' + value,
+    search: search + (search && search.indexOf('?') !== -1 ? '&' : '?') + key + '=' + value,
     hash
   })
 }
 
 export const stripQueryStringValueFromPath: StripQueryStringValueFromPath = (path, key) => {
-  const { pathname, search, hash }: Location = parsePath(path)
+  const { pathname, search, hash } = parsePath(path)
 
   return createPath({
     pathname,
-    search: search.replace(
+    search: search ? search.replace(
       new RegExp(`([?&])${key}=[a-zA-Z0-9]+(&?)`),
       (match, prefix, suffix) => (
         prefix === '?' ? prefix : suffix
       )
-    ),
+    ) : '',
     hash
   })
 }
 
 export const getQueryStringValueFromPath: GetQueryStringValueFromPath
 = (path, key) => {
-  const { search }: Location = parsePath(path)
-  const match: RegExpMatchArray = search.match(new RegExp(`[?&]${key}=([a-zA-Z0-9]+)`))
-  return match && match[1]
+  const { search } = parsePath(path)
+  const match: RegExpMatchArray | null = search ? search.match(new RegExp(`[?&]${key}=([a-zA-Z0-9]+)`)) : null
+  return match ? match[1] : ''
 }
 
 const extractPath: ExtractPath = (path) => {
-  let match: RegExpMatchArray = null
+  let match: RegExpMatchArray | null = null
   if (typeof path === 'string') {
     match = path.match(/^(https?:)?\/\/[^\/]*/)
   }
@@ -105,10 +105,12 @@ export const parsePath: ParsePath = (path) => {
 }
 
 export const createPath: CreatePath = (location) => {
-  if (location === undefined || typeof location === 'string')
-    return <string>location
+  if (typeof location === 'string') {
+    return location
+  }
+  location = location || {}
+  const { basename, pathname, search, hash } = location
 
-  const { basename, pathname, search, hash }: Location = location
   let path = (basename || '') + pathname
 
   if (search && search !== '?')

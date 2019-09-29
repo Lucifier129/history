@@ -7,7 +7,7 @@ import describeReplace from './TestSequences/describeReplace'
 import describeBasename from './TestSequences/describeBasename'
 import describeQueries from './TestSequences/describeQueries'
 import describeGo from './TestSequences/describeGo'
-import CH, { Location } from '../src'
+import { NativeLocation } from '../src'
 
 describe('memory history', () => {
   describeListen(createMemoryHistory)
@@ -21,10 +21,10 @@ describe('memory history', () => {
 
   describe('when using push in the middle of the stack', () => {
     it('clears rest of stack so the user cannot go forward', () => {
-      const history: CH.NativeHistory = createMemoryHistory()
+      const history = createMemoryHistory()
 
-      let location: Location
-      history.listen((loc: Location) => {
+      let location: NativeLocation = history.getCurrentLocation()
+      history.listen((loc: NativeLocation) => {
         location = loc
       })
 

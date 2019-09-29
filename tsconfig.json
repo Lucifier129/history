@@ -6,8 +6,8 @@
     "diagnostics": true,
     "lib": ["es2015", "es2016", "es2017", "dom", "esnext"],
     "jsx": "react",
-    "strict": false,
-    "sourceMap": true,
+    "strict": true,
+    // "sourceMap": true,
     "declaration": true,
     "esModuleInterop": true,
     "downlevelIteration": true,
@@ -22,6 +22,6 @@
     ]
   },
   "include": [
-    "src",
+    "src"
   ]
 }

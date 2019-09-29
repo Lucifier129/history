@@ -1,35 +1,34 @@
 import warning from 'warning'
 
-export interface CreateKey {
+export interface AppendPrefix {
   (key: string): string;
 }
 
-export interface SaveKey {
-  (key: string, state: object): void;
+export interface SaveState {
+  (key: string, state: any): void;
 }
 
 export interface ReadState {
-  (key: string): void;
+  (key: string): any;
 }
 
-const QuotaExceededErrors = {
-  QuotaExceededError: true,
-  QUOTA_EXCEEDED_ERR: true
-}
+const QuotaExceededErrors = [
+  'QuotaExceededError',
+  'QUOTA_EXCEEDED_ERR'
+]
 
-const SecurityErrors = {
-  SecurityError: true
-}
+const SecurityErrors = [
+  'SecurityError'
+]
 
 const KeyPrefix: string = '@@History/'
 
-export const createKey: CreateKey = (key) =>
+export const appendPrefix: AppendPrefix = (key) =>
   KeyPrefix + key
 
-export const saveState: SaveKey = (key, state) => {
+export const saveState: SaveState = (key, state) => {
   if (!window.sessionStorage) {
-    // Session storage is not available or hidden.
-    // sessionStorage is undefined in Internet Explorer when served via file protocol.
+    
     warning(
       false,
       '[history] Unable to save state; sessionStorage is not available'
@@ -39,13 +38,14 @@ export const saveState: SaveKey = (key, state) => {
   }
 
   try {
-    if (state == null) {
-      window.sessionStorage.removeItem(createKey(key))
+    if (state === null) {
+      window.sessionStorage.removeItem(appendPrefix(key))
     } else {
-      window.sessionStorage.setItem(createKey(key), JSON.stringify(state))
+      window.sessionStorage.setItem(appendPrefix(key), JSON.stringify(state))
     }
-  } catch (error) {
-    if (SecurityErrors[error.name]) {
+  } catch (ex) {
+    let error: Error = ex
+    if (SecurityErrors.includes(error.name)) {
       // Blocking cookies in Chrome/Firefox/Safari throws SecurityError on any
       // attempt to access window.sessionStorage.
       warning(
@@ -56,7 +56,7 @@ export const saveState: SaveKey = (key, state) => {
       return
     }
 
-    if (QuotaExceededErrors[error.name] && window.sessionStorage.length === 0) {
+    if (QuotaExceededErrors.includes(error.name) && window.sessionStorage.length === 0) {
       // Safari "private mode" throws QuotaExceededError.
       warning(
         false,
@@ -71,11 +71,12 @@ export const saveState: SaveKey = (key, state) => {
 }
 
 export const readState: ReadState = (key) => {
-  let json: string
+  let json: string | null = null
   try {
-    json = window.sessionStorage.getItem(createKey(key))
-  } catch (error) {
-    if (SecurityErrors[error.name]) {
+    json = window.sessionStorage.getItem(appendPrefix(key))
+  } catch (ex) {
+    let error: Error = ex
+    if (SecurityErrors.includes(error.name)) {
       // Blocking cookies in Chrome/Firefox/Safari throws SecurityError on any
       // attempt to access window.sessionStorage.
       warning(
@@ -89,8 +90,9 @@ export const readState: ReadState = (key) => {
 
   if (json) {
     try {
-      return JSON.parse(json)
-    } catch (error) {
+      return JSON.parse(json) as object
+    } catch (ex) {
+      let error: Error = ex
       // Ignore invalid JSON.
     }
   }

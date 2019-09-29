@@ -34,7 +34,7 @@ describe('hash history', () => {
   if (supportsHistory()) {
     describePopState(createHashHistory)
   } else {
-    describe.skip(null, () => {
+    describe.skip('', () => {
       describePopState(createHashHistory)
     })
   }
@@ -44,7 +44,7 @@ describe('hash history', () => {
     describeQueryKey(createHashHistory)
     describePathCoding(createHashHistory)
   } else {
-    describe.skip(null, () => {
+    describe.skip('', () => {
       describeGo(createHashHistory)
       describeQueryKey(createHashHistory)
       describePathCoding(createHashHistory)

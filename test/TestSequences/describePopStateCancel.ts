@@ -1,9 +1,9 @@
 import { Done, Describe } from '../type'
-import CH, { Location } from '../../src'
+import { NativeLocation, NativeHistory } from '../../src'
 
 const describePopStateCancel: Describe = (createHistory) => {
   describe('when popstate transitons are canceled', () => {
-    let history: CH.NativeHistory
+    let history: NativeHistory = createHistory()
     let unlistenBefore: Function
     beforeEach(() => {
       history = createHistory()
@@ -23,7 +23,7 @@ const describePopStateCancel: Describe = (createHistory) => {
       window.history.back()
 
       setTimeout(() => {
-        const currentLocation: Location = history.getCurrentLocation()
+        const currentLocation: NativeLocation = history.getCurrentLocation()
         expect(currentLocation.pathname).toBe('/c')
         done()
       }, 100)

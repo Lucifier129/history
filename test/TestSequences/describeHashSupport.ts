@@ -1,23 +1,23 @@
 import execSteps from './execSteps'
 import { Step, Done, Describe } from '../type'
-import CH, { Location } from '../../src'
+import { NativeLocation, Actions, NativeHistory } from '../../src'
 
 const describeHashSupport: Describe = (createHistory) => {
   describe('when a URL with a hash is pushed', () => {
-    let history: CH.NativeHistory
+    let history: NativeHistory = createHistory()
     beforeEach(() => {
       history = createHistory()
     })
 
     it('preserves the hash', (done: Done) => {
       const steps: Step[] = [
-        (location: Location) => {
+        (location: NativeLocation) => {
           expect(location.pathname).toEqual('/')
           expect(location.search).toEqual('')
           expect(location.hash).toEqual('')
           expect(location.state).toBeUndefined()
-          expect(location.action).toEqual(CH.Actions.POP)
-          expect(location.key).toBeNull()
+          expect(location.action).toEqual(Actions.POP)
+          expect(location.key).toBe('')
 
           history.push({
             pathname: '/home',
@@ -26,12 +26,12 @@ const describeHashSupport: Describe = (createHistory) => {
             state: { the: 'state' }
           })
         },
-        (location: Location) => {
+        (location: NativeLocation) => {
           expect(location.pathname).toEqual('/home')
           expect(location.search).toEqual('?the=query')
           expect(location.hash).toEqual('#the-hash')
           expect(location.state).toEqual({ the: 'state' })
-          expect(location.action).toEqual(CH.Actions.PUSH)
+          expect(location.action).toEqual(Actions.PUSH)
           expect(location.key).toBeDefined()
         }
       ]
@@ -41,22 +41,22 @@ const describeHashSupport: Describe = (createHistory) => {
 
     it('does not convert PUSH to REPLACE if path does not change', (done: Done) => {
       const steps: Step[] = [
-        (location: Location) => {
+        (location: NativeLocation) => {
           expect(location.pathname).toEqual('/')
           expect(location.search).toEqual('')
           expect(location.hash).toEqual('')
           expect(location.state).toBeUndefined()
-          expect(location.action).toEqual(CH.Actions.POP)
-          expect(location.key).toBeNull()
+          expect(location.action).toEqual(Actions.POP)
+          expect(location.key).toBe('')
 
           history.push('/#the-hash')
         },
-        (location: Location) => {
+        (location: NativeLocation) => {
           expect(location.pathname).toEqual('/')
           expect(location.search).toEqual('')
           expect(location.hash).toEqual('#the-hash')
           expect(location.state).toBeUndefined()
-          expect(location.action).toEqual(CH.Actions.PUSH)
+          expect(location.action).toEqual(Actions.PUSH)
           expect(location.key).toBeDefined()
         }
       ]

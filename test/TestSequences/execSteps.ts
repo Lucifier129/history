@@ -1,22 +1,22 @@
+import { NativeHistory } from '../../src'
 import { Step, Done } from '../type'
-import CH from '../../src'
 
 const execSteps: (
   steps: Step[],
-  history: CH.NativeHistory,
+  history: NativeHistory,
   done: Done
 ) => void = (steps, history, done) => {
   let index: number = 0
   let unlisten: Function
 
-  const cleanup = (...args) => {
+  const cleanup = (...args: any[]) => {
     unlisten()
     done(...args)
   }
 
-  const execNextStep = (...args) => {
+  const execNextStep = (location: any) => {
     try {
-      steps[index++](...args)
+      steps[index++](location)
 
       if (index === steps.length)
         cleanup()

@@ -1,60 +1,49 @@
-import runTransitionHook from './runTransitionHook'
-import { parsePath } from './PathUtils'
-import CH, { Location } from './index'
+import warning from 'warning'
+import { Callback, RunTransitionHook } from './runTransitionHook'
+import { parsePath, CreatePath } from './PathUtils'
+import { CreateLocation } from './LocationUtils';
+import Actions from './Actions';
+import {
+  HistoryOptions,
+  GetCurrentLocation,
+  Listen,
+  ListenBefore,
+  Push,
+  Replace,
+  CreateHref,
+  CreateHistory,
+  NativeLocation,
+  BaseLocation,
+  LocationTypeLoader,
+  LocationTypeMap,
+  LTFromCH
+} from './type'
 
 export interface UseBasename {
-  (createHistory: CH.CreateHistory): CH.CreateHistory
+  <CH extends CreateHistory<any>>(createHistory: CH): CreateHistory<LocationTypeLoader<LTFromCH<CH>, 'BASENAME'>>
 }
 
-export interface AddBasename {
-  (location: Location): Location
+export interface AddBasename<NL extends NativeLocation> {
+  (location: NL): NL
 }
 
-export interface PrePendBasename {
-  (location: Location): Location
+export interface PrePendBasename<BL extends BaseLocation> {
+  (location?: BL | string): BL | string
 }
 
-export interface GetCurrentLocation {
-  (): Location
-}
 
-export interface ListenBefore {
-  (hook: Function): any
-}
-
-export interface Listen {
-  (listener: Function): any
-}
-
-export interface Push {
-  (location: Location): any
-}
-
-export interface Replace {
-  (location: Location): any
-}
-
-export interface CreatePath {
-  (location: Location): any
-}
-
-export interface CreateHref {
-  (location: Location): any
-}
-
-export interface CreateLocation {
-  (location: Location, ...args: any[]): Location
-}
-
-const useBasename: UseBasename = (createHistory) => (options: CH.HistoryOptions = {}) => {
-    const history: CH.NativeHistory = createHistory(options)
+const useBasename: UseBasename = <CH extends CreateHistory<any>>(createHistory: CH) => {
+  type BL = LocationTypeMap[LocationTypeLoader<LTFromCH<CH>, 'BASENAME'>]['Base']
+  type NL = LocationTypeMap[LocationTypeLoader<LTFromCH<CH>, 'BASENAME'>]['Native']
+  let ch: CreateHistory<LocationTypeLoader<LTFromCH<CH>, 'BASENAME'>> = (options: HistoryOptions = { hashType: 'slash' }) => {
+    const history = createHistory(options)
     const { basename } = options
 
-    const addBasename: AddBasename = (location) => {
+    const addBasename: AddBasename<NL> = (location) => {
       if (!location)
         return location
 
-      if (basename && location.basename == null) {
+      if (basename && !location.basename) {
         if (location.pathname.indexOf(basename) === 0) {
           location.pathname = location.pathname.substring(basename.length)
           location.basename = basename
@@ -69,12 +58,12 @@ const useBasename: UseBasename = (createHistory) => (options: CH.HistoryOptions 
       return location
     }
 
-    const prependBasename: PrePendBasename = (location) => {
+    const prependBasename: PrePendBasename<BL> = (location = '/') => {
       if (!basename)
         return location
-
+      
       const object = typeof location === 'string' ? parsePath(location) : location
-      const pname = object.pathname
+      const pname = object.pathname || basename
       const normalizedBasename = basename.slice(-1) === '/' ? basename : `${basename}/`
       const normalizedPathname = pname.charAt(0) === '/' ? pname.slice(1) : pname
       const pathname = normalizedBasename + normalizedPathname
@@ -86,33 +75,50 @@ const useBasename: UseBasename = (createHistory) => (options: CH.HistoryOptions 
     }
 
     // Override all read methods with basename-aware versions.
-    const getCurrentLocation: GetCurrentLocation = () =>
+    const getCurrentLocation: GetCurrentLocation<NL> = () =>
       addBasename(history.getCurrentLocation())
 
-    const listenBefore: ListenBefore = (hook) =>
+
+    const runTransitionHook: RunTransitionHook<NL> = (hook, location, callback) => {
+      const result = hook(location, callback)
+
+      if (hook.length < 2) {
+        // Assume the hook runs synchronously and automatically
+        // call the callback with the return value.
+        callback && callback(result)
+      } else {
+        warning(
+          result === undefined,
+          'You should not "return" in a transition hook with a callback argument; ' +
+          'call the callback instead'
+        )
+      }
+    }
+
+    const listenBefore: ListenBefore<NL> = (hook) =>
       history.listenBefore(
         (location, callback) =>
           runTransitionHook(hook, addBasename(location), callback)
       )
 
-    const listen: Listen = (listener) =>
+    const listen: Listen<NL> = (listener) =>
       history.listen(location => listener(addBasename(location)))
 
     // Override all write methods with basename-aware versions.
-    const push: Push = (location) =>
+    const push: Push<BL> = (location) =>
       history.push(prependBasename(location))
 
-    const replace: Replace = (location) =>
+    const replace: Replace<BL> = (location) =>
       history.replace(prependBasename(location))
 
     const createPath: CreatePath = (location) =>
       history.createPath(prependBasename(location))
 
-    const createHref: CreateHref = (location) =>
+    const createHref: CreateHref<BL> = (location) =>
       history.createHref(prependBasename(location))
 
-    const createLocation: CreateLocation = (location, ...args) =>
-      addBasename(history.createLocation(prependBasename(location), ...args))
+    const createLocation: CreateLocation<BL, NL> = (location, action, key) =>
+      addBasename(history.createLocation(prependBasename(location), action, key))
 
     return {
       ...history,
@@ -126,5 +132,8 @@ const useBasename: UseBasename = (createHistory) => (options: CH.HistoryOptions 
       createLocation
     }
   }
+
+  return ch
+}
 
 export default useBasename

@@ -2,7 +2,7 @@ export interface AddEventListener {
   (
     node: Element | Window,
     event: string,
-    listener: EventListenerOrEventListenerObject
+    listener: EventListener
   ): void;
 }
 
@@ -10,7 +10,7 @@ export interface RemoveEventListener {
   (
     node: Element | Window,
     event: string,
-    listener: EventListenerOrEventListenerObject
+    listener: EventListener
   ): void;
 }
 
@@ -60,3 +60,7 @@ export const supportsHistory: SupportsHistory = () => {
  */
 export const supportsGoWithoutReloadUsingHash: SupportsGoWithoutReloadUsingHash = () =>
   window.navigator.userAgent.indexOf('Firefox') === -1
+
+export const canUseDOM: boolean = !!(
+  typeof window !== 'undefined' && window.document && window.document.createElement
+)

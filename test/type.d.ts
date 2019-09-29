@@ -1,7 +1,7 @@
-import CH from '../src/createHistory'
+import { NativeLocation, CreateHistory } from '../src'
 
 export interface Step {
-  (location?: Location): void
+  (location: NativeLocation): void
 }
 
 export interface Done {
@@ -9,5 +9,5 @@ export interface Done {
 }
 
 export interface Describe {
-  (createHistory: typeof CH): void
+  (createHistory: CreateHistory<any>): void
 }

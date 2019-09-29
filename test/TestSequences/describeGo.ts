@@ -1,10 +1,10 @@
 import execSteps from './execSteps'
 import { Step, Done, Describe } from '../type'
-import CH, { Location } from '../../src'
+import { NativeLocation, Actions, NativeHistory } from '../../src'
 
 const describeGo: Describe = (createHistory)  => {
   describe('go', () => {
-    let history: CH.NativeHistory
+    let history: NativeHistory = createHistory()
     beforeEach(() => {
       history = createHistory()
     })
@@ -16,12 +16,12 @@ const describeGo: Describe = (createHistory)  => {
     describe('back', () => {
       it('calls change listeners with the previous location', (done: Done) => {
         const steps: Step[] = [
-          (location: Location) => {
+          (location: NativeLocation) => {
             expect(location.pathname).toEqual('/')
             expect(location.search).toEqual('')
             expect(location.state).toBeUndefined()
-            expect(location.action).toEqual(CH.Actions.POP)
-            expect(location.key).toBeNull()
+            expect(location.action).toEqual(Actions.POP)
+            expect(location.key).toBe('')
 
             history.push({
               pathname: '/home',
@@ -29,21 +29,21 @@ const describeGo: Describe = (createHistory)  => {
               state: { the: 'state' }
             })
           },
-          (location: Location) => {
+          (location: NativeLocation) => {
             expect(location.pathname).toEqual('/home')
             expect(location.search).toEqual('?the=query')
             expect(location.state).toEqual({ the: 'state' })
-            expect(location.action).toEqual(CH.Actions.PUSH)
+            expect(location.action).toEqual(Actions.PUSH)
             expect(location.key).toBeDefined()
 
             history.goBack()
           },
-          (location: Location) => {
+          (location: NativeLocation) => {
             expect(location.pathname).toEqual('/')
             expect(location.search).toEqual('')
             expect(location.state).toBe(undefined)
-            expect(location.action).toEqual(CH.Actions.POP)
-            expect(location.key).toBe(null)
+            expect(location.action).toEqual(Actions.POP)
+            expect(location.key).toBe('')
           }
         ]
 
@@ -54,12 +54,12 @@ const describeGo: Describe = (createHistory)  => {
     describe('forward', () => {
       it('calls change listeners with the next location', (done: Done) => {
         const steps: Step[] = [
-          (location: Location) => {
+          (location: NativeLocation) => {
             expect(location.pathname).toEqual('/')
             expect(location.search).toEqual('')
             expect(location.state).toBeUndefined()
-            expect(location.action).toEqual(CH.Actions.POP)
-            expect(location.key).toBeNull()
+            expect(location.action).toEqual(Actions.POP)
+            expect(location.key).toBe('')
 
             history.push({
               pathname: '/home',
@@ -67,11 +67,11 @@ const describeGo: Describe = (createHistory)  => {
               state: { the: 'state' }
             })
           },
-          (location: Location) => {
+          (location: NativeLocation) => {
             expect(location.pathname).toEqual('/home')
             expect(location.search).toEqual('?the=query')
             expect(location.state).toEqual({ the: 'state' })
-            expect(location.action).toEqual(CH.Actions.PUSH)
+            expect(location.action).toEqual(Actions.PUSH)
             expect(location.key).toBeDefined()
 
             history.push({
@@ -80,38 +80,38 @@ const describeGo: Describe = (createHistory)  => {
               state: { the: 'state a' }
             })
           },
-          (location: Location) => {
+          (location: NativeLocation) => {
             expect(location.pathname).toEqual('/person')
             expect(location.search).toEqual('?the=query')
             expect(location.state).toEqual({ the: 'state a' })
-            expect(location.action).toEqual(CH.Actions.PUSH)
+            expect(location.action).toEqual(Actions.PUSH)
             expect(location.key).toBeDefined()
 
             history.goBack()
           },
-          (location: Location) => {
+          (location: NativeLocation) => {
             expect(location.pathname).toEqual('/home')
             expect(location.search).toEqual('?the=query')
             expect(location.state).toEqual({ the: 'state' })
-            expect(location.action).toEqual(CH.Actions.POP)
+            expect(location.action).toEqual(Actions.POP)
             expect(location.key).toBeDefined()
 
             history.goBack()
           },
-          (location: Location) => {
+          (location: NativeLocation) => {
             expect(location.pathname).toEqual('/')
             expect(location.search).toEqual('')
             expect(location.state).toBeUndefined()
-            expect(location.action).toEqual(CH.Actions.POP)
-            expect(location.key).toBeNull()
+            expect(location.action).toEqual(Actions.POP)
+            expect(location.key).toBe('')
 
             history.goForward()
           },
-          (location: Location) => {
+          (location: NativeLocation) => {
             expect(location.pathname).toEqual('/home')
             expect(location.search).toEqual('?the=query')
             expect(location.state).toEqual({ the: 'state' })
-            expect(location.action).toEqual(CH.Actions.POP)
+            expect(location.action).toEqual(Actions.POP)
             expect(location.key).toBeDefined()
           }
         ]

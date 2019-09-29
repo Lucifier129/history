@@ -1,45 +1,61 @@
 import invariant from 'invariant'
 import { parsePath } from './PathUtils'
 import Actions, { POP } from './Actions'
-import { Location } from './index'
+import { BaseLocation, NativeLocation, GetUserConfirmation } from './type'
 
 export interface CreateQuery {
-  (props?: object): object;
+  (props?: object): object
 }
 
-export interface CreateLocation {
+export interface CreateKey {
+  (): string
+}
+
+export interface CreateLocation<BL extends BaseLocation = BaseLocation, NL extends NativeLocation = NativeLocation> {
   (
-    location?: Location | string,
+    location?: BL | string,
     action?: Actions,
     key?: string
-  ): Location
+  ): NL
 }
 
 export interface IsDate {
-  (object: object): boolean;
+  (object: object): boolean
 }
 
 export interface StatesAreEqual {
-  (a: any, b: any): boolean;
+  (a: any, b: any): boolean
 }
 
 export interface LocationsAreEqual {
-  (a: Location, b: Location): boolean;
+  (a: NativeLocation, b: NativeLocation): boolean
 }
 
 export const createQuery: CreateQuery = (props) =>
   Object.assign(Object.create(null), props)
 
-export const createLocation: CreateLocation = (input = '/', action = POP, key = null) => {
-  const object: Location = typeof input === 'string' ? parsePath(input) : input
+export const createLocation: CreateLocation = (input = '/', action = POP, key = '') => {
+  const location = typeof input === 'string' ? parsePath(input) : input
 
-  // console.log(input)
-  // console.log(object)
+  let pathname: string = location.pathname || '/'
+  const search: string = location.search || ''
+  const hash: string = location.hash || ''
+  const state: any = location.state
 
-  const pathname: string = object.pathname || '/'
-  const search: string = object.search || ''
-  const hash: string = object.hash || ''
-  const state: string = object.state
+  try {
+    pathname = decodeURI(pathname)
+  } catch (e) {
+    if (e instanceof URIError) {
+      throw new URIError(
+        'Pathname "' +
+          location.pathname +
+          '" could not be decoded. ' +
+          'This is likely caused by an invalid percent-encoding.'
+      );
+    } else {
+      throw e;
+    }
+  }
 
   return {
     pathname,
@@ -50,6 +66,9 @@ export const createLocation: CreateLocation = (input = '/', action = POP, key = 
     key
   }
 }
+
+export const defaultGetUserConfirmation: GetUserConfirmation
+= (message, callback) => callback(window.confirm(message)) // eslint-disable-line no-alert
 
 const isDate: IsDate = (object) =>
   Object.prototype.toString.call(object) === '[object Date]'

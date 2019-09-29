@@ -96,7 +96,7 @@ describe('stripQueryStringValueFromPath', () => {
 describe('getQueryStringValueFromPath', () => {
   describe('when the path has no query string', () => {
     it('returns null', () => {
-      expect(getQueryStringValueFromPath('/a/b/c', 'key')).toBe(null)
+      expect(getQueryStringValueFromPath('/a/b/c', 'key')).toBe('')
     })
   })
 

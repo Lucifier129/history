@@ -1,8 +1,12 @@
+export interface Done {
+  (...args: any[]): void
+}
+
 export interface Work {
   (
     currentTurn: number,
     next: () => void,
-    done: (...args: any[]) => void
+    done: Done
   ): void;
 }
 
@@ -19,9 +23,9 @@ export const loopAsync: LoopAsync = (turns, work, callback) => {
   let isDone: boolean = false
   let isSync: boolean = false
   let hasNext: boolean = false
-  let doneArgs: any[]
+  let doneArgs: any[] = []
 
-  const done = (...args) => {
+  const done = (...args: any[]) => {
     isDone = true
 
     if (isSync) {

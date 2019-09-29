@@ -14,7 +14,7 @@ import describeGo from './TestSequences/describeGo'
 
 describe('browser history', () => {
   beforeEach(() => {
-    window.history.replaceState(null, null, '/')
+    window.history.replaceState(null, '', '/')
   })
 
   if (supportsHistory()) {
@@ -30,7 +30,7 @@ describe('browser history', () => {
     describeQueries(createBrowserHistory)
     describeGo(createBrowserHistory)
   } else {
-    describe.skip(null, () => {
+    describe.skip('', () => {
       describeListen(createBrowserHistory)
       describeInitialLocation(createBrowserHistory)
       describeTransitions(createBrowserHistory)
