@@ -27,9 +27,9 @@ import { saveState, readState } from './DOMStateStorage'
 import Actions, { POP, PUSH, REPLACE } from './Actions'
 import runTransitionHook from './runTransitionHook'
 import {
-  NativeLocation,
+  Location,
   BaseLocation,
-  NLWithBQ,
+  ILWithBQ,
   PathCoders,
   PathCoder,
   HistoryOptions,
@@ -51,11 +51,11 @@ import {
  * Utils
  */
 export interface PushLocation {
-  (location: NativeLocation): boolean
+  (location: Location): boolean
 }
 
 export interface ReplaceLocation {
-  (location: NativeLocation): boolean
+  (location: Location): boolean
 }
 
 export interface StartListener {
@@ -67,11 +67,11 @@ export interface GetCurrentIndex {
 }
 
 export interface UpdateLocation {
-  (location: NativeLocation): void;
+  (location: Location): void;
 }
 
 export interface ConfirmTransitionTo {
-  (location: NativeLocation, callback: (ok: any) => void): void;
+  (location: Location, callback: (ok: any) => void): void;
 }
 
 /**
@@ -91,7 +91,7 @@ export interface Update {
 
 export interface UpdateLocationHash {
   (
-    location: NativeLocation,
+    location: Location,
     pathCoder: PathCoder,
     queryKey: string,
     updateHash: Update
@@ -99,18 +99,18 @@ export interface UpdateLocationHash {
 }
 
 export interface PushLocationHash {
-  (location: NativeLocation, pathCoder: PathCoder, queryKey: string): boolean
+  (location: Location, pathCoder: PathCoder, queryKey: string): boolean
 }
 
 export interface ReplaceLocationHash {
-  (location: NativeLocation, pathCoder: PathCoder, queryKey: string): boolean
+  (location: Location, pathCoder: PathCoder, queryKey: string): boolean
 }
 export interface GetPath {
   (): string;
 }
 
 export interface GetCurrentLocationHash {
-  (pathCoder: PathCoder, queryKey: string): NativeLocation
+  (pathCoder: PathCoder, queryKey: string): Location
 }
 
 export interface PopEventListener {
@@ -191,7 +191,7 @@ const createHashHistory: CreateHistory<'NORMAL'> = (options = {}) => {
   }
 
 
-  let prevLocation: NLWithBQ
+  let prevLocation: ILWithBQ
   const updateLocationHash: UpdateLocationHash = (location, pathCoder, queryKey, updateHash) => {
     const { state, key } = location
 
@@ -206,7 +206,7 @@ const createHashHistory: CreateHistory<'NORMAL'> = (options = {}) => {
 
     updateHash(path)
   }
-  const pushLocationHash: PushLocationHash = (location: NativeLocation, pathCoder: PathCoder, queryKey: string) => {
+  const pushLocationHash: PushLocationHash = (location: Location, pathCoder: PathCoder, queryKey: string) => {
     updateLocationHash(location, pathCoder, queryKey, (path) => {
       if (getHashPath() !== path) {
         pushHashPath(path)
@@ -218,7 +218,7 @@ const createHashHistory: CreateHistory<'NORMAL'> = (options = {}) => {
   }
 
 
-  const replaceLocationHash: ReplaceLocationHash = (location: NativeLocation, pathCoder: PathCoder, queryKey: string) => {
+  const replaceLocationHash: ReplaceLocationHash = (location: Location, pathCoder: PathCoder, queryKey: string) => {
     updateLocationHash(location, pathCoder, queryKey, (path) => {
       if (getHashPath() !== path)
         replaceHashPath(path)
@@ -259,7 +259,7 @@ const createHashHistory: CreateHistory<'NORMAL'> = (options = {}) => {
         // Always be sure we have a properly-encoded hash.
         replaceHashPath(encodedPath)
       } else {
-        const currentLocation: NativeLocation = getCurrentLocationHash(pathCoder, queryKey)
+        const currentLocation: Location = getCurrentLocationHash(pathCoder, queryKey)
 
         // Ignore extraneous hashchange events
         if (prevLocation) {
@@ -333,8 +333,8 @@ const createHashHistory: CreateHistory<'NORMAL'> = (options = {}) => {
   }
 
 
-  let currentLocation: NativeLocation
-  let pendingLocation: NativeLocation | null
+  let currentLocation: Location
+  let pendingLocation: Location | null
   let beforeHooks: Hook[] = []
   let hooks: Hook[] = []
   let allKeys: string[] = []

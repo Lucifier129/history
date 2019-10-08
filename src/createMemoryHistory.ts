@@ -18,7 +18,7 @@ import { ReadState, SaveState } from './DOMStateStorage'
 import Actions, { POP, PUSH, REPLACE } from './Actions'
 import runTransitionHook from './runTransitionHook'
 import {
-  NativeLocation,
+  Location,
   BaseLocation,
   GetUserConfirmation,
   GetCurrentLocation,
@@ -45,19 +45,19 @@ export interface GetCurrentIndex {
 }
 
 export interface UpdateLocation {
-  (location: NativeLocation): void;
+  (location: Location): void;
 }
 
 export interface ConfirmTransitionTo {
-  (location: NativeLocation, callback: (ok: any) => void): void;
+  (location: Location, callback: (ok: any) => void): void;
 }
 
 export interface PushLocation {
-  (location: NativeLocation): boolean
+  (location: Location): boolean
 }
 
 export interface ReplaceLocation {
-  (location: NativeLocation): boolean
+  (location: Location): boolean
 }
 
 export interface Memo {
@@ -70,7 +70,7 @@ export interface Entry {
 }
 
 export interface CreateStateStorage {
-  (entries: NativeLocation[]): Memo
+  (entries: Location[]): Memo
 }
 
 export interface CanGo {
@@ -92,8 +92,8 @@ const createStateStorage: CreateStateStorage = entries =>
 const createMemoryHistory: CreateHistory<'NORMAL'> = (options = { hashType: 'slash' }) => {
   const getUserConfirmation: GetUserConfirmation = options.getUserConfirmation || defaultGetUserConfirmation
 
-  let currentLocation: NativeLocation
-  let pendingLocation: NativeLocation | null
+  let currentLocation: Location
+  let pendingLocation: Location | null
   let beforeHooks: Hook[] = []
   let hooks: Hook[] = []
   let allKeys: string[] = []
@@ -224,7 +224,7 @@ const createMemoryHistory: CreateHistory<'NORMAL'> = (options = { hashType: 'sla
 
   const getCurrentLocation: GetCurrentLocation = () => {
     if (typeof entries[current] !== undefined) {
-      const entry: NativeLocation = entries[current]
+      const entry: Location = entries[current]
       const path: string = createPath(entry)
 
       let key: string = ""
@@ -286,7 +286,7 @@ const createMemoryHistory: CreateHistory<'NORMAL'> = (options = { hashType: 'sla
     return true
   }
 
-  let entriesBefore: (string | NativeLocation | BaseLocation)[]
+  let entriesBefore: (string | Location | BaseLocation)[]
 
   if (typeof options.entries === "string") {
     entriesBefore = [options.entries]

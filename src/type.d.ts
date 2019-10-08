@@ -10,7 +10,7 @@ export interface BaseLocation {
   state?: any
 }
 
-export interface NativeLocation extends Required<BaseLocation> {
+export interface Location extends Required<BaseLocation> {
   key: string
   action: Actions
 }
@@ -19,7 +19,7 @@ export interface BLWithBasename extends BaseLocation {
   basename?: string
 }
 
-export interface NLWithBasename extends NativeLocation {
+export interface ILWithBasename extends Location {
   basename?: string
 }
 
@@ -27,7 +27,7 @@ export interface BLWithQuery extends BaseLocation {
   query?: object
 }
 
-export interface NLWithQuery extends NativeLocation {
+export interface ILWithQuery extends Location {
   query?: object
 }
 
@@ -36,7 +36,7 @@ export interface BLWithBQ extends BaseLocation {
   query?: object
 }
 
-export interface NLWithBQ extends NativeLocation {
+export interface ILWithBQ extends Location {
   basename?: string
   query?: object
 }
@@ -44,19 +44,19 @@ export interface NLWithBQ extends NativeLocation {
 export interface LocationTypeMap {
   NORMAL: {
     Base: BaseLocation,
-    Native: NativeLocation
+    Intact: Location
   },
   BASENAME: {
     Base: BLWithBasename,
-    Native: NLWithBasename
+    Intact: ILWithBasename
   },
   QUERY: {
     Base: BLWithQuery,
-    Native: NLWithQuery
+    Intact: ILWithQuery
   },
   BQ: {
     Base: BLWithBQ,
-    Native: NLWithBQ
+    Intact: ILWithBQ
   }
 }
 
@@ -106,24 +106,24 @@ export interface HistoryOptions {
   getUserConfirmation?: GetUserConfirmation
 }
 
-export interface GetCurrentLocation<NL extends NativeLocation = NativeLocation> {
-  (): NL
+export interface GetCurrentLocation<IL extends Location = Location> {
+  (): IL
 }
 
 export interface Unlisten {
   (): void
 }
 
-export interface ListenBefore<NL extends NativeLocation = NativeLocation> {
-  (hook: Hook<NL>): Unlisten
+export interface ListenBefore<IL extends Location = Location> {
+  (hook: Hook<IL>): Unlisten
 }
 
-export interface Listen<NL extends NativeLocation = NativeLocation> {
-  (hook: Hook<NL>): Unlisten
+export interface Listen<IL extends Location = Location> {
+  (hook: Hook<IL>): Unlisten
 }
 
-export interface TransitionTo<NL extends NativeLocation = NativeLocation> {
-  (nextLocation: NL): void
+export interface TransitionTo<IL extends Location = Location> {
+  (nextLocation: IL): void
 }
 
 export interface Push<BL extends BaseLocation = BaseLocation> {
@@ -150,11 +150,11 @@ export interface CreateHref<BL extends BaseLocation = BaseLocation> {
   (location: BL | string): string;
 }
 
-export interface NativeHistory<BL extends BaseLocation = BaseLocation, NL extends NativeLocation = NativeLocation> {
-  getCurrentLocation: GetCurrentLocation<NL>
-  listenBefore: ListenBefore<NL>
-  listen: Listen<NL>
-  transitionTo: TransitionTo<NL>
+export interface History<BL extends BaseLocation = BaseLocation, IL extends Location = Location> {
+  getCurrentLocation: GetCurrentLocation<IL>
+  listenBefore: ListenBefore<IL>
+  listen: Listen<IL>
+  transitionTo: TransitionTo<IL>
   push: Push<BL>
   replace: Replace<BL>
   go: Go
@@ -163,11 +163,11 @@ export interface NativeHistory<BL extends BaseLocation = BaseLocation, NL extend
   createKey: CreateKey
   createPath: CreatePath
   createHref: CreateHref<BL>
-  createLocation: CreateLocation<BL, NL>
+  createLocation: CreateLocation<BL, IL>
 }
 
 export interface CreateHistory<LT extends LocationType> {
-  (options?: HistoryOptions): NativeHistory<LocationTypeMap[LT]['Base'], LocationTypeMap[LT]['Native']>
+  (options?: HistoryOptions): History<LocationTypeMap[LT]['Base'], LocationTypeMap[LT]['Intact']>
 }
 
 export type LTFromCH<CH extends CreateHistory<any>> = CH extends CreateHistory<infer LT> ? LT : never

@@ -20,7 +20,7 @@ import {
 import Actions, { POP, PUSH, REPLACE } from './Actions'
 import { Hook } from './runTransitionHook'
 import {
-  NativeLocation,
+  Location,
   GetCurrentLocation,
   Listen,
   ListenBefore,
@@ -40,11 +40,11 @@ import {
  */
 
 export interface PushLocation {
-  (location: NativeLocation): boolean
+  (location: Location): boolean
 }
 
 export interface ReplaceLocation {
-  (location: NativeLocation): boolean
+  (location: Location): boolean
 }
 
 /**
@@ -54,7 +54,7 @@ export interface ReplaceLocation {
  * Base Utils
  */
 export interface UpdateLocation {
-  (location: NativeLocation): void;
+  (location: Location): void;
 }
 
 export interface StopListener {
@@ -66,7 +66,7 @@ export interface StartListenerBrowser {
 }
 
 export interface CreateBrowserLocation {
-  (historyState: any): NativeLocation
+  (historyState: any): Location
 }
 
 // Browser
@@ -80,13 +80,13 @@ export interface UpdateState {
 
 export interface UpdateLocationBrow {
   (
-    location: NativeLocation,
+    location: Location,
     updateState: UpdateState
   ): void
 }
 
 export interface ConfirmTransitionTo {
-  (location: NativeLocation, callback: (ok: any) => void): void
+  (location: Location, callback: (ok: any) => void): void
 }
 
 export interface StartListener {
@@ -220,8 +220,8 @@ const createBrowserHistory: CreateHistory<'NORMAL'> = (options = { hashType: 'sl
     : replaceLocationBrow
   const { keyLength } = options
 
-  let currentLocation: NativeLocation
-  let pendingLocation: NativeLocation | null
+  let currentLocation: Location
+  let pendingLocation: Location | null
   let beforeHooks: Hook[] = []
   let hooks: Hook[] = []
   let allKeys: string[] = []
