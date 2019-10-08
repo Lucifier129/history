@@ -22,16 +22,9 @@ import {
 } from './type'
 
 export interface UseBasename {
-  <
-    CH extends CreateHistory<any>
-  >(
+  <CH extends CreateHistory<any>>(
     createHistory: CH
-  ): CreateHistory<
-    LocationTypeLoader<
-      LTFromCH<CH>,
-      'BASENAME'
-    >
-  >
+  ): CreateHistory<LocationTypeLoader<LTFromCH<CH>,'BASENAME'>>
 }
 
 export interface AddBasename<IL extends Location> {
