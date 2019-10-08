@@ -22,13 +22,20 @@ export interface SupportsGoWithoutReloadUsingHash {
   (): boolean;
 }
 
-export const addEventListener: AddEventListener = (node, event, listener) =>
-  node.addEventListener
+export const addEventListener: AddEventListener = (
+  node,
+  event,
+  listener
+) =>node.addEventListener
     ? node.addEventListener(event, listener, false)
     // @ts-ignore
     : node.attachEvent('on' + event, listener)
 
-export const removeEventListener: RemoveEventListener = (node, event, listener) =>
+export const removeEventListener: RemoveEventListener = (
+  node,
+  event,
+  listener
+) =>
   node.removeEventListener
     ? node.removeEventListener(event, listener, false)
     // @ts-ignore
@@ -44,10 +51,12 @@ export const removeEventListener: RemoveEventListener = (node, event, listener) 
 export const supportsHistory: SupportsHistory = () => {
   const ua: string = window.navigator.userAgent
 
-  if ((ua.indexOf('Android 2.') !== -1 || ua.indexOf('Android 4.0') !== -1) &&
-    ua.indexOf('Mobile Safari') !== -1 &&
-    ua.indexOf('Chrome') === -1 &&
-    ua.indexOf('Windows Phone') === -1
+  if (
+    (ua.indexOf('Android 2.') !== -1
+      || ua.indexOf('Android 4.0') !== -1)
+    && ua.indexOf('Mobile Safari') !== -1
+    && ua.indexOf('Chrome') === -1
+    && ua.indexOf('Windows Phone') === -1
   ) {
     return false
   } else {

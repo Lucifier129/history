@@ -1,10 +1,16 @@
-import { parse, stringify } from "querystringify"
-import runTransitionHook, { Callback } from "./runTransitionHook"
+import {
+  parse,
+  stringify
+} from "querystringify"
+import runTransitionHook from "./runTransitionHook"
 import {
   createQuery,
   CreateLocation
 } from "./LocationUtils"
-import { parsePath, CreatePath } from "./PathUtils"
+import {
+  parsePath,
+  CreatePath
+} from "./PathUtils"
 import {
   CreateHistory,
   ParseQueryString,
@@ -28,7 +34,9 @@ export interface DefaultStringifyQuery {
 }
 
 export interface UseQueries {
-  <CH extends CreateHistory<any>>(createHistory: CH): CreateHistory<LocationTypeLoader<LTFromCH<CH>, 'QUERY'>>
+  <CH extends CreateHistory<any>>(
+    createHistory: CH
+  ): CreateHistory<LocationTypeLoader<LTFromCH<CH>, 'QUERY'>>
 }
 
 export interface DecodeQuery<IL extends Location> {
@@ -136,7 +144,11 @@ const useQueries: UseQueries = <CH extends CreateHistory<any>>(createHistory: CH
         )
       )
 
-    const createLocation: CreateLocation<BL, IL> = (location = '/', action, key) => {
+    const createLocation: CreateLocation<BL, IL> = (
+      location = '/',
+      action,
+      key
+    ) => {
       let newLocation = encodeQuery(
         location,
         typeof location === "string" ? undefined : location.query

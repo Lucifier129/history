@@ -23,8 +23,15 @@ import {
   locationsAreEqual,
   defaultGetUserConfirmation
 } from './LocationUtils'
-import { saveState, readState } from './DOMStateStorage'
-import Actions, { POP, PUSH, REPLACE } from './Actions'
+import {
+  saveState,
+  readState
+} from './DOMStateStorage'
+import Actions, {
+  POP,
+  PUSH,
+  REPLACE
+} from './Actions'
 import runTransitionHook from './runTransitionHook'
 import {
   Location,
@@ -59,7 +66,10 @@ export interface ReplaceLocation {
 }
 
 export interface StartListener {
-  (listener: Hook, before: boolean): () => void
+  (
+    listener: Hook,
+    before: boolean
+  ): () => void
 }
 
 export interface GetCurrentIndex {
@@ -71,7 +81,10 @@ export interface UpdateLocation {
 }
 
 export interface ConfirmTransitionTo {
-  (location: Location, callback: (ok: any) => void): void;
+  (
+    location: Location,
+    callback: (ok: any) => void
+  ): void;
 }
 
 /**
@@ -99,18 +112,29 @@ export interface UpdateLocationHash {
 }
 
 export interface PushLocationHash {
-  (location: Location, pathCoder: PathCoder, queryKey: string): boolean
+  (
+    location: Location,
+    pathCoder: PathCoder,
+    queryKey: string
+  ): boolean
 }
 
 export interface ReplaceLocationHash {
-  (location: Location, pathCoder: PathCoder, queryKey: string): boolean
+  (
+    location: Location,
+    pathCoder: PathCoder,
+    queryKey: string
+  ): boolean
 }
 export interface GetPath {
   (): string;
 }
 
 export interface GetCurrentLocationHash {
-  (pathCoder: PathCoder, queryKey: string): Location
+  (
+    pathCoder: PathCoder,
+    queryKey: string
+  ): Location
 }
 
 export interface PopEventListener {
@@ -176,7 +200,8 @@ const createHashHistory: CreateHistory<'NORMAL'> = (options = {}) => {
   }
 
   // Base
-  const getUserConfirmation: GetUserConfirmation = options.getUserConfirmation || defaultGetUserConfirmation
+  const getUserConfirmation: GetUserConfirmation =
+    options.getUserConfirmation || defaultGetUserConfirmation
 
   // Hash
   const pushHashPath: PushPath = (path) =>
@@ -192,7 +217,12 @@ const createHashHistory: CreateHistory<'NORMAL'> = (options = {}) => {
 
 
   let prevLocation: ILWithBQ
-  const updateLocationHash: UpdateLocationHash = (location, pathCoder, queryKey, updateHash) => {
+  const updateLocationHash: UpdateLocationHash = (
+    location,
+    pathCoder,
+    queryKey,
+    updateHash
+  ) => {
     const { state, key } = location
 
     let path: string = pathCoder.encodePath(createPath(location))
@@ -206,7 +236,11 @@ const createHashHistory: CreateHistory<'NORMAL'> = (options = {}) => {
 
     updateHash(path)
   }
-  const pushLocationHash: PushLocationHash = (location: Location, pathCoder: PathCoder, queryKey: string) => {
+  const pushLocationHash: PushLocationHash = (
+    location: Location, 
+    pathCoder: PathCoder, 
+    queryKey: string
+  ) => {
     updateLocationHash(location, pathCoder, queryKey, (path) => {
       if (getHashPath() !== path) {
         pushHashPath(path)
@@ -234,7 +268,10 @@ const createHashHistory: CreateHistory<'NORMAL'> = (options = {}) => {
     return hashIndex === -1 ? '' : href.substring(hashIndex + 1)
   }
 
-  const getCurrentLocationHash: GetCurrentLocationHash = (pathCoder: PathCoder, queryKey: string) => {
+  const getCurrentLocationHash: GetCurrentLocationHash = (
+    pathCoder: PathCoder,
+    queryKey: string
+  ) => {
     let path: string = pathCoder.decodePath(getHashPath())
     const key: string = getQueryStringValueFromPath(path, queryKey)
 
@@ -250,7 +287,11 @@ const createHashHistory: CreateHistory<'NORMAL'> = (options = {}) => {
     return _createLocation(newInit, undefined, key)
   }
 
-  const startListenerHash: StartListenerHash = (listener, pathCoder, queryKey) => {
+  const startListenerHash: StartListenerHash = (
+    listener,
+    pathCoder,
+    queryKey
+  ) => {
     const handleHashChange: PopEventListener = () => {
       const path: string = getHashPath()
       const encodedPath: string = pathCoder.encodePath(path)
@@ -259,11 +300,15 @@ const createHashHistory: CreateHistory<'NORMAL'> = (options = {}) => {
         // Always be sure we have a properly-encoded hash.
         replaceHashPath(encodedPath)
       } else {
-        const currentLocation: Location = getCurrentLocationHash(pathCoder, queryKey)
+        const currentLocation: Location =
+          getCurrentLocationHash(pathCoder, queryKey)
 
         // Ignore extraneous hashchange events
         if (prevLocation) {
-          if (currentLocation.key && prevLocation.key === currentLocation.key) {
+          if (
+            currentLocation.key
+            && prevLocation.key === currentLocation.key
+          ) {
             return
           }
 
@@ -293,10 +338,18 @@ const createHashHistory: CreateHistory<'NORMAL'> = (options = {}) => {
     if (path !== encodedPath)
       replaceHashPath(encodedPath)
 
-    addEventListener(window, HashChangeEvent, handleHashChange as EventListener)
+    addEventListener(
+      window,
+      HashChangeEvent,
+      handleHashChange as EventListener
+    )
 
     return () =>
-      removeEventListener(window, HashChangeEvent, handleHashChange as EventListener)
+      removeEventListener(
+        window,
+        HashChangeEvent,
+        handleHashChange as EventListener
+      )
   }
 
   // Base
@@ -379,17 +432,26 @@ const createHashHistory: CreateHistory<'NORMAL'> = (options = {}) => {
   const _createHref: CreateHref = (location) =>
     createPath(location)
 
-  const confirmTransitionTo: ConfirmTransitionTo = (location, callback) => {
+  const confirmTransitionTo: ConfirmTransitionTo = (
+    location,
+    callback
+  ) => {
     loopAsync(
       beforeHooks.length,
       (index, next, done) => {
-        runTransitionHook(beforeHooks[index], location, (result) =>
-          result != null ? done(result) : next()
+        runTransitionHook(
+          beforeHooks[index],
+          location,
+          (result) =>
+            result != null ? done(result) : next()
         )
       },
       (message) => {
         if (getUserConfirmation && typeof message === 'string') {
-          getUserConfirmation(message, (ok: boolean) => callback(ok !== false))
+          getUserConfirmation(
+            message,
+            (ok: boolean) => callback(ok !== false)
+          )
         } else {
           callback(message !== false)
         }
@@ -399,8 +461,8 @@ const createHashHistory: CreateHistory<'NORMAL'> = (options = {}) => {
 
   const transitionTo: TransitionTo = (nextLocation) => {
     if (
-      (currentLocation && locationsAreEqual(currentLocation, nextLocation)) ||
-      (pendingLocation && locationsAreEqual(pendingLocation, nextLocation))
+      (currentLocation && locationsAreEqual(currentLocation, nextLocation))
+      || (pendingLocation && locationsAreEqual(pendingLocation, nextLocation))
     ) {
       return // Nothing to do
     }
@@ -419,8 +481,12 @@ const createHashHistory: CreateHistory<'NORMAL'> = (options = {}) => {
           const prevPath = createPath(currentLocation)
           const nextPath = createPath(nextLocation)
 
-          if (nextPath === prevPath && statesAreEqual(currentLocation.state, nextLocation.state))
+          if (
+            nextPath === prevPath
+            && statesAreEqual(currentLocation.state, nextLocation.state)
+          ) {
             nextLocation.action = REPLACE
+          }
         }
 
         if (nextLocation.action === POP) {
@@ -460,14 +526,19 @@ const createHashHistory: CreateHistory<'NORMAL'> = (options = {}) => {
   const createKey: CreateKey = () =>
     Math.random().toString(36).substr(2, keyLength || 6)
 
-  const createLocation: CreateLocation = (location, action, key = createKey()) =>
-    _createLocation(location, action, key)
+  const createLocation: CreateLocation = (
+    location,
+    action,
+    key = createKey()
+  ) => _createLocation(location, action, key)
 
-  const listenBefore: ListenBefore = listener => startListener(listener, true)
+  const listenBefore: ListenBefore =
+    listener => startListener(listener, true)
 
   const listen: Listen = listener => startListener(listener, false)
 
-  const goIsSupportedWithoutReload: boolean = supportsGoWithoutReloadUsingHash()
+  const goIsSupportedWithoutReload: boolean =
+    supportsGoWithoutReloadUsingHash()
 
   const go: Go = n => {
     warning(

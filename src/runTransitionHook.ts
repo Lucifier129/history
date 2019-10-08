@@ -6,7 +6,10 @@ export interface Callback {
 }
 
 export interface Hook<IL extends Location = Location> {
-  (location: IL, callback?: Callback): any
+  (
+    location: IL,
+    callback?: Callback
+  ): any
 }
 
 export interface RunTransitionHook<IL extends Location = Location> {
@@ -17,7 +20,11 @@ export interface RunTransitionHook<IL extends Location = Location> {
   ): void
 }
 
-const runTransitionHook: RunTransitionHook = (hook, location, callback) => {
+const runTransitionHook: RunTransitionHook = (
+  hook,
+  location,
+  callback
+) => {
   const result = hook(location, callback)
 
   if (hook.length < 2) {

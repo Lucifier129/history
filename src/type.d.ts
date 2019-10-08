@@ -1,6 +1,9 @@
 import Actions from './Actions'
 import { Hook } from "./runTransitionHook"
-import { CreateKey, CreateLocation } from './LocationUtils';
+import {
+  CreateKey,
+  CreateLocation
+} from './LocationUtils';
 import { CreatePath } from './PathUtils'
 
 export interface BaseLocation {
@@ -62,7 +65,10 @@ export interface LocationTypeMap {
 
 export type LocationType = keyof LocationTypeMap
 
-export type LocationTypeLoader<FLT extends 'NORMAL' | 'BASENAME' | 'QUERY', CLT extends 'BASENAME' | 'QUERY'> = CLT extends 'BASENAME'
+export type LocationTypeLoader<
+  FLT extends 'NORMAL' | 'BASENAME' | 'QUERY',
+  CLT extends 'BASENAME' | 'QUERY'
+> = CLT extends 'BASENAME'
   ? FLT extends 'NORMAL' | 'BASENAME'
     ? 'BASENAME'
     : 'BQ'
@@ -150,7 +156,10 @@ export interface CreateHref<BL extends BaseLocation = BaseLocation> {
   (location: BL | string): string;
 }
 
-export interface History<BL extends BaseLocation = BaseLocation, IL extends Location = Location> {
+export interface History<
+  BL extends BaseLocation = BaseLocation,
+  IL extends Location = Location
+> {
   getCurrentLocation: GetCurrentLocation<IL>
   listenBefore: ListenBefore<IL>
   listen: Listen<IL>
@@ -167,7 +176,11 @@ export interface History<BL extends BaseLocation = BaseLocation, IL extends Loca
 }
 
 export interface CreateHistory<LT extends LocationType> {
-  (options?: HistoryOptions): History<LocationTypeMap[LT]['Base'], LocationTypeMap[LT]['Intact']>
+  (options?: HistoryOptions): History<
+    LocationTypeMap[LT]['Base'],
+    LocationTypeMap[LT]['Intact']
+  >
 }
 
-export type LTFromCH<CH extends CreateHistory<any>> = CH extends CreateHistory<infer LT> ? LT : never
+export type LTFromCH<CH extends CreateHistory<any>> =
+  CH extends CreateHistory<infer LT> ? LT : never

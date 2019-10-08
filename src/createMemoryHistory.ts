@@ -14,8 +14,15 @@ import {
   locationsAreEqual,
   defaultGetUserConfirmation
 } from './LocationUtils'
-import { ReadState, SaveState } from './DOMStateStorage'
-import Actions, { POP, PUSH, REPLACE } from './Actions'
+import {
+  ReadState,
+  SaveState
+} from './DOMStateStorage'
+import Actions, {
+  POP,
+  PUSH,
+  REPLACE
+} from './Actions'
 import runTransitionHook from './runTransitionHook'
 import {
   Location,
@@ -89,8 +96,11 @@ const createStateStorage: CreateStateStorage = entries =>
       return memo
     }, {} as Memo)
 
-const createMemoryHistory: CreateHistory<'NORMAL'> = (options = { hashType: 'slash' }) => {
-  const getUserConfirmation: GetUserConfirmation = options.getUserConfirmation || defaultGetUserConfirmation
+const createMemoryHistory: CreateHistory<'NORMAL'> = (
+  options = { hashType: 'slash' }
+) => {
+  const getUserConfirmation: GetUserConfirmation =
+    options.getUserConfirmation || defaultGetUserConfirmation
 
   let currentLocation: Location
   let pendingLocation: Location | null
@@ -113,7 +123,7 @@ const createMemoryHistory: CreateHistory<'NORMAL'> = (options = { hashType: 'sla
     currentLocation = nextLocation
 
     if (currentLocation.action === PUSH) {
-      allKeys = [ ...allKeys.slice(0, currentIndex + 1), currentLocation.key ]
+      allKeys = [ ...allKeys.slice(0, currentIndex + 1), currentLocation.key]
     } else if (currentLocation.action === REPLACE) {
       allKeys[currentIndex] = currentLocation.key
     }
@@ -135,7 +145,10 @@ const createMemoryHistory: CreateHistory<'NORMAL'> = (options = { hashType: 'sla
       hooks = hooks.filter(item => item !== hook)
   }
 
-  const confirmTransitionTo: ConfirmTransitionTo = (location, callback) => {
+  const confirmTransitionTo: ConfirmTransitionTo = (
+    location,
+    callback
+  ) => {
     loopAsync(
       beforeHooks.length,
       (index, next, done) => {
@@ -175,8 +188,12 @@ const createMemoryHistory: CreateHistory<'NORMAL'> = (options = { hashType: 'sla
           const prevPath = createPath(currentLocation)
           const nextPath = createPath(nextLocation)
 
-          if (nextPath === prevPath && statesAreEqual(currentLocation.state, nextLocation.state))
+          if (
+            nextPath === prevPath
+            && statesAreEqual(currentLocation.state, nextLocation.state)
+          ) {
             nextLocation.action = REPLACE
+          }
         }
 
         if (nextLocation.action === POP) {
@@ -219,8 +236,11 @@ const createMemoryHistory: CreateHistory<'NORMAL'> = (options = { hashType: 'sla
   const createHref: CreateHref = (location) =>
     createPath(location)
 
-  const createLocation: CreateLocation = (location, action, key = createKey()) =>
-    _createLocation(location, action, key)
+  const createLocation: CreateLocation = (
+    location,
+    action,
+    key = createKey()
+  ) => _createLocation(location, action, key)
 
   const getCurrentLocation: GetCurrentLocation = () => {
     if (typeof entries[current] !== undefined) {

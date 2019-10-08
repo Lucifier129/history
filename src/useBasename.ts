@@ -1,8 +1,10 @@
 import warning from 'warning'
-import { Callback, RunTransitionHook } from './runTransitionHook'
-import { parsePath, CreatePath } from './PathUtils'
+import { RunTransitionHook } from './runTransitionHook'
+import {
+  parsePath,
+  CreatePath
+} from './PathUtils'
 import { CreateLocation } from './LocationUtils';
-import Actions from './Actions';
 import {
   HistoryOptions,
   GetCurrentLocation,
@@ -20,7 +22,16 @@ import {
 } from './type'
 
 export interface UseBasename {
-  <CH extends CreateHistory<any>>(createHistory: CH): CreateHistory<LocationTypeLoader<LTFromCH<CH>, 'BASENAME'>>
+  <
+    CH extends CreateHistory<any>
+  >(
+    createHistory: CH
+  ): CreateHistory<
+    LocationTypeLoader<
+      LTFromCH<CH>,
+      'BASENAME'
+    >
+  >
 }
 
 export interface AddBasename<IL extends Location> {
@@ -32,10 +43,14 @@ export interface PrePendBasename<BL extends BaseLocation> {
 }
 
 
-const useBasename: UseBasename = <CH extends CreateHistory<any>>(createHistory: CH) => {
+const useBasename: UseBasename = <CH extends CreateHistory<any>>(
+  createHistory: CH
+) => {
   type BL = LocationTypeMap[LocationTypeLoader<LTFromCH<CH>, 'BASENAME'>]['Base']
   type IL = LocationTypeMap[LocationTypeLoader<LTFromCH<CH>, 'BASENAME'>]['Intact']
-  let ch: CreateHistory<LocationTypeLoader<LTFromCH<CH>, 'BASENAME'>> = (options: HistoryOptions = { hashType: 'slash' }) => {
+  let ch: CreateHistory<LocationTypeLoader<LTFromCH<CH>, 'BASENAME'>> = (
+    options: HistoryOptions = { hashType: 'slash' }
+  ) => {
     const history = createHistory(options)
     const { basename } = options
 
@@ -62,7 +77,10 @@ const useBasename: UseBasename = <CH extends CreateHistory<any>>(createHistory: 
       if (!basename)
         return location
       
-      const object = typeof location === 'string' ? parsePath(location) : location
+      const object = typeof location === 'string'
+        ? parsePath(location)
+        : location
+
       const pname = object.pathname || basename
       const normalizedBasename = basename.slice(-1) === '/' ? basename : `${basename}/`
       const normalizedPathname = pname.charAt(0) === '/' ? pname.slice(1) : pname
@@ -79,7 +97,11 @@ const useBasename: UseBasename = <CH extends CreateHistory<any>>(createHistory: 
       addBasename(history.getCurrentLocation())
 
 
-    const runTransitionHook: RunTransitionHook<IL> = (hook, location, callback) => {
+    const runTransitionHook: RunTransitionHook<IL> = (
+      hook,
+      location,
+      callback
+    ) => {
       const result = hook(location, callback)
 
       if (hook.length < 2) {
@@ -117,8 +139,15 @@ const useBasename: UseBasename = <CH extends CreateHistory<any>>(createHistory: 
     const createHref: CreateHref<BL> = (location) =>
       history.createHref(prependBasename(location))
 
-    const createLocation: CreateLocation<BL, IL> = (location, action, key) =>
-      addBasename(history.createLocation(prependBasename(location), action, key))
+    const createLocation: CreateLocation<BL, IL> = (
+      location,
+      action,
+      key
+    ) => addBasename(history.createLocation(
+      prependBasename(location),
+      action,
+      key
+    ))
 
     return {
       ...history,
