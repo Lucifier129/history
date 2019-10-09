@@ -1,9 +1,9 @@
-import { NativeHistory } from '../../src'
+import { History } from '../../src'
 import { Step, Done } from '../type'
 
 const execSteps: (
   steps: Step[],
-  history: NativeHistory,
+  history: History,
   done: Done
 ) => void = (steps, history, done) => {
   let index: number = 0

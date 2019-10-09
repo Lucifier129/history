@@ -56,7 +56,10 @@ export const saveState: SaveState = (key, state) => {
       return
     }
 
-    if (QuotaExceededErrors.includes(error.name) && window.sessionStorage.length === 0) {
+    if (
+      QuotaExceededErrors.includes(error.name)
+      && window.sessionStorage.length === 0
+    ) {
       // Safari "private mode" throws QuotaExceededError.
       warning(
         false,

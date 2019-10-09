@@ -1,33 +1,44 @@
 import invariant from "invariant"
-import { addEventListener, removeEventListener } from "./DOMUtils"
+import {
+  addEventListener,
+  removeEventListener
+} from "./DOMUtils"
 import { Hook } from './runTransitionHook'
 import { canUseDOM } from "./DOMUtils"
 import {
   CreateHistory,
-  NativeHistory,
+  History,
   HistoryOptions,
   LTFromCH,
   LocationTypeMap,
   BaseLocation,
-  NativeLocation,
+  Location,
   Unlisten,
   LocationType
 } from "./type"
 
-export interface ListenBeforeUnload<NL extends NativeLocation = NativeLocation> {
-  (hook: Hook<NL>): Unlisten
+export interface ListenBeforeUnload<IL extends Location = Location> {
+  (hook: Hook<IL>): Unlisten
 }
 
-export interface NativeHistoryWithBFOL<BL extends BaseLocation = BaseLocation, NL extends NativeLocation = NativeLocation> extends NativeHistory<BL, NL> {
-  listenBeforeUnload: ListenBeforeUnload<NL>
+export interface HistoryWithBFOL<
+  BL extends BaseLocation = BaseLocation,
+  IL extends Location = Location
+> extends History<BL, IL> {
+  listenBeforeUnload: ListenBeforeUnload<IL>
 }
 
 export interface CreateHistoryWithBFOL<LT extends LocationType> {
-  (options?: HistoryOptions): NativeHistoryWithBFOL<LocationTypeMap[LT]['Base'], LocationTypeMap[LT]['Native']>
+  (options?: HistoryOptions): HistoryWithBFOL<
+    LocationTypeMap[LT]['Base'],
+    LocationTypeMap[LT]['Intact']
+  >
 }
 
 export interface UseBeforeUnload {
-  <CH extends CreateHistory<any>>(createHistory: CH): CreateHistoryWithBFOL<LTFromCH<CH>>
+  <CH extends CreateHistory<any>>(
+    createHistory: CH
+  ): CreateHistoryWithBFOL<LTFromCH<CH>>
 }
 
 export interface GetPromptMessage {
@@ -58,7 +69,11 @@ const startListener: StartListener = getPromptMessage => {
     return undefined
   }
 
-  addEventListener(window, "beforeunload", handleBeforeUnload as EventListener)
+  addEventListener(
+    window,
+    "beforeunload",
+    handleBeforeUnload as EventListener
+  )
 
   return () =>
     removeEventListener(
@@ -81,8 +96,8 @@ const useBeforeUnload: UseBeforeUnload = <CH extends CreateHistory<any>>(
   const ch: CreateHistoryWithBFOL<LTFromCH<CH>> = (
     options: HistoryOptions = { hashType: "slash" }
   ) => {
-    const history: NativeHistory = createHistory(options)
-    type NL = LocationTypeMap[LTFromCH<CH>]["Native"]
+    const history: History = createHistory(options)
+    type IL = LocationTypeMap[LTFromCH<CH>][""]
     let hooks: Function[] = []
     let stopListener: Function | null
 
@@ -94,7 +109,7 @@ const useBeforeUnload: UseBeforeUnload = <CH extends CreateHistory<any>>(
       return message
     }
 
-    const listenBeforeUnload: ListenBeforeUnload<NL> = listener => {
+    const listenBeforeUnload: ListenBeforeUnload<IL> = listener => {
       if (hooks.push(listener) === 1) {
         stopListener = startListener(getPromptMessage)
       }

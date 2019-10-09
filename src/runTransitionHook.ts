@@ -1,23 +1,30 @@
 import warning from 'warning'
-import { NativeLocation } from './type'
+import { Location } from './type'
 
 export interface Callback {
   (result: any): void
 }
 
-export interface Hook<NL extends NativeLocation = NativeLocation> {
-  (location: NL, callback?: Callback): any
+export interface Hook<IL extends Location = Location> {
+  (
+    location: IL,
+    callback?: Callback
+  ): any
 }
 
-export interface RunTransitionHook<NL extends NativeLocation = NativeLocation> {
+export interface RunTransitionHook<IL extends Location = Location> {
   (
-    hook: Hook<NL>, 
-    location: NL, 
+    hook: Hook<IL>, 
+    location: IL, 
     callback?: Callback
   ): void
 }
 
-const runTransitionHook: RunTransitionHook = (hook, location, callback) => {
+const runTransitionHook: RunTransitionHook = (
+  hook,
+  location,
+  callback
+) => {
   const result = hook(location, callback)
 
   if (hook.length < 2) {

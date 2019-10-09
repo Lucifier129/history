@@ -6,8 +6,11 @@ import {
   removeEventListener
 } from "./DOMUtils"
 import { loopAsync } from './AsyncUtils'
-import { createPath, CreatePath } from './PathUtils'
-import { saveState, readState } from './DOMStateStorage'
+import { createPath } from './PathUtils'
+import {
+  saveState,
+  readState
+} from './DOMStateStorage'
 import runTransitionHook from './runTransitionHook'
 import {
   CreateKey,
@@ -20,7 +23,7 @@ import {
 import Actions, { POP, PUSH, REPLACE } from './Actions'
 import { Hook } from './runTransitionHook'
 import {
-  NativeLocation,
+  Location,
   GetCurrentLocation,
   Listen,
   ListenBefore,
@@ -40,11 +43,11 @@ import {
  */
 
 export interface PushLocation {
-  (location: NativeLocation): boolean
+  (location: Location): boolean
 }
 
 export interface ReplaceLocation {
-  (location: NativeLocation): boolean
+  (location: Location): boolean
 }
 
 /**
@@ -54,7 +57,7 @@ export interface ReplaceLocation {
  * Base Utils
  */
 export interface UpdateLocation {
-  (location: NativeLocation): void;
+  (location: Location): void;
 }
 
 export interface StopListener {
@@ -66,7 +69,7 @@ export interface StartListenerBrowser {
 }
 
 export interface CreateBrowserLocation {
-  (historyState: any): NativeLocation
+  (historyState: any): Location
 }
 
 // Browser
@@ -80,13 +83,13 @@ export interface UpdateState {
 
 export interface UpdateLocationBrow {
   (
-    location: NativeLocation,
+    location: Location,
     updateState: UpdateState
   ): void
 }
 
 export interface ConfirmTransitionTo {
-  (location: NativeLocation, callback: (ok: any) => void): void
+  (location: Location, callback: (ok: any) => void): void
 }
 
 export interface StartListener {
@@ -97,7 +100,8 @@ export interface IsExtraneousPopstateEvent {
   (event: PopStateEvent): boolean
 }
 const isExtraneousPopstateEvent: IsExtraneousPopstateEvent
-  = event => event.state === undefined && navigator.userAgent.indexOf('CriOS') === -1
+  = event => event.state === undefined 
+    && navigator.userAgent.indexOf('CriOS') === -1
 
 export interface PopEventListener {
   (event: PopStateEvent): void
@@ -118,11 +122,14 @@ const PopStateEventState = 'popstate'
  * behavior using { forceRefresh: true } in options.
  */
 
-const createBrowserHistory: CreateHistory<'NORMAL'> = (options = { hashType: 'slash' }) => {
+const createBrowserHistory: CreateHistory<'NORMAL'> = (
+  options = { hashType: 'slash' }
+) => {
   invariant(canUseDOM, "Browser history needs a DOM")
 
   // Default operator
-  const getUserConfirmation: GetUserConfirmation = options.getUserConfirmation || defaultGetUserConfirmation
+  const getUserConfirmation: GetUserConfirmation =
+    options.getUserConfirmation || defaultGetUserConfirmation
 
   const go: Go = (n) => {
     if (n)
@@ -143,14 +150,23 @@ const createBrowserHistory: CreateHistory<'NORMAL'> = (options = { hashType: 'sl
 
   const startListenerBrowser: StartListenerBrowser = (listener) => {
     const handlePopState: PopEventListener = (event: PopStateEvent) => {
-      if (isExtraneousPopstateEvent(event)) return // Ignore extraneous popstate events in WebKit
+      // Ignore extraneous popstate events in WebKit
+      if (isExtraneousPopstateEvent(event)) return
       listener(createBroserverLocation(event.state))
     }
 
-    addEventListener(window, PopStateEventState, handlePopState as EventListener)
+    addEventListener(
+      window,
+      PopStateEventState,
+      handlePopState as EventListener
+    )
 
     return () =>
-      removeEventListener(window, PopStateEventState, handlePopState as EventListener)
+      removeEventListener(
+        window,
+        PopStateEventState,
+        handlePopState as EventListener
+      )
   }
 
   const updateLocationBrow: UpdateLocationBrow = (location, updateState) => {
@@ -220,8 +236,8 @@ const createBrowserHistory: CreateHistory<'NORMAL'> = (options = { hashType: 'sl
     : replaceLocationBrow
   const { keyLength } = options
 
-  let currentLocation: NativeLocation
-  let pendingLocation: NativeLocation | null
+  let currentLocation: Location
+  let pendingLocation: Location | null
   let beforeHooks: Hook[] = []
   let hooks: Hook[] = []
   let allKeys: string[] = []
@@ -293,8 +309,12 @@ const createBrowserHistory: CreateHistory<'NORMAL'> = (options = { hashType: 'sl
           const prevPath = createPath(currentLocation)
           const nextPath = createPath(nextLocation)
 
-          if (nextPath === prevPath && statesAreEqual(currentLocation.state, nextLocation.state))
+          if (
+            nextPath === prevPath
+            && statesAreEqual(currentLocation.state, nextLocation.state)
+          ) {
             nextLocation.action = REPLACE
+          }
         }
 
         if (nextLocation.action === POP) {

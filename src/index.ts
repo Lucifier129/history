@@ -19,15 +19,15 @@ export default {
 export {
   HistoryOptions,
   CreateHistory,
-  NativeHistory,
+  History,
   BaseLocation,
-  NativeLocation,
+  Location,
   BLWithBasename,
-  NLWithBasename,
+  ILWithBasename,
   BLWithQuery,
-  NLWithQuery,
+  ILWithQuery,
   BLWithBQ,
-  NLWithBQ,
+  ILWithBQ,
   LocationType,
   LocationTypeLoader,
   LocationTypeMap
@@ -35,7 +35,10 @@ export {
 
 export { default as useBasename } from './useBasename'
 
-export { default as useBeforeUnload, NativeHistoryWithBFOL } from './useBeforeUnload'
+export {
+  default as useBeforeUnload,
+  HistoryWithBFOL
+} from './useBeforeUnload'
 
 export { default as useQueries } from './useQueries'
 

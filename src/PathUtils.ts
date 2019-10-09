@@ -2,15 +2,25 @@ import warning from 'warning'
 import { BLWithBQ } from './type';
 
 export interface AddQueryStringValueToPath {
-  (path: string, key: string, value: string): string
+  (
+    path: string,
+    key: string,
+    value: string
+  ): string
 }
 
 export interface StripQueryStringValueFromPath {
-  (path: string, key?: string): string
+  (
+    path: string,
+    key?: string
+  ): string
 }
 
 export interface GetQueryStringValueFromPath {
-  (path: string, key: string): string
+  (
+    path: string,
+    key: string
+  ): string
 }
 
 export interface ExtractPath {
@@ -25,7 +35,11 @@ export interface CreatePath {
   (location: BLWithBQ | string): string
 }
 
-export const addQueryStringValueToPath: AddQueryStringValueToPath = (path, key, value) => {
+export const addQueryStringValueToPath: AddQueryStringValueToPath = (
+  path,
+  key,
+  value
+) => {
   const { pathname, search, hash } = parsePath(path)
 
   return createPath({
@@ -35,7 +49,10 @@ export const addQueryStringValueToPath: AddQueryStringValueToPath = (path, key, 
   })
 }
 
-export const stripQueryStringValueFromPath: StripQueryStringValueFromPath = (path, key) => {
+export const stripQueryStringValueFromPath: StripQueryStringValueFromPath = (
+  path,
+  key
+) => {
   const { pathname, search, hash } = parsePath(path)
 
   return createPath({
@@ -50,10 +67,15 @@ export const stripQueryStringValueFromPath: StripQueryStringValueFromPath = (pat
   })
 }
 
-export const getQueryStringValueFromPath: GetQueryStringValueFromPath
-= (path, key) => {
+export const getQueryStringValueFromPath: GetQueryStringValueFromPath = (
+  path,
+  key
+) => {
   const { search } = parsePath(path)
-  const match: RegExpMatchArray | null = search ? search.match(new RegExp(`[?&]${key}=([a-zA-Z0-9]+)`)) : null
+  const match: RegExpMatchArray | null = search
+    ? search.match(new RegExp(`[?&]${key}=([a-zA-Z0-9]+)`))
+    : null
+    
   return match ? match[1] : ''
 }
 

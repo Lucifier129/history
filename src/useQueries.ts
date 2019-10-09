@@ -1,15 +1,21 @@
-import { parse, stringify } from "querystringify"
-import runTransitionHook, { Callback } from "./runTransitionHook"
+import {
+  parse,
+  stringify
+} from "querystringify"
+import runTransitionHook from "./runTransitionHook"
 import {
   createQuery,
   CreateLocation
 } from "./LocationUtils"
-import { parsePath, CreatePath } from "./PathUtils"
+import {
+  parsePath,
+  CreatePath
+} from "./PathUtils"
 import {
   CreateHistory,
   ParseQueryString,
   HistoryOptions,
-  NativeLocation,
+  Location,
   BaseLocation,
   LocationTypeLoader,
   LocationTypeMap,
@@ -20,7 +26,7 @@ import {
   Push,
   Replace,
   CreateHref,
-  NLWithQuery
+  ILWithQuery
 } from "./type"
 
 export interface DefaultStringifyQuery {
@@ -28,11 +34,13 @@ export interface DefaultStringifyQuery {
 }
 
 export interface UseQueries {
-  <CH extends CreateHistory<any>>(createHistory: CH): CreateHistory<LocationTypeLoader<LTFromCH<CH>, 'QUERY'>>
+  <CH extends CreateHistory<any>>(
+    createHistory: CH
+  ): CreateHistory<LocationTypeLoader<LTFromCH<CH>, 'QUERY'>>
 }
 
-export interface DecodeQuery<NL extends NativeLocation> {
-  (location: NL): NL
+export interface DecodeQuery<IL extends Location> {
+  (location: IL): IL
 }
 
 export interface EncodeQuery<BL extends BaseLocation> {
@@ -50,7 +58,7 @@ const defaultParseQueryString: ParseQueryString = parse
  */
 const useQueries: UseQueries = <CH extends CreateHistory<any>>(createHistory: CH) => {
   type BL = LocationTypeMap[LocationTypeLoader<LTFromCH<CH>, 'QUERY'>]['Base']
-  type NL = LocationTypeMap[LocationTypeLoader<LTFromCH<CH>, 'QUERY'>]['Native']
+  type IL = LocationTypeMap[LocationTypeLoader<LTFromCH<CH>, 'QUERY'>]['Intact']
   let ch: CreateHistory<LocationTypeLoader<LTFromCH<CH>, 'QUERY'>> = (
     options: HistoryOptions = { hashType: "slash" }
   ) => {
@@ -66,7 +74,7 @@ const useQueries: UseQueries = <CH extends CreateHistory<any>>(createHistory: CH
     if (!parseQueryString || typeof parseQueryString !== 'function')
       parseQueryString = defaultParseQueryString
 
-    const decodeQuery: DecodeQuery<NL> = location => {
+    const decodeQuery: DecodeQuery<IL> = location => {
       if (!location) return location
 
       if (location.query === null || location.query === undefined)
@@ -92,15 +100,15 @@ const useQueries: UseQueries = <CH extends CreateHistory<any>>(createHistory: CH
     }
 
     // Override all read methods with query-aware versions.
-    const getCurrentLocation: GetCurrentLocation<NL> = () =>
+    const getCurrentLocation: GetCurrentLocation<IL> = () =>
       decodeQuery(history.getCurrentLocation())
 
-    const listenBefore: ListenBefore<NL> = hook =>
+    const listenBefore: ListenBefore<IL> = hook =>
       history.listenBefore((location, callback) =>
         runTransitionHook(hook, decodeQuery(location), callback)
       )
 
-    const listen: Listen<NL> = listener =>
+    const listen: Listen<IL> = listener =>
       history.listen(location => listener(decodeQuery(location)))
 
     // Override all write methods with query-aware versions.
@@ -136,12 +144,16 @@ const useQueries: UseQueries = <CH extends CreateHistory<any>>(createHistory: CH
         )
       )
 
-    const createLocation: CreateLocation<BL, NL> = (location = '/', action, key) => {
+    const createLocation: CreateLocation<BL, IL> = (
+      location = '/',
+      action,
+      key
+    ) => {
       let newLocation = encodeQuery(
         location,
         typeof location === "string" ? undefined : location.query
       )
-      let newLocationAfter: NLWithQuery = history.createLocation(
+      let newLocationAfter: ILWithQuery = history.createLocation(
         newLocation,
         action,
         key

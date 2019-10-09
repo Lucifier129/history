@@ -14,11 +14,18 @@ import {
   locationsAreEqual,
   defaultGetUserConfirmation
 } from './LocationUtils'
-import { ReadState, SaveState } from './DOMStateStorage'
-import Actions, { POP, PUSH, REPLACE } from './Actions'
+import {
+  ReadState,
+  SaveState
+} from './DOMStateStorage'
+import Actions, {
+  POP,
+  PUSH,
+  REPLACE
+} from './Actions'
 import runTransitionHook from './runTransitionHook'
 import {
-  NativeLocation,
+  Location,
   BaseLocation,
   GetUserConfirmation,
   GetCurrentLocation,
@@ -45,19 +52,19 @@ export interface GetCurrentIndex {
 }
 
 export interface UpdateLocation {
-  (location: NativeLocation): void;
+  (location: Location): void;
 }
 
 export interface ConfirmTransitionTo {
-  (location: NativeLocation, callback: (ok: any) => void): void;
+  (location: Location, callback: (ok: any) => void): void;
 }
 
 export interface PushLocation {
-  (location: NativeLocation): boolean
+  (location: Location): boolean
 }
 
 export interface ReplaceLocation {
-  (location: NativeLocation): boolean
+  (location: Location): boolean
 }
 
 export interface Memo {
@@ -70,7 +77,7 @@ export interface Entry {
 }
 
 export interface CreateStateStorage {
-  (entries: NativeLocation[]): Memo
+  (entries: Location[]): Memo
 }
 
 export interface CanGo {
@@ -89,11 +96,14 @@ const createStateStorage: CreateStateStorage = entries =>
       return memo
     }, {} as Memo)
 
-const createMemoryHistory: CreateHistory<'NORMAL'> = (options = { hashType: 'slash' }) => {
-  const getUserConfirmation: GetUserConfirmation = options.getUserConfirmation || defaultGetUserConfirmation
+const createMemoryHistory: CreateHistory<'NORMAL'> = (
+  options = { hashType: 'slash' }
+) => {
+  const getUserConfirmation: GetUserConfirmation =
+    options.getUserConfirmation || defaultGetUserConfirmation
 
-  let currentLocation: NativeLocation
-  let pendingLocation: NativeLocation | null
+  let currentLocation: Location
+  let pendingLocation: Location | null
   let beforeHooks: Hook[] = []
   let hooks: Hook[] = []
   let allKeys: string[] = []
@@ -113,7 +123,7 @@ const createMemoryHistory: CreateHistory<'NORMAL'> = (options = { hashType: 'sla
     currentLocation = nextLocation
 
     if (currentLocation.action === PUSH) {
-      allKeys = [ ...allKeys.slice(0, currentIndex + 1), currentLocation.key ]
+      allKeys = [ ...allKeys.slice(0, currentIndex + 1), currentLocation.key]
     } else if (currentLocation.action === REPLACE) {
       allKeys[currentIndex] = currentLocation.key
     }
@@ -135,7 +145,10 @@ const createMemoryHistory: CreateHistory<'NORMAL'> = (options = { hashType: 'sla
       hooks = hooks.filter(item => item !== hook)
   }
 
-  const confirmTransitionTo: ConfirmTransitionTo = (location, callback) => {
+  const confirmTransitionTo: ConfirmTransitionTo = (
+    location,
+    callback
+  ) => {
     loopAsync(
       beforeHooks.length,
       (index, next, done) => {
@@ -175,8 +188,12 @@ const createMemoryHistory: CreateHistory<'NORMAL'> = (options = { hashType: 'sla
           const prevPath = createPath(currentLocation)
           const nextPath = createPath(nextLocation)
 
-          if (nextPath === prevPath && statesAreEqual(currentLocation.state, nextLocation.state))
+          if (
+            nextPath === prevPath
+            && statesAreEqual(currentLocation.state, nextLocation.state)
+          ) {
             nextLocation.action = REPLACE
+          }
         }
 
         if (nextLocation.action === POP) {
@@ -219,12 +236,15 @@ const createMemoryHistory: CreateHistory<'NORMAL'> = (options = { hashType: 'sla
   const createHref: CreateHref = (location) =>
     createPath(location)
 
-  const createLocation: CreateLocation = (location, action, key = createKey()) =>
-    _createLocation(location, action, key)
+  const createLocation: CreateLocation = (
+    location,
+    action,
+    key = createKey()
+  ) => _createLocation(location, action, key)
 
   const getCurrentLocation: GetCurrentLocation = () => {
     if (typeof entries[current] !== undefined) {
-      const entry: NativeLocation = entries[current]
+      const entry: Location = entries[current]
       const path: string = createPath(entry)
 
       let key: string = ""
@@ -286,7 +306,7 @@ const createMemoryHistory: CreateHistory<'NORMAL'> = (options = { hashType: 'sla
     return true
   }
 
-  let entriesBefore: (string | NativeLocation | BaseLocation)[]
+  let entriesBefore: (string | Location | BaseLocation)[]
 
   if (typeof options.entries === "string") {
     entriesBefore = [options.entries]
