@@ -4,3 +4,4 @@ umd
 coverage
 .vscode
 publish
+package-lock.json

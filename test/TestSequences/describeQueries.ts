@@ -201,7 +201,7 @@ const describeQueries: Describe = (createHistory) => {
 
         expect(location.pathname).toEqual('/the/path')
         expect(location.query).toEqual(createQuery({ the: undefined }))
-        expect(location.search).toEqual('?the=')
+        expect(location.search).toEqual('')
       })
     })
 

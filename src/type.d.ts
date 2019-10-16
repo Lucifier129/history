@@ -5,6 +5,7 @@ import {
   CreateLocation
 } from './LocationUtils';
 import { CreatePath } from './PathUtils'
+import { ParsedQuery } from 'query-string'
 
 export interface BaseLocation {
   pathname?: string
@@ -27,21 +28,21 @@ export interface ILWithBasename extends Location {
 }
 
 export interface BLWithQuery extends BaseLocation {
-  query?: object
+  query?: ParsedQuery
 }
 
 export interface ILWithQuery extends Location {
-  query?: object
+  query?: ParsedQuery
 }
 
 export interface BLWithBQ extends BaseLocation {
   basename?: string
-  query?: object
+  query?: ParsedQuery
 }
 
 export interface ILWithBQ extends Location {
   basename?: string
-  query?: object
+  query?: ParsedQuery
 }
 
 export interface LocationTypeMap {
@@ -92,7 +93,7 @@ export interface StringifyQuery {
 }
 
 export interface ParseQueryString {
-  (query: string): object
+  (query: string): ParsedQuery
 }
 
 export interface GetUserConfirmation {

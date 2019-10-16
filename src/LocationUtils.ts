@@ -6,9 +6,10 @@ import {
   Location,
   GetUserConfirmation
 } from './type'
+import { ParsedQuery } from 'query-string'
 
 export interface CreateQuery {
-  (props?: object): object
+  (props?: object): ParsedQuery
 }
 
 export interface CreateKey {

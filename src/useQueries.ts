@@ -1,7 +1,7 @@
 import {
   parse,
   stringify
-} from "querystringify"
+} from "query-string"
 import runTransitionHook from "./runTransitionHook"
 import {
   createQuery,
@@ -80,7 +80,7 @@ const useQueries: UseQueries = <CH extends CreateHistory<any>>(createHistory: CH
       if (location.query === null || location.query === undefined)
         location.query = parseQueryString(
           location.search ? location.search.substring(1) : ""
-        )
+        ) as Record<string, any>
 
       return location
     }

@@ -43,14 +43,13 @@
   },
   "dependencies": {
     "invariant": "^2.2.4",
-    "querystringify": "^2.1.1",
+    "query-string": "^6.8.3",
     "warning": "^3.0.0"
   },
   "devDependencies": {
     "@types/invariant": "^2.2.30",
     "@types/jest": "^23.0.1",
     "@types/node": "^12.6.9",
-    "@types/querystringify": "^2.0.0",
     "@types/warning": "^3.0.0",
     "cp-file": "^7.0.0",
     "jest": "^23.0.1",
