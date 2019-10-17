@@ -232,7 +232,11 @@ const createHashHistory: CreateHistory<'NORMAL'> = (options = {}) => {
       saveState(key, state)
     }
 
-    prevLocation = location
+    prevLocation = {
+      basename: '',
+      query: {},
+      ...location
+    }
 
     updateHash(path)
   }
@@ -325,7 +329,11 @@ const createHashHistory: CreateHistory<'NORMAL'> = (options = {}) => {
           }
         }
 
-        prevLocation = currentLocation
+        prevLocation = {
+          basename: '',
+          query: {},
+          ...currentLocation
+        }
 
         listener(currentLocation)
       }

@@ -1,16 +1,8 @@
-import {
-  parse,
-  stringify
-} from "query-string"
-import runTransitionHook from "./runTransitionHook"
-import {
-  createQuery,
-  CreateLocation
-} from "./LocationUtils"
-import {
-  parsePath,
-  CreatePath
-} from "./PathUtils"
+import warning from 'warning'
+import { parse, stringify } from "query-string"
+import { RunTransitionHook } from "./runTransitionHook"
+import { createQuery, CreateLocation } from "./LocationUtils"
+import { parsePath, CreatePath } from "./PathUtils"
 import {
   CreateHistory,
   ParseQueryString,
@@ -96,6 +88,26 @@ const useQueries: UseQueries = <CH extends CreateHistory<any>>(createHistory: CH
       return {
         ...object,
         search
+      }
+    }
+
+    const runTransitionHook: RunTransitionHook<IL> = (
+      hook,
+      location,
+      callback
+    ) => {
+      const result = hook(location, callback)
+    
+      if (hook.length < 2) {
+        // Assume the hook runs synchronously and automatically
+        // call the callback with the return value.
+        callback && callback(result)
+      } else {
+        warning(
+          result === undefined,
+          'You should not "return" in a transition hook with a callback argument; ' +
+          'call the callback instead'
+        )
       }
     }
 
