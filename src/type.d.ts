@@ -24,7 +24,7 @@ export interface BLWithBasename extends BaseLocation {
 }
 
 export interface ILWithBasename extends Location {
-  basename?: string
+  basename: string
 }
 
 export interface BLWithQuery extends BaseLocation {
@@ -32,7 +32,7 @@ export interface BLWithQuery extends BaseLocation {
 }
 
 export interface ILWithQuery extends Location {
-  query?: ParsedQuery
+  query: ParsedQuery
 }
 
 export interface BLWithBQ extends BaseLocation {
@@ -41,8 +41,8 @@ export interface BLWithBQ extends BaseLocation {
 }
 
 export interface ILWithBQ extends Location {
-  basename?: string
-  query?: ParsedQuery
+  basename: string
+  query: ParsedQuery
 }
 
 export interface LocationTypeMap {
