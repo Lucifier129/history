@@ -25,7 +25,7 @@ export function loopAsync(
   let hasNext: boolean = false
   let doneArgs: any[] = []
 
-  const done = (...args: any[]) => {
+  function done(...args: any[]): void {
     isDone = true
 
     if (isSync) {
@@ -37,7 +37,7 @@ export function loopAsync(
     callback(...args)
   }
 
-  const next: () => void = () => {
+  function next(): void {
     if (isDone)
       return
 

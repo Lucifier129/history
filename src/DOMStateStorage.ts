@@ -67,10 +67,12 @@ export function saveState(
 
 export function readState(key: string): any {
   let json: string | null = null
+
   try {
     json = window.sessionStorage.getItem(appendPrefix(key))
   } catch (ex) {
     let error: Error = ex
+
     if (SecurityErrors.includes(error.name)) {
       // Blocking cookies in Chrome/Firefox/Safari throws SecurityError on any
       // attempt to access window.sessionStorage.
@@ -86,8 +88,8 @@ export function readState(key: string): any {
   if (json) {
     try {
       return JSON.parse(json) as object
-    } catch (ex) {
-      let error: Error = ex
+    } catch (err)  {
+      let error: Error = err
       // Ignore invalid JSON.
     }
   }
