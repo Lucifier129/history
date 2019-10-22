@@ -11,7 +11,6 @@ export interface CreateKey {
   (): string
 }
 
-
 export function createQuery(props?: object): ParsedQuery {
   return Object.assign(Object.create(null), props)
 }
