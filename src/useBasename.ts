@@ -24,6 +24,7 @@ export default function useBasename<CH extends CreateHistory<any>>(
 ): CreateHistory<LocationTypeLoader<LTFromCH<CH>,'BASENAME'>> {
   type BL = LocationTypeMap[LocationTypeLoader<LTFromCH<CH>, 'BASENAME'>]['Base']
   type IL = LocationTypeMap[LocationTypeLoader<LTFromCH<CH>, 'BASENAME'>]['Intact']
+
   let ch: CreateHistory<LocationTypeLoader<LTFromCH<CH>, 'BASENAME'>> = (
     options: HistoryOptions = { hashType: 'slash' }
   ) => {
@@ -71,7 +72,6 @@ export default function useBasename<CH extends CreateHistory<any>>(
     // Override all read methods with basename-aware versions.
     const getCurrentLocation: GetCurrentLocation<IL> = () =>
       addBasename(history.getCurrentLocation())
-
 
     const runTransitionHook: RunTransitionHook<IL> = (
       hook,
