@@ -371,7 +371,7 @@ const createBrowserHistory: CreateHistory<'NORMAL'> = (
     }
   }
 
-  function startListener(listener: Hook, before: boolean): StopListener {
+  function startListener(listener: Hook<Location>, before: boolean): () => void {
     if (++listenerCount === 1)
       stopListener = startListenerBrowser(transitionTo)
 
