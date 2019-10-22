@@ -25,60 +25,27 @@ import { Hook } from './runTransitionHook'
 import {
   Location,
   BaseLocation,
-  GetCurrentLocation,
-  Listen,
-  ListenBefore,
-  TransitionTo,
-  Push,
-  Replace,
-  GoBack,
-  GoForward,
-  CreateHref,
-  CreateHistory,
-  GetUserConfirmation,
-  PushLocation,
-  ReplaceLocation
+  History,
+  HistoryOptions,
+  LocationTypeMap
 } from './type'
 /**
  * Utils
- */ 
-/**
- * Base Utils
  */
-export interface UpdateLocation {
-  (location: Location): void;
-}
-
 export interface StopListener {
   (): void
 }
 
-// Browser
-export interface GetCurrentIndex {
-  (): number
-}
 
 export interface UpdateState {
   (state: object, path: string): void
 }
 
-export interface ConfirmTransitionTo {
-  (location: Location, callback: (ok: any) => void): void
-}
-
-export interface StartListener {
-  (listener: Hook, before: boolean): StopListener
-}
-
-export interface IsExtraneousPopstateEvent {
-  (event: PopStateEvent): boolean
-}
-const isExtraneousPopstateEvent: IsExtraneousPopstateEvent
-  = event => event.state === undefined 
-    && navigator.userAgent.indexOf('CriOS') === -1
-
-export interface PopEventListener {
-  (event: PopStateEvent): void
+function isExtraneousPopstateEvent(event: PopStateEvent): boolean {
+  return (
+    event.state === undefined 
+      && navigator.userAgent.indexOf('CriOS') === -1
+  )
 }
 
 const PopStateEventState = 'popstate'
@@ -96,9 +63,12 @@ const PopStateEventState = 'popstate'
  * behavior using { forceRefresh: true } in options.
  */
 
-const createBrowserHistory: CreateHistory<'NORMAL'> = (
-  options = { hashType: 'slash' }
-) => {
+export default function createBrowserHistory(
+  options: HistoryOptions = { hashType: 'slash' }
+): History<
+  LocationTypeMap['NORMAL']['Base'],
+  LocationTypeMap['NORMAL']['Intact']
+> {
   invariant(canUseDOM, "Browser history needs a DOM")
 
   // Browser
@@ -114,7 +84,7 @@ const createBrowserHistory: CreateHistory<'NORMAL'> = (
   }
 
   function startListenerBrowser(listener: Hook): StopListener {
-    const handlePopState: PopEventListener = (event: PopStateEvent) => {
+    function handlePopState(event: PopStateEvent): void {
       // Ignore extraneous popstate events in WebKit
       if (isExtraneousPopstateEvent(event)) return
       listener(createBroserverLocation(event.state))
@@ -242,11 +212,11 @@ const createBrowserHistory: CreateHistory<'NORMAL'> = (
     hooks.forEach(hook => hook(currentLocation))
   }
 
-  function listenBefore(listener: Hook<Location>): () => void {
+  function listenBefore(listener: Hook<Location>): StopListener {
     return  startListener(listener, true)
   }
 
-  function listen(listener: Hook<Location>): () => void {
+  function listen(listener: Hook<Location>): StopListener {
     return startListener(listener, false)
   }
 
@@ -355,7 +325,7 @@ const createBrowserHistory: CreateHistory<'NORMAL'> = (
   let listenerCount: number = 0
   let stopListener: StopListener
 
-  function _listenBefore(hook: Hook<Location>): () => void {
+  function _listenBefore(hook: Hook<Location>): StopListener {
     beforeHooks.push(hook)
 
     return () => {
@@ -363,7 +333,7 @@ const createBrowserHistory: CreateHistory<'NORMAL'> = (
     }
   }
 
-  function _listen(hook: Hook<Location>): () => void {
+  function _listen(hook: Hook<Location>): StopListener {
     hooks.push(hook)
 
     return () => {
@@ -371,7 +341,7 @@ const createBrowserHistory: CreateHistory<'NORMAL'> = (
     }
   }
 
-  function startListener(listener: Hook<Location>, before: boolean): () => void {
+  function startListener(listener: Hook<Location>, before: boolean): StopListener {
     if (++listenerCount === 1)
       stopListener = startListenerBrowser(transitionTo)
 
@@ -402,5 +372,3 @@ const createBrowserHistory: CreateHistory<'NORMAL'> = (
     createLocation
   }
 }
-
-export default createBrowserHistory
