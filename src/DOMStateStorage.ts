@@ -1,17 +1,5 @@
 import warning from 'warning'
 
-export interface AppendPrefix {
-  (key: string): string;
-}
-
-export interface SaveState {
-  (key: string, state: any): void;
-}
-
-export interface ReadState {
-  (key: string): any;
-}
-
 const QuotaExceededErrors = [
   'QuotaExceededError',
   'QUOTA_EXCEEDED_ERR'
@@ -23,10 +11,14 @@ const SecurityErrors = [
 
 const KeyPrefix: string = '@@History/'
 
-export const appendPrefix: AppendPrefix = (key) =>
-  KeyPrefix + key
+export function appendPrefix(key: string): string {
+  return KeyPrefix + key
+}
 
-export const saveState: SaveState = (key, state) => {
+export function saveState(
+  key: string,
+  state: any
+): void {
   if (!window.sessionStorage) {
     
     warning(
@@ -73,7 +65,7 @@ export const saveState: SaveState = (key, state) => {
   }
 }
 
-export const readState: ReadState = (key) => {
+export function readState(key: string): any {
   let json: string | null = null
   try {
     json = window.sessionStorage.getItem(appendPrefix(key))

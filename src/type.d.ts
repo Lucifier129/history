@@ -113,6 +113,14 @@ export interface HistoryOptions {
   getUserConfirmation?: GetUserConfirmation
 }
 
+export interface PushLocation {
+  (location: Location): boolean
+}
+
+export interface ReplaceLocation {
+  (location: Location): boolean
+}
+
 export interface GetCurrentLocation<IL extends Location = Location> {
   (): IL
 }

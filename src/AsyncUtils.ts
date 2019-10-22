@@ -14,11 +14,11 @@ export interface Callback {
   (...args: any[]): void;
 }
 
-export interface LoopAsync {
-  (turns: number, work: Work, callback: Callback): void;
-}
-
-export const loopAsync: LoopAsync = (turns, work, callback) => {
+export function loopAsync(
+  turns: number,
+  work: Work,
+  callback: Callback
+): void {
   let currentTurn: number = 0
   let isDone: boolean = false
   let isSync: boolean = false

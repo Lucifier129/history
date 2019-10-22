@@ -25,12 +25,6 @@ export interface DefaultStringifyQuery {
   (query: object): string
 }
 
-export interface UseQueries {
-  <CH extends CreateHistory<any>>(
-    createHistory: CH
-  ): CreateHistory<LocationTypeLoader<LTFromCH<CH>, 'QUERY'>>
-}
-
 export interface DecodeQuery<IL extends Location> {
   (location: IL): IL
 }
@@ -48,7 +42,9 @@ const defaultParseQueryString: ParseQueryString = parse
  * Returns a new createHistory function that may be used to create
  * history objects that know how to handle URL queries.
  */
-const useQueries: UseQueries = <CH extends CreateHistory<any>>(createHistory: CH) => {
+export default function useQueries<CH extends CreateHistory<any>>(
+  createHistory: CH
+): CreateHistory<LocationTypeLoader<LTFromCH<CH>, 'QUERY'>> {
   type BL = LocationTypeMap[LocationTypeLoader<LTFromCH<CH>, 'QUERY'>]['Base']
   type IL = LocationTypeMap[LocationTypeLoader<LTFromCH<CH>, 'QUERY'>]['Intact']
   let ch: CreateHistory<LocationTypeLoader<LTFromCH<CH>, 'QUERY'>> = (
@@ -190,5 +186,3 @@ const useQueries: UseQueries = <CH extends CreateHistory<any>>(createHistory: CH
   }
   return ch
 }
-
-export default useQueries

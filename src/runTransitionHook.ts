@@ -20,11 +20,11 @@ export interface RunTransitionHook<IL extends Location = Location> {
   ): void
 }
 
-const runTransitionHook: RunTransitionHook = (
-  hook,
-  location,
-  callback
-) => {
+export default function runTransitionHook<IL extends Location = Location>(
+  hook: Hook<IL>, 
+  location: IL, 
+  callback?: Callback
+): void {
   const result = hook(location, callback)
 
   if (hook.length < 2) {
@@ -39,5 +39,3 @@ const runTransitionHook: RunTransitionHook = (
     )
   }
 }
-
-export default runTransitionHook

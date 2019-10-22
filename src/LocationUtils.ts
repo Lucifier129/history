@@ -3,17 +3,17 @@ import { parsePath } from './PathUtils'
 import Actions, { POP } from './Actions'
 import {
   BaseLocation,
-  Location,
-  GetUserConfirmation
+  Location
 } from './type'
 import { ParsedQuery } from 'query-string'
 
-export interface CreateQuery {
-  (props?: object): ParsedQuery
-}
-
 export interface CreateKey {
   (): string
+}
+
+
+export function createQuery(props?: object): ParsedQuery {
+  return Object.assign(Object.create(null), props)
 }
 
 export interface CreateLocation<
@@ -21,40 +21,28 @@ export interface CreateLocation<
   IL extends Location = Location
 > {
   (
-    location?: BL | string,
+    input?: BL | string,
     action?: Actions,
     key?: string
   ): IL
 }
 
-export interface IsDate {
-  (object: object): boolean
-}
-
-export interface StatesAreEqual {
-  (a: any, b: any): boolean
-}
-
-export interface LocationsAreEqual {
-  (a: Location, b: Location): boolean
-}
-
-export const createQuery: CreateQuery = (props) =>
-  Object.assign(Object.create(null), props)
-
-export const createLocation: CreateLocation = (
-  input = '/',
-  action = POP,
-  key = ''
-) => {
-  const location = typeof input === 'string'
+export function createLocation<
+  BL extends BaseLocation = BaseLocation,
+  IL extends Location = Location
+>(
+  input: BL | string = '/',
+  action: Actions = POP,
+  key: string = ''
+): IL {
+  let location = typeof input === 'string'
     ? parsePath(input)
     : input
 
   let pathname: string = location.pathname || '/'
-  const search: string = location.search || ''
-  const hash: string = location.hash || ''
-  const state: any = location.state
+  let search: string = location.search || ''
+  let hash: string = location.hash || ''
+  let state: any = location.state
 
   try {
     pathname = decodeURI(pathname)
@@ -78,16 +66,21 @@ export const createLocation: CreateLocation = (
     state,
     action,
     key
-  }
+  } as IL
 }
 
-export const defaultGetUserConfirmation: GetUserConfirmation
-= (message, callback) => callback(window.confirm(message)) // eslint-disable-line no-alert
+export function defaultGetUserConfirmation(
+  message: string,
+  callback: Function
+): void {
+  callback(window.confirm(message))
+}
 
-const isDate: IsDate = (object) =>
-  Object.prototype.toString.call(object) === '[object Date]'
+function isDate(object: object): boolean {
+  return Object.prototype.toString.call(object) === '[object Date]'
+}
 
-export const statesAreEqual: StatesAreEqual = (a, b) => {
+export function statesAreEqual(a: any, b: any): boolean {
   if (a === b)
     return true
 
@@ -112,13 +105,18 @@ export const statesAreEqual: StatesAreEqual = (a, b) => {
     if (!Array.isArray(a)) {
       const keysofA: string[] = Object.keys(a)
       const keysofB: string[] = Object.keys(b)
-      return keysofA.length === keysofB.length &&
-        keysofA.every(key => statesAreEqual(a[key], b[key]))
+
+      return (
+        keysofA.length === keysofB.length &&
+          keysofA.every(key => statesAreEqual(a[key], b[key]))
+      )
     }
 
-    return Array.isArray(b) &&
-      a.length === b.length &&
-      a.every((item, index) => statesAreEqual(item, b[index]))
+    return (
+      Array.isArray(b) &&
+        a.length === b.length &&
+          a.every((item, index) => statesAreEqual(item, b[index]))
+    )
   }
 
   // All other serializable types (string, number, boolean)
@@ -126,10 +124,13 @@ export const statesAreEqual: StatesAreEqual = (a, b) => {
   return false
 }
 
-export const locationsAreEqual: LocationsAreEqual = (a, b) =>
-  a.key === b.key && // Different key !== location change.
-  // a.action === b.action && // Different action !== location change.
-  a.pathname === b.pathname &&
-  a.search === b.search &&
-  a.hash === b.hash
-  && statesAreEqual(a.state, b.state)
+export function locationsAreEqual(a: Location, b: Location): boolean {
+  return (
+    a.key === b.key && // Different key !== location change.
+      a.pathname === b.pathname &&
+        a.search === b.search &&
+          a.hash === b.hash &&
+            statesAreEqual(a.state, b.state)
+  )
+}
+

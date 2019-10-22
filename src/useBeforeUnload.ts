@@ -35,12 +35,6 @@ export interface CreateHistoryWithBFOL<LT extends LocationType> {
   >
 }
 
-export interface UseBeforeUnload {
-  <CH extends CreateHistory<any>>(
-    createHistory: CH
-  ): CreateHistoryWithBFOL<LTFromCH<CH>>
-}
-
 export interface GetPromptMessage {
   (): any
 }
@@ -49,15 +43,11 @@ export interface StopListener {
   (): void
 }
 
-export interface StartListener {
-  (getPromptMessage: GetPromptMessage): StopListener
-}
-
 export interface BeforeUnloadEventListener {
   (event: BeforeUnloadEvent): void
 }
 
-const startListener: StartListener = getPromptMessage => {
+function startListener(getPromptMessage: GetPromptMessage): StopListener {
   const handleBeforeUnload: BeforeUnloadEventListener = event => {
     const message = getPromptMessage()
 
@@ -75,12 +65,13 @@ const startListener: StartListener = getPromptMessage => {
     handleBeforeUnload as EventListener
   )
 
-  return () =>
+  return () => (
     removeEventListener(
       window,
       "beforeunload",
       handleBeforeUnload as EventListener
     )
+  )
 }
 
 /**
@@ -88,14 +79,15 @@ const startListener: StartListener = getPromptMessage => {
  * history objects that know how to use the beforeunload event in web
  * browsers to cancel navigation.
  */
-const useBeforeUnload: UseBeforeUnload = <CH extends CreateHistory<any>>(
+export default function useBeforeUnload<CH extends CreateHistory<any>>(
   createHistory: CH
-) => {
+): CreateHistoryWithBFOL<LTFromCH<CH>> {
   invariant(canUseDOM, "useBeforeUnload only works in DOM environments")
 
-  const ch: CreateHistoryWithBFOL<LTFromCH<CH>> = (
-    options: HistoryOptions = { hashType: "slash" }
-  ) => {
+  function ch<LT extends LocationType>(options?: HistoryOptions): HistoryWithBFOL<
+    LocationTypeMap[LT]['Base'],
+    LocationTypeMap[LT]['Intact']
+  > {
     const history: History = createHistory(options)
     type IL = LocationTypeMap[LTFromCH<CH>][""]
     let hooks: Function[] = []
@@ -132,5 +124,3 @@ const useBeforeUnload: UseBeforeUnload = <CH extends CreateHistory<any>>(
 
   return ch
 }
-
-export default useBeforeUnload

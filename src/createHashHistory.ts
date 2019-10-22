@@ -51,19 +51,14 @@ import {
   GoForward,
   CreateHref,
   CreateHistory,
-  GetUserConfirmation
+  GetUserConfirmation,
+  PushLocation,
+  ReplaceLocation
 } from './type'
 
 /**
  * Utils
  */
-export interface PushLocation {
-  (location: Location): boolean
-}
-
-export interface ReplaceLocation {
-  (location: Location): boolean
-}
 
 export interface StartListener {
   (

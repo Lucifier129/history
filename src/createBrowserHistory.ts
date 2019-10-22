@@ -35,21 +35,10 @@ import {
   GoForward,
   CreateHref,
   CreateHistory,
-  GetUserConfirmation
+  GetUserConfirmation,
+  PushLocation,
+  ReplaceLocation
 } from './type'
-
-/**
- * BrowserHistoryOptions
- */
-
-export interface PushLocation {
-  (location: Location): boolean
-}
-
-export interface ReplaceLocation {
-  (location: Location): boolean
-}
-
 /**
  * Utils
  */ 
@@ -64,14 +53,6 @@ export interface StopListener {
   (): void
 }
 
-export interface StartListenerBrowser {
-  (listener: Hook): StopListener
-}
-
-export interface CreateBrowserLocation {
-  (historyState: any): Location
-}
-
 // Browser
 export interface GetCurrentIndex {
   (): number
@@ -79,13 +60,6 @@ export interface GetCurrentIndex {
 
 export interface UpdateState {
   (state: object, path: string): void
-}
-
-export interface UpdateLocationBrow {
-  (
-    location: Location,
-    updateState: UpdateState
-  ): void
 }
 
 export interface ConfirmTransitionTo {
@@ -127,17 +101,8 @@ const createBrowserHistory: CreateHistory<'NORMAL'> = (
 ) => {
   invariant(canUseDOM, "Browser history needs a DOM")
 
-  // Default operator
-  const getUserConfirmation: GetUserConfirmation =
-    options.getUserConfirmation || defaultGetUserConfirmation
-
-  const go: Go = (n) => {
-    if (n)
-      window.history.go(n)
-  }
-
   // Browser
-  const createBroserverLocation: CreateBrowserLocation = (historyState) => {
+  function createBroserverLocation(historyState: any): Location {
     const key: string = (historyState && historyState.key) || ''
 
     return _createLocation({
@@ -148,7 +113,7 @@ const createBrowserHistory: CreateHistory<'NORMAL'> = (
     }, undefined, key)
   }
 
-  const startListenerBrowser: StartListenerBrowser = (listener) => {
+  function startListenerBrowser(listener: Hook): StopListener {
     const handlePopState: PopEventListener = (event: PopStateEvent) => {
       // Ignore extraneous popstate events in WebKit
       if (isExtraneousPopstateEvent(event)) return
@@ -169,7 +134,10 @@ const createBrowserHistory: CreateHistory<'NORMAL'> = (
       )
   }
 
-  const updateLocationBrow: UpdateLocationBrow = (location, updateState) => {
+  function updateLocationBrow(
+    location: Location,
+    updateState: UpdateState
+  ): void {
     const { state, key } = location
 
     if (state !== undefined) {
@@ -177,6 +145,15 @@ const createBrowserHistory: CreateHistory<'NORMAL'> = (
     }
 
     updateState({ key }, createPath(location))
+  }
+
+  // Default operator
+  const getUserConfirmation: GetUserConfirmation =
+    options.getUserConfirmation || defaultGetUserConfirmation
+
+  const go: Go = (n) => {
+    if (n)
+      window.history.go(n)
   }
 
   const getCurrentLocationBrow: GetCurrentLocation = () => {

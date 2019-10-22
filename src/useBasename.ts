@@ -14,31 +14,14 @@ import {
   Replace,
   CreateHref,
   CreateHistory,
-  Location,
-  BaseLocation,
   LocationTypeLoader,
   LocationTypeMap,
   LTFromCH
 } from './type'
 
-export interface UseBasename {
-  <CH extends CreateHistory<any>>(
-    createHistory: CH
-  ): CreateHistory<LocationTypeLoader<LTFromCH<CH>,'BASENAME'>>
-}
-
-export interface AddBasename<IL extends Location> {
-  (location: IL): IL
-}
-
-export interface PrePendBasename<BL extends BaseLocation> {
-  (location?: BL | string): BL | string
-}
-
-
-const useBasename: UseBasename = <CH extends CreateHistory<any>>(
+export default function useBasename<CH extends CreateHistory<any>>(
   createHistory: CH
-) => {
+): CreateHistory<LocationTypeLoader<LTFromCH<CH>,'BASENAME'>> {
   type BL = LocationTypeMap[LocationTypeLoader<LTFromCH<CH>, 'BASENAME'>]['Base']
   type IL = LocationTypeMap[LocationTypeLoader<LTFromCH<CH>, 'BASENAME'>]['Intact']
   let ch: CreateHistory<LocationTypeLoader<LTFromCH<CH>, 'BASENAME'>> = (
@@ -47,7 +30,7 @@ const useBasename: UseBasename = <CH extends CreateHistory<any>>(
     const history = createHistory(options)
     const { basename } = options
 
-    const addBasename: AddBasename<IL> = (location) => {
+    function addBasename(location: IL): IL {
       if (!location)
         return location
 
@@ -66,7 +49,7 @@ const useBasename: UseBasename = <CH extends CreateHistory<any>>(
       return location
     }
 
-    const prependBasename: PrePendBasename<BL> = (location = '/') => {
+    function prependBasename(location: BL | string = '/'): BL | string {
       if (!basename)
         return location
       
@@ -157,5 +140,3 @@ const useBasename: UseBasename = <CH extends CreateHistory<any>>(
 
   return ch
 }
-
-export default useBasename

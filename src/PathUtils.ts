@@ -1,58 +1,33 @@
 import warning from 'warning'
 import { BLWithBQ } from './type';
 
-export interface AddQueryStringValueToPath {
-  (
-    path: string,
-    key: string,
-    value: string
-  ): string
-}
-
-export interface StripQueryStringValueFromPath {
-  (
-    path: string,
-    key?: string
-  ): string
-}
-
-export interface GetQueryStringValueFromPath {
-  (
-    path: string,
-    key: string
-  ): string
-}
-
-export interface ExtractPath {
-  (path: string): string
-}
-
-export interface ParsePath {
-  (path: string): BLWithBQ
-}
-
 export interface CreatePath {
   (location: BLWithBQ | string): string
 }
 
-export const addQueryStringValueToPath: AddQueryStringValueToPath = (
-  path,
-  key,
-  value
-) => {
+export function addQueryStringValueToPath(
+  path: string,
+  key: string,
+  value: string
+): string {
   const { pathname, search, hash } = parsePath(path)
 
   return createPath({
     pathname,
-    search: search + (search && search.indexOf('?') !== -1 ? '&' : '?') + key + '=' + value,
+    search: search + 
+      (search && search.indexOf('?') !== -1 ? '&' : '?') + 
+        key +
+          '=' +
+            value
+    ,
     hash
   })
 }
 
-export const stripQueryStringValueFromPath: StripQueryStringValueFromPath = (
-  path,
-  key
-) => {
+export function stripQueryStringValueFromPath(
+  path: string,
+  key?: string
+): string {
   const { pathname, search, hash } = parsePath(path)
 
   return createPath({
@@ -67,10 +42,10 @@ export const stripQueryStringValueFromPath: StripQueryStringValueFromPath = (
   })
 }
 
-export const getQueryStringValueFromPath: GetQueryStringValueFromPath = (
-  path,
-  key
-) => {
+export function getQueryStringValueFromPath(
+  path: string,
+  key: string
+): string {
   const { search } = parsePath(path)
   const match: RegExpMatchArray | null = search
     ? search.match(new RegExp(`[?&]${key}=([a-zA-Z0-9]+)`))
@@ -79,7 +54,7 @@ export const getQueryStringValueFromPath: GetQueryStringValueFromPath = (
   return match ? match[1] : ''
 }
 
-const extractPath: ExtractPath = (path) => {
+function extractPath(path: string): string {
   let match: RegExpMatchArray | null = null
   if (typeof path === 'string') {
     match = path.match(/^(https?:)?\/\/[^\/]*/)
@@ -87,7 +62,7 @@ const extractPath: ExtractPath = (path) => {
   return match == null ? path : path.substring(match[0].length)
 }
 
-export const parsePath: ParsePath = (path) => {
+export function parsePath(path: string): BLWithBQ {
   let pathname: string = extractPath(path)
   let search: string = ''
   let hash: string = ''
@@ -126,7 +101,7 @@ export const parsePath: ParsePath = (path) => {
   }
 }
 
-export const createPath: CreatePath = (location) => {
+export function createPath(location: BLWithBQ | string): string {
   if (typeof location === 'string') {
     return location
   }

@@ -14,10 +14,6 @@ import {
   locationsAreEqual,
   defaultGetUserConfirmation
 } from './LocationUtils'
-import {
-  ReadState,
-  SaveState
-} from './DOMStateStorage'
 import Actions, {
   POP,
   PUSH,
@@ -38,12 +34,22 @@ import {
   GoBack,
   GoForward,
   CreateHref,
-  CreateHistory
+  CreateHistory,
+  PushLocation,
+  ReplaceLocation
 } from './type'
 
 /**
  * Utils
  */
+
+export interface Memo {
+  [propName: string]: any
+}
+
+export interface CreateStateStorage {
+  
+}
 /**
  * Base
  */
@@ -59,42 +65,24 @@ export interface ConfirmTransitionTo {
   (location: Location, callback: (ok: any) => void): void;
 }
 
-export interface PushLocation {
-  (location: Location): boolean
-}
-
-export interface ReplaceLocation {
-  (location: Location): boolean
-}
-
-export interface Memo {
-  [propName: string]: any
-}
-
 export interface Entry {
   key: string,
   state: any
-}
-
-export interface CreateStateStorage {
-  (entries: Location[]): Memo
 }
 
 export interface CanGo {
   (n: number): boolean
 }
 
-/**
- * Memory
- */
 
-const createStateStorage: CreateStateStorage = entries =>
-  entries
+function createStateStorage(entries: Location[]): Memo {
+  return entries
     .filter(entry => entry.state)
     .reduce((memo, entry) => {
       memo[entry.key] = entry.state
       return memo
     }, {} as Memo)
+}
 
 const createMemoryHistory: CreateHistory<'NORMAL'> = (
   options = { hashType: 'slash' }
@@ -329,9 +317,13 @@ const createMemoryHistory: CreateHistory<'NORMAL'> = (
 
   const storage: Memo = createStateStorage(entries)
 
-  const saveState: SaveState = (key, state) => (storage[key] = state)
+  function saveState(key: string, state: any) {
+    return storage[key] = state
+  }
 
-  const readState: ReadState = key => storage[key]
+  function readState(key: string) {
+    return storage[key]
+  }
 
   return {
     getCurrentLocation,
