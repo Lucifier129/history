@@ -24,13 +24,13 @@ import Actions, { POP, PUSH, REPLACE } from './Actions'
 import { Hook } from './runTransitionHook'
 import {
   Location,
+  BaseLocation,
   GetCurrentLocation,
   Listen,
   ListenBefore,
   TransitionTo,
   Push,
   Replace,
-  Go,
   GoBack,
   GoForward,
   CreateHref,
@@ -147,16 +147,16 @@ const createBrowserHistory: CreateHistory<'NORMAL'> = (
     updateState({ key }, createPath(location))
   }
 
-  // Default operator
-  const getUserConfirmation: GetUserConfirmation =
+  const getUserConfirmation =
     options.getUserConfirmation || defaultGetUserConfirmation
 
-  const go: Go = (n) => {
-    if (n)
+  function go(n: number) {
+    if (n) {
       window.history.go(n)
+    }
   }
 
-  const getCurrentLocationBrow: GetCurrentLocation = () => {
+  function getCurrentLocationBrow(): Location {
     let historyState: any
     try {
       historyState = window.history.state || {}
@@ -169,7 +169,7 @@ const createBrowserHistory: CreateHistory<'NORMAL'> = (
     return createBroserverLocation(historyState)
   }
 
-  const pushLocationBrow: PushLocation = (location) => {
+  function pushLocationBrow(location: Location): boolean {
     updateLocationBrow(
       location,
       (state: object, path: string) =>
@@ -178,7 +178,7 @@ const createBrowserHistory: CreateHistory<'NORMAL'> = (
     return true
   }
 
-  const replaceLocationBrow: ReplaceLocation = (location) => {
+  function replaceLocationBrow(location: Location): boolean {
     updateLocationBrow(location, (state: object, path: string) =>
       window.history.replaceState(state, '', path)
     )
@@ -186,16 +186,16 @@ const createBrowserHistory: CreateHistory<'NORMAL'> = (
   }
 
   // Refresh
-  const getCurrentLocationRefresh: GetCurrentLocation = () => {
+  function getCurrentLocationRefresh(): Location {
     return _createLocation(window.location)
   }
 
-  const pushLocationRefresh: PushLocation = (location) => {
+  function pushLocationRefresh(location: Location): boolean {
     window.location.href = createPath(location)
     return false // Don't update location
   }
 
-  const replaceLocationRefresh: ReplaceLocation = (location) => {
+  function replaceLocationRefresh(location: Location): boolean {
     window.location.replace(createPath(location))
     return false // Don't update location
   }
@@ -219,7 +219,7 @@ const createBrowserHistory: CreateHistory<'NORMAL'> = (
   let hooks: Hook[] = []
   let allKeys: string[] = []
 
-  const getCurrentIndex: GetCurrentIndex = () => {
+  function getCurrentIndex(): number {
     if (pendingLocation && pendingLocation.action === Actions.POP)
       return allKeys.indexOf(pendingLocation.key || '')
 
@@ -229,7 +229,7 @@ const createBrowserHistory: CreateHistory<'NORMAL'> = (
     return -1
   }
 
-  const updateLocation: UpdateLocation = (nextLocation) => {
+  function updateLocation(nextLocation: Location): void {
     const currentIndex = getCurrentIndex()
     currentLocation = nextLocation
 
@@ -242,11 +242,15 @@ const createBrowserHistory: CreateHistory<'NORMAL'> = (
     hooks.forEach(hook => hook(currentLocation))
   }
 
-  const listenBefore: ListenBefore = listener => startListener(listener, true)
+  function listenBefore(listener: Hook<Location>): () => void {
+    return  startListener(listener, true)
+  }
 
-  const listen: Listen = listener => startListener(listener, false)
+  function listen(listener: Hook<Location>): () => void {
+    return startListener(listener, false)
+  }
 
-  const confirmTransitionTo: ConfirmTransitionTo = (location, callback) => {
+  function confirmTransitionTo(location: Location, callback: (ok: any) => void): void {
     loopAsync(
       beforeHooks.length,
       (index, next, done) => {
@@ -264,7 +268,7 @@ const createBrowserHistory: CreateHistory<'NORMAL'> = (
     )
   }
 
-  const transitionTo: TransitionTo = (nextLocation) => {
+  function transitionTo(nextLocation: Location): void {
     if (
       (currentLocation && locationsAreEqual(currentLocation, nextLocation)) ||
       (pendingLocation && locationsAreEqual(pendingLocation, nextLocation))
@@ -316,46 +320,58 @@ const createBrowserHistory: CreateHistory<'NORMAL'> = (
     })
   }
 
-  const push: Push = (input) =>
+  function push(input: BaseLocation | string): void {
     transitionTo(createLocation(input, PUSH))
+  }
 
-  const replace: Replace = (input) =>
+  function replace(input: BaseLocation | string): void {
     transitionTo(createLocation(input, REPLACE))
+  }
 
-  const goBack: GoBack = () =>
+  function goBack() {
     go(-1)
+  }
 
-  const goForward: GoForward = () =>
+  function goForward() {
     go(1)
+  }
 
-  const createKey: CreateKey = () =>
-    Math.random().toString(36).substr(2, keyLength || 6)
+  function createKey() {
+    return Math.random().toString(36).substr(2, keyLength || 6)
+  }
 
-  const createHref: CreateHref = (location) =>
-    createPath(location)
+  function createHref(location: BaseLocation | string): string {
+    return createPath(location)
+  }
 
-  const createLocation: CreateLocation = (location, action, key = createKey()) =>
-    _createLocation(location, action, key)
-
+  function createLocation(
+    input?: BaseLocation | string,
+    action?: Actions,
+    key: string = createKey()
+  ): Location {
+    return _createLocation(input, action, key)
+  }
 
   let listenerCount: number = 0
   let stopListener: StopListener
 
-  const _listenBefore: ListenBefore = (hook) => {
+  function _listenBefore(hook: Hook<Location>): () => void {
     beforeHooks.push(hook)
 
-    return () =>
-    beforeHooks = beforeHooks.filter(item => item !== hook)
+    return () => {
+      beforeHooks = beforeHooks.filter(item => item !== hook)
+    }
   }
 
-  const _listen: Listen = (hook) => {
+  function _listen(hook: Hook<Location>): () => void {
     hooks.push(hook)
 
-    return () =>
+    return () => {
       hooks = hooks.filter(item => item !== hook)
+    }
   }
 
-  const startListener: StartListener = (listener, before) => {
+  function startListener(listener: Hook, before: boolean): StopListener {
     if (++listenerCount === 1)
       stopListener = startListenerBrowser(transitionTo)
 

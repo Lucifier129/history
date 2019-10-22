@@ -43,12 +43,8 @@ export interface StopListener {
   (): void
 }
 
-export interface BeforeUnloadEventListener {
-  (event: BeforeUnloadEvent): void
-}
-
 function startListener(getPromptMessage: GetPromptMessage): StopListener {
-  const handleBeforeUnload: BeforeUnloadEventListener = event => {
+  function handleBeforeUnload(event: BeforeUnloadEvent): void | string {
     const message = getPromptMessage()
 
     if (typeof message === "string") {
@@ -101,13 +97,13 @@ export default function useBeforeUnload<CH extends CreateHistory<any>>(
       return message
     }
 
-    const listenBeforeUnload: ListenBeforeUnload<IL> = listener => {
-      if (hooks.push(listener) === 1) {
+    function listenBeforeUnload(hook: Hook<IL>): Unlisten {
+      if (hooks.push(hook) === 1) {
         stopListener = startListener(getPromptMessage)
       }
 
       return () => {
-        hooks = hooks.filter(item => item !== listener)
+        hooks = hooks.filter(item => item !== hook)
 
         if (hooks.length === 0 && stopListener) {
           stopListener()

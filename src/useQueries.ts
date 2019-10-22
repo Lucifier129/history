@@ -5,9 +5,7 @@ import { createQuery, CreateLocation } from "./LocationUtils"
 import { parsePath, CreatePath } from "./PathUtils"
 import {
   CreateHistory,
-  ParseQueryString,
   HistoryOptions,
-  Location,
   BaseLocation,
   LocationTypeLoader,
   LocationTypeMap,
@@ -21,22 +19,9 @@ import {
   ILWithQuery
 } from "./type"
 
-export interface DefaultStringifyQuery {
-  (query: object): string
+function defaultStringifyQuery(query: object): string {
+  return stringify(query).replace(/%20/g, "+")
 }
-
-export interface DecodeQuery<IL extends Location> {
-  (location: IL): IL
-}
-
-export interface EncodeQuery<BL extends BaseLocation> {
-  (location: BL | string, query: object | undefined): BL | string
-}
-
-const defaultStringifyQuery: DefaultStringifyQuery = query =>
-  stringify(query).replace(/%20/g, "+")
-
-const defaultParseQueryString: ParseQueryString = parse
 
 /**
  * Returns a new createHistory function that may be used to create
@@ -53,16 +38,16 @@ export default function useQueries<CH extends CreateHistory<any>>(
     const history = createHistory(options)
     let {
       stringifyQuery = defaultStringifyQuery,
-      parseQueryString = defaultParseQueryString
+      parseQueryString = parse
     } = options
 
     if (!stringifyQuery || typeof stringifyQuery !== 'function')
       stringifyQuery = defaultStringifyQuery
 
     if (!parseQueryString || typeof parseQueryString !== 'function')
-      parseQueryString = defaultParseQueryString
+      parseQueryString = parse
 
-    const decodeQuery: DecodeQuery<IL> = location => {
+    function decodeQuery(location: IL): IL {
       if (!location) return location
 
       if (location.query === null || location.query === undefined)
@@ -73,7 +58,10 @@ export default function useQueries<CH extends CreateHistory<any>>(
       return location
     }
 
-    const encodeQuery: EncodeQuery<BL> = (location, query) => {
+    function encodeQuery(
+      location: BL | string,
+      query: object | undefined
+    ): BL | string {
       if (!query)
         return location
 
