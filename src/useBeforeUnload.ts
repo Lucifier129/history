@@ -89,10 +89,11 @@ export default function useBeforeUnload<CH extends CreateHistory<any>>(
     let hooks: Function[] = []
     let stopListener: Function | null
 
-    const getPromptMessage = () => {
+    function getPromptMessage(): any {
       let message
-      for (let i = 0, len = hooks.length; message == null && i < len; ++i)
+      for (let i = 0, len = hooks.length; message == null && i < len; ++i) {
         message = hooks[i]()
+      }
 
       return message
     }

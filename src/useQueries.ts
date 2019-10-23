@@ -1,12 +1,11 @@
 import warning from 'warning'
 import { parse, stringify } from "query-string"
-import { RunTransitionHook } from "./runTransitionHook"
+import { Hook } from "./runTransitionHook"
 import { createQuery, CreateLocation } from "./LocationUtils"
 import { parsePath, CreatePath } from "./PathUtils"
 import {
   CreateHistory,
   HistoryOptions,
-  BaseLocation,
   LocationTypeLoader,
   LocationTypeMap,
   LTFromCH,
@@ -16,8 +15,13 @@ import {
   Push,
   Replace,
   CreateHref,
-  ILWithQuery
+  ILWithQuery,
+  History,
+  LocationType,
+  Unlisten
 } from "./type"
+import Actions from './Actions'
+import { Callback } from './AsyncUtils'
 
 function defaultStringifyQuery(query: object): string {
   return stringify(query).replace(/%20/g, "+")
@@ -30,11 +34,14 @@ function defaultStringifyQuery(query: object): string {
 export default function useQueries<CH extends CreateHistory<any>>(
   createHistory: CH
 ): CreateHistory<LocationTypeLoader<LTFromCH<CH>, 'QUERY'>> {
-  type BL = LocationTypeMap[LocationTypeLoader<LTFromCH<CH>, 'QUERY'>]['Base']
-  type IL = LocationTypeMap[LocationTypeLoader<LTFromCH<CH>, 'QUERY'>]['Intact']
-  let ch: CreateHistory<LocationTypeLoader<LTFromCH<CH>, 'QUERY'>> = (
+  type BaseLocation = LocationTypeMap[LocationTypeLoader<LTFromCH<CH>, 'QUERY'>]['Base']
+  type Location = LocationTypeMap[LocationTypeLoader<LTFromCH<CH>, 'QUERY'>]['Intact']
+  function ch<LT extends LocationType>(
     options: HistoryOptions = { hashType: "slash" }
-  ) => {
+  ): History<
+    LocationTypeMap[LT]['Base'],
+    LocationTypeMap[LT]['Intact']
+  > {
     const history = createHistory(options)
     let {
       stringifyQuery = defaultStringifyQuery,
@@ -47,7 +54,7 @@ export default function useQueries<CH extends CreateHistory<any>>(
     if (!parseQueryString || typeof parseQueryString !== 'function')
       parseQueryString = parse
 
-    function decodeQuery(location: IL): IL {
+    function decodeQuery<IL extends Location>(location: IL): IL {
       if (!location) return location
 
       if (location.query === null || location.query === undefined)
@@ -58,7 +65,7 @@ export default function useQueries<CH extends CreateHistory<any>>(
       return location
     }
 
-    function encodeQuery(
+    function encodeQuery<BL extends BaseLocation>(
       location: BL | string,
       query: object | undefined
     ): BL | string {
@@ -72,14 +79,14 @@ export default function useQueries<CH extends CreateHistory<any>>(
       return {
         ...object,
         search
-      }
+      } as BL
     }
 
-    const runTransitionHook: RunTransitionHook<IL> = (
-      hook,
-      location,
-      callback
-    ) => {
+    function runTransitionHook<IL extends Location>(
+      hook: Hook<IL>,
+      location: IL,
+      callback?: Callback
+    ): void {
       const result = hook(location, callback)
     
       if (hook.length < 2) {
@@ -96,60 +103,70 @@ export default function useQueries<CH extends CreateHistory<any>>(
     }
 
     // Override all read methods with query-aware versions.
-    const getCurrentLocation: GetCurrentLocation<IL> = () =>
-      decodeQuery(history.getCurrentLocation())
+    function getCurrentLocation<IL extends Location>(): IL {
+      return decodeQuery(history.getCurrentLocation())
+    }
 
-    const listenBefore: ListenBefore<IL> = hook =>
-      history.listenBefore((location, callback) =>
+    function listenBefore<IL extends Location>(hook: Hook<IL>): Unlisten {
+      return history.listenBefore((location, callback) =>
         runTransitionHook(hook, decodeQuery(location), callback)
       )
+    }
 
-    const listen: Listen<IL> = listener =>
-      history.listen(location => listener(decodeQuery(location)))
+    function listen<IL extends Location>(hook: Hook<IL>): Unlisten {
+      return history.listen(location => hook(decodeQuery(location)))
+    }
 
     // Override all write methods with query-aware versions.
-    const push: Push<BL> = location =>
+    function push<BL extends BaseLocation>(location: BL | string): void {
       history.push(
         encodeQuery(
           location,
           typeof location === "string" ? undefined : location.query
         )
       )
+    }
 
-    const replace: Replace<BL> = location =>
+    function replace<BL extends BaseLocation>(location: BL | string): void {
       history.replace(
         encodeQuery(
           location,
           typeof location === "string" ? undefined : location.query
         )
       )
+    }
 
-    const createPath: CreatePath = location =>
-      history.createPath(
+    function createPath<BL extends BaseLocation>(location: BL | string): string {
+      return history.createPath(
         encodeQuery(
           location,
           typeof location === "string" ? undefined : location.query
         )
       )
+    }
 
-    const createHref: CreateHref<BL> = location =>
-      history.createHref(
+    function createHref<BL extends BaseLocation>(location: BL | string): string {
+      return history.createHref(
         encodeQuery(
           location,
           typeof location === "string" ? undefined : location.query
         )
       )
+    }
 
-    const createLocation: CreateLocation<BL, IL> = (
-      location = '/',
-      action,
-      key
-    ) => {
+    function createLocation<
+      BL extends BaseLocation,
+      IL extends Location
+    >(
+      location: BL | string = '/',
+      action?: Actions,
+      key?: string
+    ): IL {
       let newLocation = encodeQuery(
         location,
         typeof location === "string" ? undefined : location.query
       )
-      let newLocationAfter: ILWithQuery = history.createLocation(
+      let newLocationAfter: IL = history.createLocation(
         newLocation,
         action,
         key
