@@ -16,8 +16,6 @@ import {
 } from './PathUtils'
 import { Hook } from "./runTransitionHook"
 import {
-  CreateLocation,
-  CreateKey,
   createLocation as _createLocation,
   statesAreEqual,
   locationsAreEqual,
@@ -40,118 +38,31 @@ import {
   PathCoders,
   PathCoder,
   HistoryOptions,
-  GetCurrentLocation,
-  Listen,
-  ListenBefore,
-  TransitionTo,
-  Push,
-  Replace,
-  Go,
-  GoBack,
-  GoForward,
-  CreateHref,
-  CreateHistory,
   GetUserConfirmation,
-  PushLocation,
-  ReplaceLocation
+  History,
+  LocationTypeMap,
+  LocationType,
+  Unlisten
 } from './type'
 
-/**
- * Utils
- */
-
-export interface StartListener {
-  (
-    listener: Hook,
-    before: boolean
-  ): () => void
-}
-
-export interface GetCurrentIndex {
-  (): number;
-}
-
-export interface UpdateLocation {
-  (location: Location): void;
-}
-
-export interface ConfirmTransitionTo {
-  (
-    location: Location,
-    callback: (ok: any) => void
-  ): void;
-}
-
-/**
- * Hash
- */
-export interface PushPath {
-  (path: string): string;
-}
-
-export interface ReplacePath {
-  (path: string): void;
-}
-
 export interface Update {
-  (path: string): void;
+  (path: string): void
 }
 
-export interface UpdateLocationHash {
-  (
-    location: Location,
-    pathCoder: PathCoder,
-    queryKey: string,
-    updateHash: Update
-  ): void;
-}
-
-export interface PushLocationHash {
-  (
-    location: Location,
-    pathCoder: PathCoder,
-    queryKey: string
-  ): boolean
-}
-
-export interface ReplaceLocationHash {
-  (
-    location: Location,
-    pathCoder: PathCoder,
-    queryKey: string
-  ): boolean
-}
-export interface GetPath {
-  (): string;
-}
-
-export interface GetCurrentLocationHash {
-  (
-    pathCoder: PathCoder,
-    queryKey: string
-  ): Location
-}
-
-export interface PopEventListener {
-  (event: PopStateEvent): void
-}
 
 export interface StopListener {
   (): void
 }
 
-export interface StartListenerHash {
-  (
-    listener: Hook,
-    pathCoder: PathCoder,
-    queryKey: string
-  ): StopListener;
-}
-
 const HashChangeEvent: string = 'hashchange'
 
 
-const createHashHistory: CreateHistory<'NORMAL'> = (options = {}) => {
+function createHashHistory<LT extends LocationType>(
+  options: HistoryOptions = {}
+): History<
+  LocationTypeMap[LT]['Base'],
+  LocationTypeMap[LT]['Intact']
+>{
   invariant(canUseDOM, "Hash history needs a DOM")
 
   let { queryKey, hashType = 'slash', keyLength }: HistoryOptions = options
@@ -164,8 +75,9 @@ const createHashHistory: CreateHistory<'NORMAL'> = (options = {}) => {
 
   const DefaultQueryKey: string = "_k"
 
-  const addLeadingSlash: (path: string) => string = path =>
-    path.charAt(0) === "/" ? path : "/" + path
+  function addLeadingSlash(path: string): string {
+    return path.charAt(0) === "/" ? path : "/" + path
+  }
 
   const HashPathCoders: PathCoders = {
     hashbang: {
@@ -199,10 +111,11 @@ const createHashHistory: CreateHistory<'NORMAL'> = (options = {}) => {
     options.getUserConfirmation || defaultGetUserConfirmation
 
   // Hash
-  const pushHashPath: PushPath = (path) =>
-    window.location.hash = path
+  function pushHashPath(path: string): string {
+    return window.location.hash = path
+  }
 
-  const replaceHashPath: ReplacePath = (path) => {
+  function replaceHashPath(path: string): void {
     const hashIndex: number = window.location.href.indexOf('#')
 
     window.location.replace(
@@ -210,14 +123,14 @@ const createHashHistory: CreateHistory<'NORMAL'> = (options = {}) => {
     )
   }
 
-
   let prevLocation: ILWithBQ
-  const updateLocationHash: UpdateLocationHash = (
-    location,
-    pathCoder,
-    queryKey,
-    updateHash
-  ) => {
+
+  function updateLocationHash<IL extends Location>(
+    location: IL,
+    pathCoder: PathCoder,
+    queryKey: string,
+    updateHash: Update
+  ): void {
     const { state, key } = location
 
     let path: string = pathCoder.encodePath(createPath(location))
@@ -235,11 +148,11 @@ const createHashHistory: CreateHistory<'NORMAL'> = (options = {}) => {
 
     updateHash(path)
   }
-  const pushLocationHash: PushLocationHash = (
-    location: Location, 
-    pathCoder: PathCoder, 
+  function pushLocationHash<IL extends Location>(
+    location: IL,
+    pathCoder: PathCoder,
     queryKey: string
-  ) => {
+  ): boolean {
     updateLocationHash(location, pathCoder, queryKey, (path) => {
       if (getHashPath() !== path) {
         pushHashPath(path)
@@ -251,7 +164,11 @@ const createHashHistory: CreateHistory<'NORMAL'> = (options = {}) => {
   }
 
 
-  const replaceLocationHash: ReplaceLocationHash = (location: Location, pathCoder: PathCoder, queryKey: string) => {
+  function replaceLocationHash<IL extends Location>(
+    location: IL,
+    pathCoder: PathCoder,
+    queryKey: string
+  ): boolean {
     updateLocationHash(location, pathCoder, queryKey, (path) => {
       if (getHashPath() !== path)
         replaceHashPath(path)
@@ -259,7 +176,7 @@ const createHashHistory: CreateHistory<'NORMAL'> = (options = {}) => {
     return true
   }
 
-  const getHashPath: GetPath = () => {
+  function getHashPath(): string {
     // We can't use window.location.hash here because it's not
     // consistent across browsers - Firefox will pre-decode it!
     const href: string = window.location.href
@@ -267,10 +184,10 @@ const createHashHistory: CreateHistory<'NORMAL'> = (options = {}) => {
     return hashIndex === -1 ? '' : href.substring(hashIndex + 1)
   }
 
-  const getCurrentLocationHash: GetCurrentLocationHash = (
+  function getCurrentLocationHash<IL extends Location>(
     pathCoder: PathCoder,
     queryKey: string
-  ) => {
+  ): IL {
     let path: string = pathCoder.decodePath(getHashPath())
     const key: string = getQueryStringValueFromPath(path, queryKey)
 
@@ -286,12 +203,12 @@ const createHashHistory: CreateHistory<'NORMAL'> = (options = {}) => {
     return _createLocation(newInit, undefined, key)
   }
 
-  const startListenerHash: StartListenerHash = (
-    listener,
-    pathCoder,
-    queryKey
-  ) => {
-    const handleHashChange: PopEventListener = () => {
+  function startListenerHash(
+    listener: Hook,
+    pathCoder: PathCoder,
+    queryKey: string
+  ): StopListener {
+    function handleHashChange(/* event: PopStateEvent */): void {
       const path: string = getHashPath()
       const encodedPath: string = pathCoder.encodePath(path)
 
@@ -356,20 +273,29 @@ const createHashHistory: CreateHistory<'NORMAL'> = (options = {}) => {
   }
 
   // Base
+  function getCurrentLocation<IL extends Location>(): IL {
+    return getCurrentLocationHash(pathCoder, queryKey || '')
+  }
 
-  const getCurrentLocation: GetCurrentLocation = () =>
-    getCurrentLocationHash(pathCoder, queryKey || '')
+  function pushLocation<IL extends Location>(
+    location: IL
+  ): boolean {
+    return pushLocationHash(location, pathCoder, queryKey || '')
+  }
 
-  const pushLocation: PushLocation = location =>
-    pushLocationHash(location, pathCoder, queryKey || '')
-
-  const replaceLocation: ReplaceLocation = location =>
-    replaceLocationHash(location, pathCoder, queryKey || '')
+  function replaceLocation<IL extends Location>(
+    location: IL
+  ): boolean {
+    return replaceLocationHash(location, pathCoder, queryKey || '')
+  }
 
   let listenerCount: number = 0
   let stopListener: StopListener
 
-  const startListener: StartListener = (listener, before) => {
+  function startListener<IL extends Location>(
+    listener: Hook<IL>,
+    before: boolean
+  ): () => void {
     if (++listenerCount === 1)
       stopListener = startListenerHash(
         transitionTo,
@@ -391,11 +317,11 @@ const createHashHistory: CreateHistory<'NORMAL'> = (options = {}) => {
 
   let currentLocation: Location
   let pendingLocation: Location | null
-  let beforeHooks: Hook[] = []
-  let hooks: Hook[] = []
+  let beforeHooks: Hook<any>[] = []
+  let hooks: Hook<any>[] = []
   let allKeys: string[] = []
 
-  const getCurrentIndex: GetCurrentIndex = () => {
+  function getCurrentIndex(): number {
     if (pendingLocation && pendingLocation.action === Actions.POP)
       return allKeys.indexOf(pendingLocation.key || '')
 
@@ -405,7 +331,9 @@ const createHashHistory: CreateHistory<'NORMAL'> = (options = {}) => {
     return -1
   }
 
-  const updateLocation: UpdateLocation = (nextLocation) => {
+  function updateLocation<IL extends Location>(
+    nextLocation: IL
+  ): void {
     const currentIndex = getCurrentIndex()
     currentLocation = nextLocation
 
@@ -418,27 +346,32 @@ const createHashHistory: CreateHistory<'NORMAL'> = (options = {}) => {
     hooks.forEach(hook => hook(currentLocation))
   }
 
-  const _listenBefore: ListenBefore = (hook) => {
+  function _listenBefore<IL extends Location>(
+    hook: Hook<IL>
+  ): Unlisten {
     beforeHooks.push(hook)
 
     return () =>
       beforeHooks = beforeHooks.filter(item => item !== hook)
   }
 
-  const _listen: Listen = (hook) => {
+  function _listen<IL extends Location>(
+    hook: Hook<IL>
+  ): Unlisten {
     hooks.push(hook)
 
     return () =>
       hooks = hooks.filter(item => item !== hook)
   }
 
-  const _createHref: CreateHref = (location) =>
-    createPath(location)
+  function _createHref<BL extends BaseLocation>(location: BL | string): string {
+    return createPath(location)
+  }
 
-  const confirmTransitionTo: ConfirmTransitionTo = (
-    location,
-    callback
-  ) => {
+  function confirmTransitionTo<IL extends Location>(
+    location: IL,
+    callback: (ok: any) => void
+  ): void {
     loopAsync(
       beforeHooks.length,
       (index, next, done) => {
@@ -462,7 +395,7 @@ const createHashHistory: CreateHistory<'NORMAL'> = (options = {}) => {
     )
   }
 
-  const transitionTo: TransitionTo = (nextLocation) => {
+  function transitionTo<IL extends Location>(nextLocation: IL): void {
     if (
       (currentLocation && locationsAreEqual(currentLocation, nextLocation))
       || (pendingLocation && locationsAreEqual(pendingLocation, nextLocation))
@@ -514,36 +447,58 @@ const createHashHistory: CreateHistory<'NORMAL'> = (options = {}) => {
     })
   }
 
-  const push: Push = (input) =>
+  function push<BL extends BaseLocation>(input: BL | string): void {
     transitionTo(createLocation(input, PUSH))
+  }
 
-  const replace: Replace = (input) =>
+  function replace<BL extends BaseLocation>(input: BL | string): void {
     transitionTo(createLocation(input, REPLACE))
+  }
 
-  const goBack: GoBack = () =>
+  function goBack(): void {
     go(-1)
+  }
 
-  const goForward: GoForward = () =>
+  function goForward(): void {
     go(1)
+  }
 
-  const createKey: CreateKey = () =>
-    Math.random().toString(36).substr(2, keyLength || 6)
+  function createKey(): string {
+    return (
+      Math
+        .random()
+        .toString(36)
+        .substr(2, keyLength || 6)
+    )
+  }
 
-  const createLocation: CreateLocation = (
-    location,
-    action,
-    key = createKey()
-  ) => _createLocation(location, action, key)
+  function createLocation<
+    BL extends BaseLocation,
+    IL extends Location
+  >(
+    location?: BL | string,
+    action?: Actions,
+    key?: string
+  ): IL {
+    return _createLocation(location, action, key)
+  }
 
-  const listenBefore: ListenBefore =
-    listener => startListener(listener, true)
+  function listenBefore<IL extends Location>(
+    listener: Hook<IL>
+  ): Unlisten {
+    return startListener(listener, true)
+  }
 
-  const listen: Listen = listener => startListener(listener, false)
+  function listen<IL extends Location>(
+    listener: Hook<IL>
+  ): Unlisten {
+    return startListener(listener, false)
+  } 
 
   const goIsSupportedWithoutReload: boolean =
     supportsGoWithoutReloadUsingHash()
 
-  const go: Go = n => {
+    function go(n: number): void {
     warning(
       goIsSupportedWithoutReload,
       "Hash history go(n) causes a full page reload in this browser"
@@ -552,8 +507,9 @@ const createHashHistory: CreateHistory<'NORMAL'> = (options = {}) => {
     history.go(n)
   }
 
-  const createHref: CreateHref = path =>
-    "#" + pathCoder.encodePath(_createHref(path))
+  function createHref<BL extends BaseLocation>(location: BL | string): string {
+    return "#" + pathCoder.encodePath(_createHref(location))
+  }
 
   return {
     getCurrentLocation,
