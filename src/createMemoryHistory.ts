@@ -36,7 +36,12 @@ import {
   CreateHref,
   CreateHistory,
   PushLocation,
-  ReplaceLocation
+  ReplaceLocation,
+  LocationType,
+  LocationTypeMap,
+  HistoryOptions,
+  History,
+  Unlisten
 } from './type'
 
 /**
@@ -75,7 +80,7 @@ export interface CanGo {
 }
 
 
-function createStateStorage(entries: Location[]): Memo {
+function createStateStorage<IL extends Location>(entries: IL[]): Memo {
   return entries
     .filter(entry => entry.state)
     .reduce((memo, entry) => {
@@ -84,19 +89,22 @@ function createStateStorage(entries: Location[]): Memo {
     }, {} as Memo)
 }
 
-const createMemoryHistory: CreateHistory<'NORMAL'> = (
-  options = { hashType: 'slash' }
-) => {
+function createMemoryHistory<LT extends LocationType>(
+  options: HistoryOptions = { hashType: 'slash' }
+): History<
+  LocationTypeMap[LT]['Base'],
+  LocationTypeMap[LT]['Intact']
+>{
   const getUserConfirmation: GetUserConfirmation =
     options.getUserConfirmation || defaultGetUserConfirmation
 
   let currentLocation: Location
   let pendingLocation: Location | null
-  let beforeHooks: Hook[] = []
-  let hooks: Hook[] = []
+  let beforeHooks: Hook<any>[] = []
+  let hooks: Hook<any>[] = []
   let allKeys: string[] = []
 
-  const getCurrentIndex: GetCurrentIndex = () => {
+  function getCurrentIndex(): number {
     if (pendingLocation && pendingLocation.action === Actions.POP)
       return allKeys.indexOf(pendingLocation.key || '')
 
@@ -106,7 +114,9 @@ const createMemoryHistory: CreateHistory<'NORMAL'> = (
     return -1
   }
 
-  const updateLocation: UpdateLocation = (nextLocation) => {
+  function updateLocation<IL extends Location>(
+    nextLocation: IL
+  ): void {
     const currentIndex = getCurrentIndex()
     currentLocation = nextLocation
 
@@ -119,24 +129,28 @@ const createMemoryHistory: CreateHistory<'NORMAL'> = (
     hooks.forEach(hook => hook(currentLocation))
   }
 
-  const listenBefore: ListenBefore = (hook) => {
+  function listenBefore<IL extends Location>(
+    hook: Hook<IL>
+  ): Unlisten {
     beforeHooks.push(hook)
 
     return () =>
     beforeHooks = beforeHooks.filter(item => item !== hook)
   }
 
-  const listen: Listen = (hook) => {
+  function listen<IL extends Location>(
+    hook: Hook<IL>
+  ): Unlisten {
     hooks.push(hook)
 
     return () =>
       hooks = hooks.filter(item => item !== hook)
   }
 
-  const confirmTransitionTo: ConfirmTransitionTo = (
-    location,
-    callback
-  ) => {
+  function confirmTransitionTo<IL extends Location>(
+    location: IL,
+    callback: (ok: any) => void
+  ): void {
     loopAsync(
       beforeHooks.length,
       (index, next, done) => {
@@ -154,7 +168,9 @@ const createMemoryHistory: CreateHistory<'NORMAL'> = (
     )
   }
 
-  const transitionTo: TransitionTo = (nextLocation) => {
+  function transitionTo<IL extends Location>(
+    nextLocation: IL
+  ): void {
     if (
       (currentLocation && locationsAreEqual(currentLocation, nextLocation)) ||
       (pendingLocation && locationsAreEqual(pendingLocation, nextLocation))
@@ -206,31 +222,48 @@ const createMemoryHistory: CreateHistory<'NORMAL'> = (
     })
   }
 
-  const push: Push = (input) =>
+  function push<BL extends BaseLocation = BaseLocation>(
+    input: BL | string
+  ): void {
     transitionTo(createLocation(input, PUSH))
+  }
 
-  const replace: Replace = (input) =>
+  function replace<BL extends BaseLocation = BaseLocation>(
+    input: BL | string
+  ): void {
     transitionTo(createLocation(input, REPLACE))
+  }
 
-  const goBack: GoBack = () =>
+  function goBack(): void {
     go(-1)
+  }
 
-  const goForward: GoForward = () =>
+  function goForward(): void {
     go(1)
+  }
 
-  const createKey: CreateKey = () =>
-    Math.random().toString(36).substr(2, 6)
+  function createKey(): string {
+    return Math.random().toString(36).substr(2, 6)
+  }
 
-  const createHref: CreateHref = (location) =>
-    createPath(location)
+  function createHref<BL extends BaseLocation = BaseLocation>(
+    location: BL | string
+  ): string {
+    return createPath(location)
+  }
 
-  const createLocation: CreateLocation = (
-    location,
-    action,
-    key = createKey()
-  ) => _createLocation(location, action, key)
+  function createLocation<
+    BL extends BaseLocation,
+    IL extends Location
+  >(
+    input?: BL | string,
+    action?: Actions,
+    key?: string
+  ): IL {
+    return _createLocation(input, action, key)
+  }
 
-  const getCurrentLocation: GetCurrentLocation = () => {
+  function getCurrentLocation<IL extends Location = Location>(): IL {
     if (typeof entries[current] !== undefined) {
       const entry: Location = entries[current]
       const path: string = createPath(entry)
@@ -250,12 +283,12 @@ const createMemoryHistory: CreateHistory<'NORMAL'> = (
     }
   }
 
-  const canGo: CanGo = n => {
+  function canGo(n: number): boolean {
     const index = current + n
     return index >= 0 && index < entries.length
   }
 
-  const go: Go = n => {
+  function go(n: number): void {
     if (!n) return
 
     if (!canGo(n)) {
@@ -277,20 +310,22 @@ const createMemoryHistory: CreateHistory<'NORMAL'> = (
     transitionTo({ ...currentLocation, action: POP })
   }
 
-  const pushLocation: PushLocation = location => {
+  function pushLocation<IL extends Location>(location: IL): boolean {
     current += 1
-
-    if (current < entries.length) entries.splice(current)
+    if (current < entries.length) {
+      entries.splice(current)
+    }
 
     entries.push(location)
-
     saveState(location.key, location.state)
+
     return true
   }
 
-  const replaceLocation: ReplaceLocation = location => {
+  function replaceLocation<IL extends Location>(location: IL): boolean {
     entries[current] = location
     saveState(location.key, location.state)
+
     return true
   }
 
@@ -317,11 +352,11 @@ const createMemoryHistory: CreateHistory<'NORMAL'> = (
 
   const storage: Memo = createStateStorage(entries)
 
-  function saveState(key: string, state: any) {
+  function saveState(key: string, state: any): Memo {
     return storage[key] = state
   }
 
-  function readState(key: string) {
+  function readState(key: string): Memo {
     return storage[key]
   }
 
