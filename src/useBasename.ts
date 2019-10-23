@@ -1,9 +1,10 @@
 import warning from 'warning'
-import { RunTransitionHook } from './runTransitionHook'
+import { Hook, Callback } from './runTransitionHook'
 import {
   parsePath,
   CreatePath
 } from './PathUtils'
+import Actions from './Actions'
 import { CreateLocation } from './LocationUtils';
 import {
   HistoryOptions,
@@ -16,22 +17,28 @@ import {
   CreateHistory,
   LocationTypeLoader,
   LocationTypeMap,
-  LTFromCH
+  LTFromCH,
+  History,
+  LocationType,
+  Unlisten
 } from './type'
 
 export default function useBasename<CH extends CreateHistory<any>>(
   createHistory: CH
 ): CreateHistory<LocationTypeLoader<LTFromCH<CH>,'BASENAME'>> {
-  type BL = LocationTypeMap[LocationTypeLoader<LTFromCH<CH>, 'BASENAME'>]['Base']
-  type IL = LocationTypeMap[LocationTypeLoader<LTFromCH<CH>, 'BASENAME'>]['Intact']
+  type BaseLocation = LocationTypeMap[LocationTypeLoader<LTFromCH<CH>, 'BASENAME'>]['Base']
+  type Location = LocationTypeMap[LocationTypeLoader<LTFromCH<CH>, 'BASENAME'>]['Intact']
 
-  let ch: CreateHistory<LocationTypeLoader<LTFromCH<CH>, 'BASENAME'>> = (
+  function ch<LT extends LocationType>(
     options: HistoryOptions = { hashType: 'slash' }
-  ) => {
+  ): History<
+    LocationTypeMap[LT]['Base'],
+    LocationTypeMap[LT]['Intact']
+  > {
     const history = createHistory(options)
     const { basename } = options
 
-    function addBasename(location: IL): IL {
+    function addBasename<IL extends Location>(location: IL): IL {
       if (!location)
         return location
 
@@ -50,7 +57,7 @@ export default function useBasename<CH extends CreateHistory<any>>(
       return location
     }
 
-    function prependBasename(location: BL | string = '/'): BL | string {
+    function prependBasename<BL extends BaseLocation>(location: BL | string = '/'): BL | string {
       if (!basename)
         return location
       
@@ -66,18 +73,19 @@ export default function useBasename<CH extends CreateHistory<any>>(
       return {
         ...object,
         pathname
-      }
+      } as BL
     }
 
     // Override all read methods with basename-aware versions.
-    const getCurrentLocation: GetCurrentLocation<IL> = () =>
-      addBasename(history.getCurrentLocation())
+    function getCurrentLocation<IL extends Location>(): IL {
+      return addBasename(history.getCurrentLocation())
+    }
 
-    const runTransitionHook: RunTransitionHook<IL> = (
-      hook,
-      location,
-      callback
-    ) => {
+    function runTransitionHook<IL extends Location>(
+      hook: Hook<IL>,
+      location: IL,
+      callback?: Callback
+    ): void {
       const result = hook(location, callback)
 
       if (hook.length < 2) {
@@ -93,37 +101,48 @@ export default function useBasename<CH extends CreateHistory<any>>(
       }
     }
 
-    const listenBefore: ListenBefore<IL> = (hook) =>
-      history.listenBefore(
+    function listenBefore<IL extends Location>(hook: Hook<IL>): Unlisten {
+      return history.listenBefore(
         (location, callback) =>
           runTransitionHook(hook, addBasename(location), callback)
       )
+    }
 
-    const listen: Listen<IL> = (listener) =>
-      history.listen(location => listener(addBasename(location)))
+    function listen<IL extends Location>(hook: Hook<IL>): Unlisten {
+      return history.listen(location => hook(addBasename(location)))
+    }
 
     // Override all write methods with basename-aware versions.
-    const push: Push<BL> = (location) =>
+    function push<BL extends BaseLocation>(location: BL | string): void {
       history.push(prependBasename(location))
+    }
 
-    const replace: Replace<BL> = (location) =>
+    function replace<BL extends BaseLocation>(location: BL | string): void {
       history.replace(prependBasename(location))
+    }
 
-    const createPath: CreatePath = (location) =>
-      history.createPath(prependBasename(location))
+    function createPath<BL extends BaseLocation>(location: BL | string): string {
+      return history.createPath(prependBasename(location))
+    }
 
-    const createHref: CreateHref<BL> = (location) =>
-      history.createHref(prependBasename(location))
+    function createHref<BL extends BaseLocation>(location: BL | string): string {
+      return history.createHref(prependBasename(location))
+    }
 
-    const createLocation: CreateLocation<BL, IL> = (
-      location,
-      action,
-      key
-    ) => addBasename(history.createLocation(
-      prependBasename(location),
-      action,
-      key
-    ))
+    function createLocation<
+      BL extends BaseLocation = BaseLocation,
+      IL extends Location = Location
+    >(
+      input?: BL | string,
+      action?: Actions,
+      key?: string
+    ): IL {
+      return addBasename(history.createLocation(
+        prependBasename(input),
+        action,
+        key
+      ))
+    }
 
     return {
       ...history,
