@@ -24,19 +24,6 @@ import {
   Location,
   BaseLocation,
   GetUserConfirmation,
-  GetCurrentLocation,
-  Listen,
-  ListenBefore,
-  TransitionTo,
-  Push,
-  Replace,
-  Go,
-  GoBack,
-  GoForward,
-  CreateHref,
-  CreateHistory,
-  PushLocation,
-  ReplaceLocation,
   LocationType,
   LocationTypeMap,
   HistoryOptions,
@@ -51,34 +38,6 @@ import {
 export interface Memo {
   [propName: string]: any
 }
-
-export interface CreateStateStorage {
-  
-}
-/**
- * Base
- */
-export interface GetCurrentIndex {
-  (): number;
-}
-
-export interface UpdateLocation {
-  (location: Location): void;
-}
-
-export interface ConfirmTransitionTo {
-  (location: Location, callback: (ok: any) => void): void;
-}
-
-export interface Entry {
-  key: string,
-  state: any
-}
-
-export interface CanGo {
-  (n: number): boolean
-}
-
 
 function createStateStorage<IL extends Location>(entries: IL[]): Memo {
   return entries
