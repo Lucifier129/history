@@ -136,7 +136,6 @@ function createMemoryHistory<LT extends LocationType>(
     ) {
       return // Nothing to do
     }
-
     pendingLocation = nextLocation
 
     confirmTransitionTo(nextLocation, (ok) => {
@@ -217,7 +216,7 @@ function createMemoryHistory<LT extends LocationType>(
   >(
     input?: BL | string,
     action?: Actions,
-    key?: string
+    key: string = createKey()
   ): IL {
     return _createLocation(input, action, key)
   }

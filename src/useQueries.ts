@@ -1,21 +1,14 @@
 import warning from 'warning'
 import { parse, stringify } from "query-string"
 import { Hook } from "./runTransitionHook"
-import { createQuery, CreateLocation } from "./LocationUtils"
-import { parsePath, CreatePath } from "./PathUtils"
+import { createQuery } from "./LocationUtils"
+import { parsePath } from "./PathUtils"
 import {
   CreateHistory,
   HistoryOptions,
   LocationTypeLoader,
   LocationTypeMap,
   LTFromCH,
-  GetCurrentLocation,
-  Listen,
-  ListenBefore,
-  Push,
-  Replace,
-  CreateHref,
-  ILWithQuery,
   History,
   LocationType,
   Unlisten

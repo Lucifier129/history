@@ -474,7 +474,7 @@ function createHashHistory<LT extends LocationType>(
   >(
     location?: BL | string,
     action?: Actions,
-    key?: string
+    key: string = createKey()
   ): IL {
     return _createLocation(location, action, key)
   }
