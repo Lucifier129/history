@@ -2,8 +2,8 @@ import { History } from '../../src'
 import { Step, Done } from '../type'
 
 const execSteps: (
-  steps: Step[],
-  history: History,
+  steps: Step<any>[],
+  history: History<any, any>,
   done: Done
 ) => void = (steps, history, done) => {
   let index: number = 0

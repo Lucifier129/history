@@ -17,7 +17,7 @@ const describeQueries: Describe = (createHistory) => {
 
     describe('in push', () => {
       it('works', (done: Done) => {
-        const steps: Step[] = [
+        const steps: Step<ILWithQuery>[] = [
           (location: ILWithQuery) => {
             expect(location.pathname).toEqual('/')
             expect(location.search).toEqual('')
@@ -76,7 +76,7 @@ const describeQueries: Describe = (createHistory) => {
 
     describe('in replace', () => {
       it('works', (done: Done) => {
-        const steps: Step[] = [
+        const steps: Step<ILWithQuery>[] = [
           (location: ILWithQuery) => {
             expect(location.pathname).toEqual('/')
             expect(location.search).toEqual('')
@@ -230,7 +230,7 @@ const describeQueries: Describe = (createHistory) => {
 
     describe('in push', () => {
       it('works', (done: Done) => {
-        const steps: Step[] = [
+        const steps: Step<ILWithQuery>[] = [
           (location: ILWithQuery) => {
             expect(location.pathname).toEqual('/')
             expect(location.search).toEqual('')
@@ -265,7 +265,7 @@ const describeQueries: Describe = (createHistory) => {
 
     describe('in replace', () => {
       it('works', (done: Done) => {
-        const steps: Step[] = [
+        const steps: Step<ILWithQuery>[] = [
           (location: ILWithQuery) => {
             expect(location.pathname).toEqual('/')
             expect(location.search).toEqual('')

@@ -1,7 +1,7 @@
 import { Location, CreateHistory } from '../src'
 
-export interface Step {
-  (location: Location): void
+export interface Step<L extends Location = Location> {
+  (location: L): void
 }
 
 export interface Done {

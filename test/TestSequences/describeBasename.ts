@@ -19,7 +19,7 @@ const describeBasename: Describe = (createHistory) => {
 
     describe('in push', () => {
       it('works with string', (done: Done) => {
-        const steps: Step[] = [
+        const steps: Step<ILWithBasename>[] = [
           (location: ILWithBasename) => {
             expect(location.pathname).toEqual('/')
             expect(location.search).toEqual('')
@@ -44,7 +44,7 @@ const describeBasename: Describe = (createHistory) => {
       })
 
       it('works with object', (done: Done) => {
-        const steps = [
+        const steps: Step<ILWithBasename>[] = [
           (location: ILWithBasename) => {
             expect(location.pathname).toEqual('/')
             expect(location.search).toEqual('')
@@ -89,7 +89,7 @@ const describeBasename: Describe = (createHistory) => {
 
     describe('in replace', () => {
       it('works with string', (done: Done) => {
-        const steps = [
+        const steps: Step<ILWithBasename>[] = [
           (location: ILWithBasename) => {
             expect(location.pathname).toEqual('/')
             expect(location.search).toEqual('')
@@ -114,7 +114,7 @@ const describeBasename: Describe = (createHistory) => {
       })
 
       it('works with object', (done: Done) => {
-        const steps = [
+        const steps: Step<ILWithBasename>[] = [
           (location: ILWithBasename) => {
             expect(location.pathname).toEqual('/')
             expect(location.search).toEqual('')
