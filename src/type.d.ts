@@ -121,7 +121,7 @@ export interface ReplaceLocation {
   (location: Location): boolean
 }
 
-export interface GetCurrentLocation<IL extends Location = Location> {
+export interface GetCurrentLocation<IL extends Location> {
   (): IL
 }
 
@@ -129,23 +129,23 @@ export interface Unlisten {
   (): void
 }
 
-export interface ListenBefore<IL extends Location = Location> {
+export interface ListenBefore<IL extends Location> {
   (hook: Hook<IL>): Unlisten
 }
 
-export interface Listen<IL extends Location = Location> {
+export interface Listen<IL extends Location> {
   (hook: Hook<IL>): Unlisten
 }
 
-export interface TransitionTo<IL extends Location = Location> {
+export interface TransitionTo<IL extends Location> {
   (nextLocation: IL): void
 }
 
-export interface Push<BL extends BaseLocation = BaseLocation> {
+export interface Push<BL extends BaseLocation> {
   (input: BL | string): void
 }
 
-export interface Replace<BL extends BaseLocation = BaseLocation> {
+export interface Replace<BL extends BaseLocation> {
   (input: BL | string): void
 }
 
@@ -161,12 +161,12 @@ export interface GoForward {
   (): void
 }
 
-export interface CreateHref<BL extends BaseLocation = BaseLocation> {
+export interface CreateHref<BL extends BaseLocation> {
   (location: BL | string): string;
 }
 
 export interface History<
-  BL extends BaseLocation = BaseLocation,
+  BL extends BaseLocation,
   IL extends Location = Location
 > {
   getCurrentLocation: GetCurrentLocation<IL>

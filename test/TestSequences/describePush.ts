@@ -1,11 +1,11 @@
 import execSteps from './execSteps'
-import { Location, Actions, History } from '../../src'
+import { Location, BaseLocation, Actions, History } from '../../src'
 
 import { Step, Done, Describe } from '../type'
 
 const describePush: Describe = (createHistory) => {
   describe('push', () => {
-    let history: History = createHistory()
+    let history: History<BaseLocation, Location> = createHistory()
     beforeEach(() => {
       history = createHistory()
     })

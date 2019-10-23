@@ -84,8 +84,10 @@ export default function useBeforeUnload<CH extends CreateHistory<any>>(
     LocationTypeMap[LT]['Base'],
     LocationTypeMap[LT]['Intact']
   > {
-    const history: History = createHistory(options)
-    type IL = LocationTypeMap[LTFromCH<CH>][""]
+    type BL = LocationTypeMap[LTFromCH<CH>]["Base"]
+    type IL = LocationTypeMap[LTFromCH<CH>]["Intact"]
+    
+    const history: History<BL, IL> = createHistory(options)
     let hooks: Function[] = []
     let stopListener: Function | null
 

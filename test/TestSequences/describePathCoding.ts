@@ -1,10 +1,10 @@
 import execSteps from './execSteps'
 import { Step, Done, Describe } from '../type'
-import { Location, Actions, History } from '../../src'
+import { Location, BaseLocation, Actions, History } from '../../src'
 
 const describePathCoding: Describe = (createHistory) => {
   describe('with the "hashbang" hashType', () => {
-    let history: History = createHistory({
+    let history: History<BaseLocation, Location> = createHistory({
       hashType: 'hashbang'
     })
     beforeEach(() => {
@@ -80,7 +80,7 @@ const describePathCoding: Describe = (createHistory) => {
   })
 
   describe('with the "noslash" hashType', () => {
-    let history: History = createHistory({
+    let history: History<BaseLocation, Location> = createHistory({
       hashType: 'noslash'
     })
     beforeEach(() => {
@@ -158,7 +158,7 @@ const describePathCoding: Describe = (createHistory) => {
   })
 
   describe('with the "slash" hashType', () => {
-    let history: History = createHistory({
+    let history: History<BaseLocation, Location> = createHistory({
       hashType: 'slash'
     })
     beforeEach(() => {
