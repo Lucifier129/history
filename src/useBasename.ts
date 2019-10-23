@@ -1,19 +1,11 @@
 import warning from 'warning'
 import { Hook, Callback } from './runTransitionHook'
 import {
-  parsePath,
-  CreatePath
+  parsePath
 } from './PathUtils'
 import Actions from './Actions'
-import { CreateLocation } from './LocationUtils';
 import {
   HistoryOptions,
-  GetCurrentLocation,
-  Listen,
-  ListenBefore,
-  Push,
-  Replace,
-  CreateHref,
   CreateHistory,
   LocationTypeLoader,
   LocationTypeMap,
