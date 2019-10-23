@@ -49,13 +49,11 @@ export interface Update {
   (path: string): void
 }
 
-
 export interface StopListener {
   (): void
 }
 
 const HashChangeEvent: string = 'hashchange'
-
 
 function createHashHistory<LT extends LocationType>(
   options: HistoryOptions = {}
@@ -162,7 +160,6 @@ function createHashHistory<LT extends LocationType>(
     })
     return true
   }
-
 
   function replaceLocationHash<IL extends Location>(
     location: IL,
@@ -313,7 +310,6 @@ function createHashHistory<LT extends LocationType>(
       if (--listenerCount === 0) stopListener()
     }
   }
-
 
   let currentLocation: Location
   let pendingLocation: Location | null

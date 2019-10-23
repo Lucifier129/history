@@ -13,8 +13,6 @@ import {
 } from './DOMStateStorage'
 import runTransitionHook from './runTransitionHook'
 import {
-  CreateKey,
-  CreateLocation,
   createLocation as _createLocation,
   statesAreEqual,
   locationsAreEqual,
