@@ -8,8 +8,7 @@
   },
   "author": "Michael Jackson",
   "license": "MIT",
-  "main": "dist/lib/index.js",
-  "typings": "dist/types/index.d.ts",
+  "main": "lib/index.js",
   "files": [
     "dist"
   ],
