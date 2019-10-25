@@ -10,7 +10,7 @@
   "license": "MIT",
   "main": "lib/index.js",
   "files": [
-    "dist"
+    "lib"
   ],
   "tags": [
     "history",
@@ -25,7 +25,7 @@
   },
   "scripts": {
     "lint": "tslint  --project tsconfig.json -t codeFrame 'src/**/*.ts' 'test/**/*.ts'",
-    "prebuild": "rimraf dist",
+    "prebuild": "rimraf lib",
     "build": "tsc",
     "postbuild": "ts-node cp.ts",
     "test": "jest",
