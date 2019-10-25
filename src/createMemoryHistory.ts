@@ -7,8 +7,6 @@ import {
 } from './PathUtils'
 import { Hook } from "./runTransitionHook"
 import {
-  CreateKey,
-  CreateLocation,
   createLocation as _createLocation,
   statesAreEqual,
   locationsAreEqual,
@@ -48,7 +46,7 @@ function createStateStorage<IL extends Location>(entries: IL[]): Memo {
     }, {} as Memo)
 }
 
-function createMemoryHistory<LT extends LocationType>(
+export default function createMemoryHistory<LT extends LocationType>(
   options: HistoryOptions = { hashType: 'slash' }
 ): History<
   LocationTypeMap[LT]['Base'],
@@ -334,5 +332,3 @@ function createMemoryHistory<LT extends LocationType>(
     createLocation
   }
 }
-
-export default createMemoryHistory

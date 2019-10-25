@@ -7,23 +7,9 @@ import {
 } from './type'
 import { ParsedQuery } from 'query-string'
 
-export interface CreateKey {
-  (): string
-}
 
 export function createQuery(props?: object): ParsedQuery {
   return Object.assign(Object.create(null), props)
-}
-
-export interface CreateLocation<
-  BL extends BaseLocation = BaseLocation,
-  IL extends Location = Location
-> {
-  (
-    input?: BL | string,
-    action?: Actions,
-    key?: string
-  ): IL
 }
 
 export function createLocation<

@@ -12,14 +12,6 @@ export interface Hook<IL extends Location = Location> {
   ): any
 }
 
-export interface RunTransitionHook<IL extends Location = Location> {
-  (
-    hook: Hook<IL>, 
-    location: IL, 
-    callback?: Callback
-  ): void
-}
-
 export default function runTransitionHook<IL extends Location = Location>(
   hook: Hook<IL>, 
   location: IL, 

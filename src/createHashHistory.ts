@@ -55,7 +55,7 @@ export interface StopListener {
 
 const HashChangeEvent: string = 'hashchange'
 
-function createHashHistory<LT extends LocationType>(
+export default function createHashHistory<LT extends LocationType>(
   options: HistoryOptions = {}
 ): History<
   LocationTypeMap[LT]['Base'],
@@ -524,4 +524,3 @@ function createHashHistory<LT extends LocationType>(
   }
 }
 
-export default createHashHistory

@@ -1,9 +1,5 @@
 import Actions from './Actions'
 import { Hook } from "./runTransitionHook"
-import {
-  CreateKey,
-  CreateLocation
-} from './LocationUtils';
 import { CreatePath } from './PathUtils'
 import { ParsedQuery } from 'query-string'
 
@@ -163,6 +159,21 @@ export interface GoForward {
 
 export interface CreateHref<BL extends BaseLocation> {
   (location: BL | string): string;
+}
+
+export interface CreateKey {
+  (): string
+}
+
+export interface CreateLocation<
+  BL extends BaseLocation = BaseLocation,
+  IL extends Location = Location
+> {
+  (
+    input?: BL | string,
+    action?: Actions,
+    key?: string
+  ): IL
 }
 
 export interface History<
