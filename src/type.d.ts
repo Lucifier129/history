@@ -1,7 +1,6 @@
-import Actions from './Actions'
-import { Hook } from "./runTransitionHook"
-import { CreatePath } from './PathUtils'
 import { ParsedQuery } from 'query-string'
+import { Hook } from "./runTransitionHook"
+import Actions from './Actions'
 
 export interface BaseLocation {
   pathname?: string
@@ -155,6 +154,10 @@ export interface GoBack {
 
 export interface GoForward {
   (): void
+}
+
+export interface CreatePath {
+  (location: BLWithBQ | string): string
 }
 
 export interface CreateHref<BL extends BaseLocation> {

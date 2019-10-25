@@ -1,10 +1,6 @@
 import warning from 'warning'
 import { BLWithBQ } from './type';
 
-export interface CreatePath {
-  (location: BLWithBQ | string): string
-}
-
 export function addQueryStringValueToPath(
   path: string,
   key: string,
