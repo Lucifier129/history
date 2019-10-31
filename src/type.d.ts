@@ -180,7 +180,7 @@ export interface CreateLocation<
 }
 
 export interface History<
-  BL extends BaseLocation,
+  BL extends BaseLocation = BaseLocation,
   IL extends Location = Location
 > {
   getCurrentLocation: GetCurrentLocation<IL>
