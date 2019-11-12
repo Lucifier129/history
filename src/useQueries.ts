@@ -53,7 +53,7 @@ export default function useQueries<CH extends CreateHistory<any>>(
       if (location.query === null || location.query === undefined)
         location.query = parseQueryString(
           location.search ? location.search.substring(1) : ""
-        ) as Record<string, any>
+        )
 
       return location
     }

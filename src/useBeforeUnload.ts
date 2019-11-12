@@ -36,7 +36,7 @@ export interface CreateHistoryWithBFOL<LT extends LocationType> {
 }
 
 export interface GetPromptMessage {
-  (): any
+  (): unknown
 }
 
 export interface StopListener {
@@ -91,7 +91,7 @@ export default function useBeforeUnload<CH extends CreateHistory<any>>(
     let hooks: Function[] = []
     let stopListener: Function | null
 
-    function getPromptMessage(): any {
+    function getPromptMessage(): unknown {
       let message
       for (let i = 0, len = hooks.length; message == null && i < len; ++i) {
         message = hooks[i]()

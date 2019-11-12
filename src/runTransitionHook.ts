@@ -2,14 +2,14 @@ import warning from 'warning'
 import { Location } from './type'
 
 export interface Callback {
-  (result: any): void
+  (result: unknown): void
 }
 
 export interface Hook<IL extends Location = Location> {
   (
     location: IL,
     callback?: Callback
-  ): any
+  ): unknown
 }
 
 export default function runTransitionHook<IL extends Location = Location>(

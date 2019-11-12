@@ -366,7 +366,7 @@ export default function createHashHistory<LT extends LocationType>(
 
   function confirmTransitionTo<IL extends Location>(
     location: IL,
-    callback: (ok: any) => void
+    callback: (ok: unknown) => void
   ): void {
     loopAsync(
       beforeHooks.length,

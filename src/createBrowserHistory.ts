@@ -218,7 +218,7 @@ export default function createBrowserHistory(
     return startListener(listener, false)
   }
 
-  function confirmTransitionTo<IL extends Location>(location: IL, callback: (ok: any) => void): void {
+  function confirmTransitionTo<IL extends Location>(location: IL, callback: (ok: unknown) => void): void {
     loopAsync(
       beforeHooks.length,
       (index, next, done) => {

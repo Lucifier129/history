@@ -34,7 +34,7 @@ import {
  */
 
 export interface Memo {
-  [propName: string]: any
+  [propName: string]: unknown
 }
 
 function createStateStorage<IL extends Location>(entries: IL[]): Memo {
@@ -106,7 +106,7 @@ export default function createMemoryHistory<LT extends LocationType>(
 
   function confirmTransitionTo<IL extends Location>(
     location: IL,
-    callback: (ok: any) => void
+    callback: (ok: unknown) => void
   ): void {
     loopAsync(
       beforeHooks.length,
@@ -308,11 +308,11 @@ export default function createMemoryHistory<LT extends LocationType>(
 
   const storage: Memo = createStateStorage(entries)
 
-  function saveState(key: string, state: any): Memo {
+  function saveState(key: string, state: any): any {
     return storage[key] = state
   }
 
-  function readState(key: string): Memo {
+  function readState(key: string): any {
     return storage[key]
   }
 

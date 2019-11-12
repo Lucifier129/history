@@ -1,5 +1,5 @@
 export interface Done {
-  (...args: any[]): void
+  (...args: unknown[]): void
 }
 
 export interface Work {
@@ -11,7 +11,7 @@ export interface Work {
 }
 
 export interface Callback {
-  (...args: any[]): void;
+  (...args: unknown[]): void;
 }
 
 export function loopAsync(
@@ -23,9 +23,9 @@ export function loopAsync(
   let isDone: boolean = false
   let isSync: boolean = false
   let hasNext: boolean = false
-  let doneArgs: any[] = []
+  let doneArgs: unknown[] = []
 
-  function done(...args: any[]): void {
+  function done(...args: unknown[]): void {
     isDone = true
 
     if (isSync) {

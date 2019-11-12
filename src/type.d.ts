@@ -103,7 +103,7 @@ export interface HistoryOptions {
   basename?: string
   stringifyQuery?: StringifyQuery
   parseQueryString?: ParseQueryString
-  entries?: any[]
+  entries?: Location[]
   current?: number
   getUserConfirmation?: GetUserConfirmation
 }
