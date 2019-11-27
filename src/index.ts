@@ -4,14 +4,14 @@ import { default as _createHashHistory } from './createHashHistory'
 
 import { default as _createMemoryHistory } from './createMemoryHistory'
 
-export const createBrowserHistory = _createBrowserHistory
+export const createHistory = _createBrowserHistory
 
 export const createHashHistory = _createHashHistory
 
 export const createMemoryHistory = _createMemoryHistory
 
 export default {
-  createBrowserHistory: _createBrowserHistory,
+  createHistory: _createBrowserHistory,
   createHashHistory: _createHashHistory,
   createMemoryHistory: _createMemoryHistory
 }
