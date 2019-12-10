@@ -225,7 +225,7 @@ export default function createMemoryHistory<LT extends LocationType>(
       const path: string = createPath(entry)
 
       let key: string = ""
-      let state: any = undefined
+      let state: unknown = undefined
       if (entry && entry.key) {
         key = entry.key
         state = readState(key)
@@ -308,11 +308,11 @@ export default function createMemoryHistory<LT extends LocationType>(
 
   const storage: Memo = createStateStorage(entries)
 
-  function saveState(key: string, state: any): any {
+  function saveState(key: string, state: unknown): unknown {
     return storage[key] = state
   }
 
-  function readState(key: string): any {
+  function readState(key: string): unknown {
     return storage[key]
   }
 

@@ -70,8 +70,8 @@ export default function createBrowserHistory(
   invariant(canUseDOM, "Browser history needs a DOM")
 
   // Browser
-  function createBroserverLocation<IL extends Location>(historyState: any): IL {
-    const key: string = (historyState && historyState.key) || ''
+  function createBroserverLocation<IL extends Location>(historyState: unknown): IL {
+    const key: string = (historyState && (historyState as { key: string }).key) || ''
 
     return _createLocation({
       pathname: window.location.pathname,
@@ -125,7 +125,7 @@ export default function createBrowserHistory(
   }
 
   function getCurrentLocationBrow<IL extends Location>(): IL {
-    let historyState: any
+    let historyState: unknown
     try {
       historyState = window.history.state || {}
     } catch (error) {

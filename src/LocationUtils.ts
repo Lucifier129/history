@@ -27,7 +27,7 @@ export function createLocation<
   let pathname: string = location.pathname || '/'
   let search: string = location.search || ''
   let hash: string = location.hash || ''
-  let state: any = location.state
+  let state: unknown = location.state
 
   try {
     pathname = decodeURI(pathname)
@@ -65,43 +65,51 @@ function isDate(object: object): boolean {
   return Object.prototype.toString.call(object) === '[object Date]'
 }
 
-export function statesAreEqual(a: any, b: any): boolean {
+function getKeys<T extends {}>(o: T): Array<keyof T>{
+  return Object.keys(o) as Array<keyof T>
+} 
+
+export function statesAreEqual(a: unknown, b: unknown): boolean {
   if (a === b)
     return true
 
-  const typeofA: string = typeof a
-  const typeofB: string = typeof b
-
-  if (typeofA !== typeofB)
+  if (typeof a !== typeof b)
     return false
+  
+  
 
   invariant(
-    typeofA !== 'function',
+    typeof a !== 'function',
     'You must not store functions in location state'
   )
 
+
   // Not the same object, but same type.
-  if (typeofA === 'object') {
-    invariant(
-      !(isDate(a) && isDate(b)),
-      'You must not store Date objects in location state'
-    )
-
-    if (!Array.isArray(a)) {
-      const keysofA: string[] = Object.keys(a)
-      const keysofB: string[] = Object.keys(b)
-
+  if (typeof a === 'object' && typeof b === 'object') {
+    if (a === null || b === null) {
+      return false
+    } else {
+      invariant(
+        !(isDate(a) && isDate(b)),
+        'You must not store Date objects in location state'
+      )
+  
+      if (!Array.isArray(a)) {
+        const keysofA = getKeys(a)
+        const keysofB = getKeys(b)
+  
+        return (
+          keysofA.length === keysofB.length &&
+            keysofA.every(key => statesAreEqual(a[key], b[key]))
+        )
+      }
+  
       return (
-        keysofA.length === keysofB.length &&
-          keysofA.every(key => statesAreEqual(a[key], b[key]))
+        Array.isArray(b) &&
+          a.length === b.length &&
+            a.every((item, index) => statesAreEqual(item, b[index]))
       )
     }
-
-    return (
-      Array.isArray(b) &&
-        a.length === b.length &&
-          a.every((item, index) => statesAreEqual(item, b[index]))
-    )
   }
 
   // All other serializable types (string, number, boolean)
@@ -118,4 +126,3 @@ export function locationsAreEqual(a: Location, b: Location): boolean {
             statesAreEqual(a.state, b.state)
   )
 }
-

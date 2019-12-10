@@ -17,7 +17,7 @@ export function appendPrefix(key: string): string {
 
 export function saveState(
   key: string,
-  state: any
+  state: unknown
 ): void {
   if (!window.sessionStorage) {
     
@@ -65,7 +65,7 @@ export function saveState(
   }
 }
 
-export function readState(key: string): any {
+export function readState(key: string): unknown {
   let json: string | null = null
 
   try {

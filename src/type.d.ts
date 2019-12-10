@@ -6,7 +6,7 @@ export interface BaseLocation {
   pathname?: string
   search?: string
   hash?: string
-  state?: any
+  state?: unknown
 }
 
 export interface Location extends Required<BaseLocation> {
