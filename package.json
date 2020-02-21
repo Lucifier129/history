@@ -27,7 +27,6 @@
     "lint": "tslint  --project tsconfig.json -t codeFrame 'src/**/*.ts' 'test/**/*.ts'",
     "prebuild": "rimraf lib",
     "build": "tsc",
-    "postbuild": "ts-node cp.ts",
     "test": "jest",
     "test:coverage": "jest --coverage",
     "test:watch": "jest --coverage --watchAll",
