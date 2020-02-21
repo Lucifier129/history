@@ -48,7 +48,6 @@
     "@types/jest": "^23.0.1",
     "@types/node": "^12.6.9",
     "@types/warning": "^3.0.0",
-    "cp-file": "^7.0.0",
     "jest": "^23.0.1",
     "rimraf": "^2.6.3",
     "ts-jest": "^23.0.1",
