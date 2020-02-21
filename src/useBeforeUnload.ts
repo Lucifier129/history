@@ -3,9 +3,9 @@ import {
   addEventListener,
   removeEventListener
 } from "./DOMUtils"
-import { Hook } from './runTransitionHook'
 import { canUseDOM } from "./DOMUtils"
-import {
+import type { Hook } from './runTransitionHook'
+import type {
   CreateHistory,
   History,
   HistoryOptions,
@@ -15,7 +15,7 @@ import {
   Location,
   Unlisten,
   LocationType
-} from "./type"
+} from "./index"
 
 export interface ListenBeforeUnload<IL extends Location = Location> {
   (hook: Hook<IL>): Unlisten

@@ -1,12 +1,11 @@
 import invariant from 'invariant'
 import { parsePath } from './PathUtils'
 import Actions, { POP } from './Actions'
-import {
+import type { ParsedQuery } from 'query-string'
+import type {
   BaseLocation,
   Location
-} from './type'
-import { ParsedQuery } from 'query-string'
-
+} from './index'
 
 export function createQuery(props?: object): ParsedQuery {
   return Object.assign(Object.create(null), props)

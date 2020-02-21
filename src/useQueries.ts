@@ -1,9 +1,11 @@
 import warning from 'warning'
 import { parse, stringify } from "query-string"
-import { Hook } from "./runTransitionHook"
 import { createQuery } from "./LocationUtils"
 import { parsePath } from "./PathUtils"
-import {
+import Actions from './Actions'
+import type { Hook } from "./runTransitionHook"
+import type { Callback } from './AsyncUtils'
+import type{
   CreateHistory,
   HistoryOptions,
   LocationTypeLoader,
@@ -12,9 +14,7 @@ import {
   History,
   LocationType,
   Unlisten
-} from "./type"
-import Actions from './Actions'
-import { Callback } from './AsyncUtils'
+} from "./index"
 
 function defaultStringifyQuery(query: object): string {
   return stringify(query).replace(/%20/g, "+")

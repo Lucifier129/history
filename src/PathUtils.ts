@@ -1,5 +1,5 @@
 import warning from 'warning'
-import { BLWithBQ } from './type';
+import type { BLWithBQ } from './index';
 
 export function addQueryStringValueToPath(
   path: string,

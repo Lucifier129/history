@@ -14,7 +14,6 @@ import {
   getQueryStringValueFromPath,
   parsePath
 } from './PathUtils'
-import { Hook } from "./runTransitionHook"
 import {
   createLocation as _createLocation,
   statesAreEqual,
@@ -25,13 +24,14 @@ import {
   saveState,
   readState
 } from './DOMStateStorage'
+import runTransitionHook from './runTransitionHook'
 import Actions, {
   POP,
   PUSH,
   REPLACE
 } from './Actions'
-import runTransitionHook from './runTransitionHook'
-import {
+import type { Hook } from "./runTransitionHook"
+import type {
   Location,
   BaseLocation,
   ILWithBQ,
@@ -43,7 +43,7 @@ import {
   LocationTypeMap,
   LocationType,
   Unlisten
-} from './type'
+} from './index'
 
 export interface Update {
   (path: string): void

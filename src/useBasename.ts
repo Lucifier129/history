@@ -1,10 +1,10 @@
 import warning from 'warning'
-import { Hook, Callback } from './runTransitionHook'
 import {
   parsePath
 } from './PathUtils'
 import Actions from './Actions'
-import {
+import type { Hook, Callback } from './runTransitionHook'
+import type {
   HistoryOptions,
   CreateHistory,
   LocationTypeLoader,
@@ -13,7 +13,7 @@ import {
   History,
   LocationType,
   Unlisten
-} from './type'
+} from './index'
 
 export default function useBasename<CH extends CreateHistory<any>>(
   createHistory: CH

@@ -1,4 +1,3 @@
-
 /**
  * History change state need this indication to distinguish which type.
  */

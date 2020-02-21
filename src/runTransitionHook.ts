@@ -1,5 +1,5 @@
 import warning from 'warning'
-import { Location } from './type'
+import type { Location } from './index'
 
 export interface Callback {
   (result: unknown): void

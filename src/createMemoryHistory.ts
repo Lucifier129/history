@@ -5,20 +5,20 @@ import {
   createPath,
   parsePath
 } from './PathUtils'
-import { Hook } from "./runTransitionHook"
 import {
   createLocation as _createLocation,
   statesAreEqual,
   locationsAreEqual,
   defaultGetUserConfirmation
 } from './LocationUtils'
+import runTransitionHook from './runTransitionHook'
 import Actions, {
   POP,
   PUSH,
   REPLACE
 } from './Actions'
-import runTransitionHook from './runTransitionHook'
-import {
+import type { Hook } from "./runTransitionHook"
+import type {
   Location,
   BaseLocation,
   GetUserConfirmation,
@@ -27,11 +27,8 @@ import {
   HistoryOptions,
   History,
   Unlisten
-} from './type'
+} from './index'
 
-/**
- * Utils
- */
 
 export interface Memo {
   [propName: string]: unknown

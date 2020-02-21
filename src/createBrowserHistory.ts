@@ -20,13 +20,13 @@ import {
 } from './LocationUtils'
 import Actions, { POP, PUSH, REPLACE } from './Actions'
 import { Hook } from './runTransitionHook'
-import {
+import type {
   Location,
   BaseLocation,
   History,
   HistoryOptions,
   LocationTypeMap
-} from './type'
+} from './index'
 /**
  * Utils
  */
