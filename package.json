@@ -36,12 +36,13 @@
     "semantic-release": "semantic-release",
     "semantic-release-prepare": "ts-node tools/semantic-release-prepare",
     "precommit": "lint-staged",
-    "travis-deploy-once": "travis-deploy-once"
+    "travis-deploy-once": "travis-deploy-once",
+    "rmnm": "rimraf node_modules"
   },
   "dependencies": {
     "invariant": "^2.2.4",
-    "query-string": "^6.8.3",
-    "warning": "^3.0.0"
+    "query-string": "^6.11.1",
+    "warning": "^4.0.3"
   },
   "devDependencies": {
     "@types/invariant": "^2.2.30",
