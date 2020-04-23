@@ -1,4 +1,4 @@
-import invariant from 'invariant'
+import invariant from 'tiny-invariant'
 import { parsePath } from './PathUtils'
 import Actions, { POP } from './Actions'
 import type { ParsedUrlQuery } from 'querystring'

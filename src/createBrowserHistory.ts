@@ -1,10 +1,10 @@
-import invariant from "invariant"
+import invariant from 'tiny-invariant'
 import {
   supportsHistory,
   canUseDOM,
   addEventListener,
   removeEventListener
-} from "./DOMUtils"
+} from './DOMUtils'
 import { loopAsync } from './AsyncUtils'
 import { createPath } from './PathUtils'
 import {
@@ -67,7 +67,7 @@ export default function createBrowserHistory(
   LocationTypeMap['NORMAL']['Base'],
   LocationTypeMap['NORMAL']['Intact']
 > {
-  invariant(canUseDOM, "Browser history needs a DOM")
+  invariant(canUseDOM, 'Browser history needs a DOM')
 
   // Browser
   function createBroserverLocation<IL extends Location>(historyState: unknown): IL {

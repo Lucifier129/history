@@ -1,12 +1,12 @@
-import warning from "warning"
-import invariant from "invariant"
+import warning from 'tiny-warning'
+import invariant from 'tiny-invariant'
 import { loopAsync } from './AsyncUtils'
 import {
   supportsGoWithoutReloadUsingHash,
   canUseDOM,
   addEventListener,
   removeEventListener
-} from "./DOMUtils"
+} from './DOMUtils'
 import {
   createPath,
   addQueryStringValueToPath,
@@ -30,7 +30,7 @@ import Actions, {
   PUSH,
   REPLACE
 } from './Actions'
-import type { Hook } from "./runTransitionHook"
+import type { Hook } from './runTransitionHook'
 import type {
   Location,
   BaseLocation,
@@ -61,7 +61,7 @@ export default function createHashHistory<LT extends LocationType>(
   LocationTypeMap[LT]['Base'],
   LocationTypeMap[LT]['Intact']
 >{
-  invariant(canUseDOM, "Hash history needs a DOM")
+  invariant(canUseDOM, 'Hash history needs a DOM')
 
   let { queryKey, hashType = 'slash', keyLength }: HistoryOptions = options
 
@@ -71,19 +71,19 @@ export default function createHashHistory<LT extends LocationType>(
     'use location state if you don\'t want a key in your URL query string'
   )
 
-  const DefaultQueryKey: string = "_k"
+  const DefaultQueryKey: string = '_k'
 
   function addLeadingSlash(path: string): string {
-    return path.charAt(0) === "/" ? path : "/" + path
+    return path.charAt(0) === '/' ? path : '/' + path
   }
 
   const HashPathCoders: PathCoders = {
     hashbang: {
-      encodePath: path => (path.charAt(0) === "!" ? path : "!" + path),
-      decodePath: path => (path.charAt(0) === "!" ? path.substring(1) : path)
+      encodePath: path => (path.charAt(0) === '!' ? path : '!' + path),
+      decodePath: path => (path.charAt(0) === '!' ? path.substring(1) : path)
     },
     noslash: {
-      encodePath: path => (path.charAt(0) === "/" ? path.substring(1) : path),
+      encodePath: path => (path.charAt(0) === '/' ? path.substring(1) : path),
       decodePath: addLeadingSlash
     },
     slash: {
@@ -94,14 +94,14 @@ export default function createHashHistory<LT extends LocationType>(
 
   const pathCoder: PathCoder = HashPathCoders[hashType]
 
-  if (typeof queryKey !== "string") queryKey = DefaultQueryKey
+  if (typeof queryKey !== 'string') queryKey = DefaultQueryKey
 
-  if (hashType == null) hashType = "slash"
+  if (hashType == null) hashType = 'slash'
 
   if (!(hashType in HashPathCoders)) {
-    warning(false, "Invalid hash type: %s", hashType)
+    warning(false, `Invalid hash type: ${hashType}`)
 
-    hashType = "slash"
+    hashType = 'slash'
   }
 
   // Base
@@ -497,14 +497,14 @@ export default function createHashHistory<LT extends LocationType>(
     function go(n: number): void {
     warning(
       goIsSupportedWithoutReload,
-      "Hash history go(n) causes a full page reload in this browser"
+      'Hash history go(n) causes a full page reload in this browser'
     )
 
     history.go(n)
   }
 
   function createHref<BL extends BaseLocation>(location: BL | string): string {
-    return "#" + pathCoder.encodePath(_createHref(location))
+    return '#' + pathCoder.encodePath(_createHref(location))
   }
 
   return {
