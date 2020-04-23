@@ -1,5 +1,5 @@
-import warning from "warning"
-import invariant from "invariant"
+import warning from 'tiny-warning'
+import invariant from 'tiny-invariant'
 import { loopAsync } from './AsyncUtils'
 import {
   createPath,
@@ -17,7 +17,7 @@ import Actions, {
   PUSH,
   REPLACE
 } from './Actions'
-import type { Hook } from "./runTransitionHook"
+import type { Hook } from './runTransitionHook'
 import type {
   Location,
   BaseLocation,
@@ -221,7 +221,7 @@ export default function createMemoryHistory<LT extends LocationType>(
       const entry: Location = entries[current]
       const path: string = createPath(entry)
 
-      let key: string = ""
+      let key: string = ''
       let state: unknown = undefined
       if (entry && entry.key) {
         key = entry.key
@@ -247,10 +247,7 @@ export default function createMemoryHistory<LT extends LocationType>(
     if (!canGo(n)) {
       warning(
         false,
-        "Cannot go(%s) there is not enough history when current is %s and entries length is %s",
-        n,
-        current,
-        entries.length
+        `Cannot go(${n}) there is not enough history when current is ${current} and entries length is ${entries.length}`
       )
 
       return
@@ -284,7 +281,7 @@ export default function createMemoryHistory<LT extends LocationType>(
 
   let entriesBefore: (string | Location | BaseLocation)[]
 
-  if (typeof options.entries === "string") {
+  if (typeof options.entries === 'string') {
     entriesBefore = [options.entries]
   } else if (!Array.isArray(options.entries)) {
     entriesBefore = ['/']
@@ -298,9 +295,7 @@ export default function createMemoryHistory<LT extends LocationType>(
 
   invariant(
     current >= 0 && current < entries.length,
-    "Current index must be >= 0 and < %s, was %s",
-    entries.length,
-    current
+    `Current index must be >= 0 and < ${entries.length}, was ${current}`,
   )
 
   const storage: Memo = createStateStorage(entries)

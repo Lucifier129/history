@@ -30,7 +30,7 @@ export * from './Actions'
 ///////////////////////////////////////////////////////////////////////////////
 import type Actions from './Actions'
 import type { ParsedUrlQuery, ParsedUrlQueryInput } from 'querystring'
-import type { Hook } from "./runTransitionHook"
+import type { Hook } from './runTransitionHook'
 export type { HistoryWithBFOL } from './useBeforeUnload'
 
 export interface BaseLocation {

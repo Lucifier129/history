@@ -1,4 +1,4 @@
-import warning from 'warning'
+import warning from 'tiny-warning'
 import type { BLWithBQ } from './index';
 
 export function addQueryStringValueToPath(
@@ -65,8 +65,7 @@ export function parsePath(path: string): BLWithBQ {
 
   warning(
     path === pathname,
-    'A path must be pathname + search + hash only, not a full URL like "%s"',
-    path
+    `A path must be pathname + search + hash only, not a full URL like ${path}`,
   )
 
   let hashIndex: number = -1

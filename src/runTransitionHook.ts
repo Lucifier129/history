@@ -1,4 +1,4 @@
-import warning from 'warning'
+import warning from 'tiny-warning'
 import type { Location } from './index'
 
 export interface Callback {

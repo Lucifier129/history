@@ -1,10 +1,10 @@
-import warning from 'warning'
-import { parse, stringify } from "querystring"
-import { createQuery } from "./LocationUtils"
-import { parsePath } from "./PathUtils"
+import warning from 'tiny-warning'
+import { parse, stringify } from 'querystring'
+import { createQuery } from './LocationUtils'
+import { parsePath } from './PathUtils'
 import Actions from './Actions'
-import type { ParsedUrlQueryInput } from "querystring"
-import type { Hook } from "./runTransitionHook"
+import type { ParsedUrlQueryInput } from 'querystring'
+import type { Hook } from './runTransitionHook'
 import type { Callback } from './AsyncUtils'
 import type{
   CreateHistory,
@@ -15,10 +15,10 @@ import type{
   History,
   LocationType,
   Unlisten
-} from "./index"
+} from './index'
 
 function defaultStringifyQuery(query: ParsedUrlQueryInput): string {
-  return stringify(query).replace(/%20/g, "+")
+  return stringify(query).replace(/%20/g, '+')
 }
 
 /**
@@ -31,7 +31,7 @@ export default function useQueries<CH extends CreateHistory<any>>(
   type BaseLocation = LocationTypeMap[LocationTypeLoader<LTFromCH<CH>, 'QUERY'>]['Base']
   type Location = LocationTypeMap[LocationTypeLoader<LTFromCH<CH>, 'QUERY'>]['Intact']
   function ch<LT extends LocationType>(
-    options: HistoryOptions = { hashType: "slash" }
+    options: HistoryOptions = { hashType: 'slash' }
   ): History<
     LocationTypeMap[LT]['Base'],
     LocationTypeMap[LT]['Intact']
@@ -53,7 +53,7 @@ export default function useQueries<CH extends CreateHistory<any>>(
 
       if (location.query === null || location.query === undefined)
         location.query = parseQueryString(
-          location.search ? location.search.substring(1) : ""
+          location.search ? location.search.substring(1) : ''
         )
 
       return location
@@ -67,9 +67,9 @@ export default function useQueries<CH extends CreateHistory<any>>(
         return location
 
       const object: BaseLocation =
-        typeof location === "string" ? parsePath(location) : location
+        typeof location === 'string' ? parsePath(location) : location
       const queryString: string = stringifyQuery(query)
-      const search: string = queryString ? `?${queryString}` : ""
+      const search: string = queryString ? `?${queryString}` : ''
       return {
         ...object,
         search
@@ -116,7 +116,7 @@ export default function useQueries<CH extends CreateHistory<any>>(
       history.push(
         encodeQuery(
           location,
-          typeof location === "string" ? undefined : location.query
+          typeof location === 'string' ? undefined : location.query
         )
       )
     }
@@ -125,7 +125,7 @@ export default function useQueries<CH extends CreateHistory<any>>(
       history.replace(
         encodeQuery(
           location,
-          typeof location === "string" ? undefined : location.query
+          typeof location === 'string' ? undefined : location.query
         )
       )
     }
@@ -134,7 +134,7 @@ export default function useQueries<CH extends CreateHistory<any>>(
       return history.createPath(
         encodeQuery(
           location,
-          typeof location === "string" ? undefined : location.query
+          typeof location === 'string' ? undefined : location.query
         )
       )
     }
@@ -143,7 +143,7 @@ export default function useQueries<CH extends CreateHistory<any>>(
       return history.createHref(
         encodeQuery(
           location,
-          typeof location === "string" ? undefined : location.query
+          typeof location === 'string' ? undefined : location.query
         )
       )
     }
@@ -158,14 +158,14 @@ export default function useQueries<CH extends CreateHistory<any>>(
     ): IL {
       let newLocation = encodeQuery(
         location,
-        typeof location === "string" ? undefined : location.query
+        typeof location === 'string' ? undefined : location.query
       )
       let newLocationAfter: IL = history.createLocation(
         newLocation,
         action,
         key
       )
-      if (typeof location !== "string" && location.query)
+      if (typeof location !== 'string' && location.query)
         newLocationAfter.query = createQuery(location.query)
 
       return decodeQuery(newLocationAfter)

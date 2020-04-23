@@ -1,9 +1,9 @@
-import invariant from "invariant"
+import invariant from 'tiny-invariant'
 import {
   addEventListener,
   removeEventListener
-} from "./DOMUtils"
-import { canUseDOM } from "./DOMUtils"
+} from './DOMUtils'
+import { canUseDOM } from './DOMUtils'
 import type { Hook } from './runTransitionHook'
 import type {
   CreateHistory,
@@ -15,7 +15,7 @@ import type {
   Location,
   Unlisten,
   LocationType
-} from "./index"
+} from './index'
 
 export interface ListenBeforeUnload<IL extends Location = Location> {
   (hook: Hook<IL>): Unlisten
@@ -47,7 +47,7 @@ function startListener(getPromptMessage: GetPromptMessage): StopListener {
   function handleBeforeUnload(event: BeforeUnloadEvent): void | string {
     const message = getPromptMessage()
 
-    if (typeof message === "string") {
+    if (typeof message === 'string') {
       event.returnValue = message
       return message
     }
@@ -57,14 +57,14 @@ function startListener(getPromptMessage: GetPromptMessage): StopListener {
 
   addEventListener(
     window,
-    "beforeunload",
+    'beforeunload',
     handleBeforeUnload as EventListener
   )
 
   return () => (
     removeEventListener(
       window,
-      "beforeunload",
+      'beforeunload',
       handleBeforeUnload as EventListener
     )
   )
@@ -78,14 +78,14 @@ function startListener(getPromptMessage: GetPromptMessage): StopListener {
 export default function useBeforeUnload<CH extends CreateHistory<any>>(
   createHistory: CH
 ): CreateHistoryWithBFOL<LTFromCH<CH>> {
-  invariant(canUseDOM, "useBeforeUnload only works in DOM environments")
+  invariant(canUseDOM, 'useBeforeUnload only works in DOM environments')
 
   function ch<LT extends LocationType>(options?: HistoryOptions): HistoryWithBFOL<
     LocationTypeMap[LT]['Base'],
     LocationTypeMap[LT]['Intact']
   > {
-    type BL = LocationTypeMap[LTFromCH<CH>]["Base"]
-    type IL = LocationTypeMap[LTFromCH<CH>]["Intact"]
+    type BL = LocationTypeMap[LTFromCH<CH>]['Base']
+    type IL = LocationTypeMap[LTFromCH<CH>]['Intact']
     
     const history: History<BL, IL> = createHistory(options)
     let hooks: Function[] = []
