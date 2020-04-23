@@ -2,7 +2,7 @@ import { createQuery } from '../../src/LocationUtils'
 import useQueries from '../../src/useQueries'
 import execSteps from './execSteps'
 import { Step, Done, Describe } from '../type'
-import { ILWithQuery, Actions, History } from '../../src'
+import { ILWithQuery, Actions } from '../../src'
 
 
 const stripHash: (path: string) => string = (path) =>
@@ -201,7 +201,7 @@ const describeQueries: Describe = (createHistory) => {
 
         expect(location.pathname).toEqual('/the/path')
         expect(location.query).toEqual(createQuery({ the: undefined }))
-        expect(location.search).toEqual('')
+        expect(location.search).toEqual('?the=')
       })
     })
 

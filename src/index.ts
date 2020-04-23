@@ -29,7 +29,7 @@ export * from './Actions'
 // TYPES
 ///////////////////////////////////////////////////////////////////////////////
 import type Actions from './Actions'
-import type { ParsedQuery } from 'query-string'
+import type { ParsedUrlQuery, ParsedUrlQueryInput } from 'querystring'
 import type { Hook } from "./runTransitionHook"
 export type { HistoryWithBFOL } from './useBeforeUnload'
 
@@ -54,21 +54,21 @@ export interface ILWithBasename extends Location {
 }
 
 export interface BLWithQuery extends BaseLocation {
-  query?: ParsedQuery
+  query?: ParsedUrlQueryInput
 }
 
 export interface ILWithQuery extends Location {
-  query: ParsedQuery
+  query: ParsedUrlQuery
 }
 
 export interface BLWithBQ extends BaseLocation {
   basename?: string
-  query?: ParsedQuery
+  query?: ParsedUrlQueryInput
 }
 
 export interface ILWithBQ extends Location {
   basename: string
-  query: ParsedQuery
+  query: ParsedUrlQuery
 }
 
 export interface LocationTypeMap {
@@ -119,7 +119,7 @@ export interface StringifyQuery {
 }
 
 export interface ParseQueryString {
-  (query: string): ParsedQuery
+  (query: string): ParsedUrlQuery
 }
 
 export interface GetUserConfirmation {

@@ -1,8 +1,9 @@
 import warning from 'warning'
-import { parse, stringify } from "query-string"
+import { parse, stringify } from "querystring"
 import { createQuery } from "./LocationUtils"
 import { parsePath } from "./PathUtils"
 import Actions from './Actions'
+import type { ParsedUrlQueryInput } from "querystring"
 import type { Hook } from "./runTransitionHook"
 import type { Callback } from './AsyncUtils'
 import type{
@@ -16,7 +17,7 @@ import type{
   Unlisten
 } from "./index"
 
-function defaultStringifyQuery(query: object): string {
+function defaultStringifyQuery(query: ParsedUrlQueryInput): string {
   return stringify(query).replace(/%20/g, "+")
 }
 
@@ -60,7 +61,7 @@ export default function useQueries<CH extends CreateHistory<any>>(
 
     function encodeQuery<BL extends BaseLocation>(
       location: BL | string,
-      query: object | undefined
+      query: ParsedUrlQueryInput | undefined
     ): BL | string {
       if (!query)
         return location
