@@ -133,7 +133,7 @@ export default function createHashHistory<LT extends LocationType>(
 
     let path: string = pathCoder.encodePath(createPath(location))
 
-    if (state !== undefined) {
+    if (state !== void 0) {
       path = addQueryStringValueToPath(path, queryKey, key)
       saveState(key, state)
     }
@@ -197,7 +197,7 @@ export default function createHashHistory<LT extends LocationType>(
     const init = parsePath(path)
     let newInit: BaseLocation = Object.assign(init, { state })
 
-    return _createLocation(newInit, undefined, key)
+    return _createLocation(newInit, void 0, key)
   }
 
   function startListenerHash(

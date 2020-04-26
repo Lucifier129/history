@@ -41,7 +41,7 @@ export interface UpdateState {
 
 function isExtraneousPopstateEvent(event: PopStateEvent): boolean {
   return (
-    event.state === undefined 
+    event.state === void 0 
       && navigator.userAgent.indexOf('CriOS') === -1
   )
 }
@@ -77,8 +77,8 @@ export default function createBrowserHistory(
       pathname: window.location.pathname,
       search: window.location.search,
       hash: window.location.hash,
-      state: (key ? readState(key) : undefined)
-    }, undefined, key)
+      state: (key ? readState(key) : void 0)
+    }, void 0, key)
   }
 
   function startListenerBrowser<IL extends Location>(listener: Hook<IL>): StopListener {
@@ -108,7 +108,7 @@ export default function createBrowserHistory(
   ): void {
     const { state, key } = location
 
-    if (state !== undefined) {
+    if (state !== void 0) {
       saveState(key, state)
     }
 

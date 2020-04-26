@@ -51,7 +51,7 @@ export default function useQueries<CH extends CreateHistory<any>>(
     function decodeQuery<IL extends Location>(location: IL): IL {
       if (!location) return location
 
-      if (location.query === null || location.query === undefined)
+      if (location.query === null || location.query === void 0)
         location.query = parseQueryString(
           location.search ? location.search.substring(1) : ''
         )
@@ -61,7 +61,7 @@ export default function useQueries<CH extends CreateHistory<any>>(
 
     function encodeQuery<BL extends BaseLocation>(
       location: BL | string,
-      query: ParsedUrlQueryInput | undefined
+      query?: ParsedUrlQueryInput
     ): BL | string {
       if (!query)
         return location
@@ -89,7 +89,7 @@ export default function useQueries<CH extends CreateHistory<any>>(
         callback && callback(result)
       } else {
         warning(
-          result === undefined,
+          result === void 0,
           'You should not "return" in a transition hook with a callback argument; ' +
           'call the callback instead'
         )
@@ -116,7 +116,7 @@ export default function useQueries<CH extends CreateHistory<any>>(
       history.push(
         encodeQuery(
           location,
-          typeof location === 'string' ? undefined : location.query
+          typeof location === 'string' ? void 0 : location.query
         )
       )
     }
@@ -125,7 +125,7 @@ export default function useQueries<CH extends CreateHistory<any>>(
       history.replace(
         encodeQuery(
           location,
-          typeof location === 'string' ? undefined : location.query
+          typeof location === 'string' ? void 0 : location.query
         )
       )
     }
@@ -134,7 +134,7 @@ export default function useQueries<CH extends CreateHistory<any>>(
       return history.createPath(
         encodeQuery(
           location,
-          typeof location === 'string' ? undefined : location.query
+          typeof location === 'string' ? void 0 : location.query
         )
       )
     }
@@ -143,7 +143,7 @@ export default function useQueries<CH extends CreateHistory<any>>(
       return history.createHref(
         encodeQuery(
           location,
-          typeof location === 'string' ? undefined : location.query
+          typeof location === 'string' ? void 0 : location.query
         )
       )
     }
@@ -158,7 +158,7 @@ export default function useQueries<CH extends CreateHistory<any>>(
     ): IL {
       let newLocation = encodeQuery(
         location,
-        typeof location === 'string' ? undefined : location.query
+        typeof location === 'string' ? void 0 : location.query
       )
       let newLocationAfter: IL = history.createLocation(
         newLocation,
