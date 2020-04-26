@@ -7,11 +7,11 @@ export interface Work {
     currentTurn: number,
     next: () => void,
     done: Done
-  ): void;
+  ): void
 }
 
 export interface Callback {
-  (...args: unknown[]): void;
+  (...args: unknown[]): void
 }
 
 export function loopAsync(
