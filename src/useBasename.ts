@@ -86,7 +86,7 @@ export default function useBasename<CH extends CreateHistory<any>>(
         callback && callback(result)
       } else {
         warning(
-          result === undefined,
+          result === void 0,
           'You should not "return" in a transition hook with a callback argument; ' +
           'call the callback instead'
         )

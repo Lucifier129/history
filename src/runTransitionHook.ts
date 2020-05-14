@@ -25,7 +25,7 @@ export default function runTransitionHook<IL extends Location = Location>(
     callback && callback(result)
   } else {
     warning(
-      result === undefined,
+      result === void 0,
       'You should not "return" in a transition hook with a callback argument; ' +
       'call the callback instead'
     )

@@ -192,7 +192,7 @@ export interface CreatePath {
 }
 
 export interface CreateHref<BL extends BaseLocation> {
-  (location: BL | string): string;
+  (location: BL | string): string
 }
 
 export interface CreateKey {

@@ -217,12 +217,12 @@ export default function createMemoryHistory<LT extends LocationType>(
   }
 
   function getCurrentLocation<IL extends Location = Location>(): IL {
-    if (typeof entries[current] !== undefined) {
+    if (typeof entries[current] !== void 0) {
       const entry: Location = entries[current]
       const path: string = createPath(entry)
 
       let key: string = ''
-      let state: unknown = undefined
+      let state: unknown = void 0
       if (entry && entry.key) {
         key = entry.key
         state = readState(key)
@@ -230,7 +230,7 @@ export default function createMemoryHistory<LT extends LocationType>(
   
       const init: BaseLocation = parsePath(path)
   
-      return _createLocation({ ...init, state }, undefined, key)
+      return _createLocation({ ...init, state }, void 0, key)
     } else {
       throw new Error('current location is not exist.')      
     }

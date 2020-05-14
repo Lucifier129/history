@@ -56,5 +56,7 @@ export function supportsGoWithoutReloadUsingHash(): boolean {
 }
 
 export const canUseDOM: boolean = !!(
-  typeof window !== 'undefined' && window.document && window.document.createElement
+  typeof window !== 'undefined' &&
+  window.document &&
+  window.document.createElement
 )

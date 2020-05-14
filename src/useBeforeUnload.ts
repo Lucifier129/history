@@ -52,7 +52,7 @@ function startListener(getPromptMessage: GetPromptMessage): StopListener {
       return message
     }
 
-    return undefined
+    return void 0
   }
 
   addEventListener(

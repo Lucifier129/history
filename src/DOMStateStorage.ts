@@ -81,7 +81,7 @@ export function readState(key: string): unknown {
         '[history] Unable to read state; sessionStorage is not available due to security settings'
       )
 
-      return undefined
+      return void 0
     }
   }
 
@@ -94,5 +94,5 @@ export function readState(key: string): unknown {
     }
   }
 
-  return undefined
+  return void 0
 }
