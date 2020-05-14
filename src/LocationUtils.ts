@@ -37,9 +37,9 @@ export function createLocation<
           location.pathname +
           '" could not be decoded. ' +
           'This is likely caused by an invalid percent-encoding.'
-      );
+      )
     } else {
-      throw e;
+      throw e
     }
   }
 

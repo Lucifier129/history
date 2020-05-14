@@ -6,7 +6,7 @@ import Actions from './Actions'
 import type { ParsedUrlQueryInput } from 'querystring'
 import type { Hook } from './runTransitionHook'
 import type { Callback } from './AsyncUtils'
-import type{
+import type {
   CreateHistory,
   HistoryOptions,
   LocationTypeLoader,
