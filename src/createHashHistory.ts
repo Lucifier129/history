@@ -201,7 +201,7 @@ export default function createHashHistory<LT extends LocationType>(
   }
 
   function startListenerHash(
-    listener: Hook,
+    callback: (l: Location) => void,
     pathCoder: PathCoder,
     queryKey: string
   ): StopListener {
@@ -244,7 +244,7 @@ export default function createHashHistory<LT extends LocationType>(
           ...currentLocation
         }
 
-        listener(currentLocation)
+        callback(currentLocation)
       }
     }
 
@@ -328,7 +328,8 @@ export default function createHashHistory<LT extends LocationType>(
   }
 
   function updateLocation<IL extends Location>(
-    nextLocation: IL
+    nextLocation: IL,
+    silence: boolean = false
   ): void {
     const currentIndex = getCurrentIndex()
     currentLocation = nextLocation
@@ -339,7 +340,9 @@ export default function createHashHistory<LT extends LocationType>(
       allKeys[currentIndex] = currentLocation.key
     }
 
-    hooks.forEach(hook => hook(currentLocation))
+    if (!silence) {
+      hooks.forEach(hook => hook(currentLocation))
+    }
   }
 
   function _listenBefore<IL extends Location>(
@@ -391,7 +394,7 @@ export default function createHashHistory<LT extends LocationType>(
     )
   }
 
-  function transitionTo<IL extends Location>(nextLocation: IL): void {
+  function transitionTo<IL extends Location>(nextLocation: IL, silence: boolean = false): void {
     if (
       (currentLocation && locationsAreEqual(currentLocation, nextLocation))
       || (pendingLocation && locationsAreEqual(pendingLocation, nextLocation))
@@ -422,14 +425,14 @@ export default function createHashHistory<LT extends LocationType>(
         }
 
         if (nextLocation.action === POP) {
-          updateLocation(nextLocation)
+          updateLocation(nextLocation, silence)
         } else if (nextLocation.action === PUSH) {
           if (pushLocation(nextLocation) !== false) {
-            updateLocation(nextLocation)
+            updateLocation(nextLocation, silence)
           }
         } else if (nextLocation.action === REPLACE) {
           if (replaceLocation(nextLocation) !== false) {
-            updateLocation(nextLocation)
+            updateLocation(nextLocation, silence)
           }
         }
       } else if (currentLocation && nextLocation.action === POP) {
@@ -443,12 +446,12 @@ export default function createHashHistory<LT extends LocationType>(
     })
   }
 
-  function push<BL extends BaseLocation>(input: BL | string): void {
-    transitionTo(createLocation(input, PUSH))
+  function push<BL extends BaseLocation>(input: BL | string, silence: boolean = false): void {
+    transitionTo(createLocation(input, PUSH), silence)
   }
 
-  function replace<BL extends BaseLocation>(input: BL | string): void {
-    transitionTo(createLocation(input, REPLACE))
+  function replace<BL extends BaseLocation>(input: BL | string, silence: boolean = false): void {
+    transitionTo(createLocation(input, REPLACE), silence)
   }
 
   function goBack(): void {
