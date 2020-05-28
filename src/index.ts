@@ -168,11 +168,11 @@ export interface TransitionTo<IL extends Location> {
 }
 
 export interface Push<BL extends BaseLocation> {
-  (input: BL | string): void
+  (input: BL | string, silence?: boolean): void
 }
 
 export interface Replace<BL extends BaseLocation> {
-  (input: BL | string): void
+  (input: BL | string, silence?: boolean): void
 }
 
 export interface Go {

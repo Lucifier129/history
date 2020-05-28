@@ -69,7 +69,8 @@ export default function createMemoryHistory<LT extends LocationType>(
   }
 
   function updateLocation<IL extends Location>(
-    nextLocation: IL
+    nextLocation: IL,
+    silence: boolean = false
   ): void {
     const currentIndex = getCurrentIndex()
     currentLocation = nextLocation
@@ -80,7 +81,9 @@ export default function createMemoryHistory<LT extends LocationType>(
       allKeys[currentIndex] = currentLocation.key
     }
 
-    hooks.forEach(hook => hook(currentLocation))
+    if (!silence) {
+      hooks.forEach(hook => hook(currentLocation))
+    }
   }
 
   function listenBefore<IL extends Location>(
@@ -123,7 +126,8 @@ export default function createMemoryHistory<LT extends LocationType>(
   }
 
   function transitionTo<IL extends Location>(
-    nextLocation: IL
+    nextLocation: IL,
+    silence: boolean = false
   ): void {
     if (
       (currentLocation && locationsAreEqual(currentLocation, nextLocation)) ||
@@ -154,14 +158,14 @@ export default function createMemoryHistory<LT extends LocationType>(
         }
 
         if (nextLocation.action === POP) {
-          updateLocation(nextLocation)
+          updateLocation(nextLocation, silence)
         } else if (nextLocation.action === PUSH) {
           if (pushLocation(nextLocation) !== false) {
-            updateLocation(nextLocation)
+            updateLocation(nextLocation, silence)
           }
         } else if (nextLocation.action === REPLACE) {
           if (replaceLocation(nextLocation) !== false) {
-            updateLocation(nextLocation)
+            updateLocation(nextLocation, silence)
           }
         }
       } else if (currentLocation && nextLocation.action === POP) {
@@ -176,15 +180,17 @@ export default function createMemoryHistory<LT extends LocationType>(
   }
 
   function push<BL extends BaseLocation = BaseLocation>(
-    input: BL | string
+    input: BL | string,
+    silence: boolean = false
   ): void {
-    transitionTo(createLocation(input, PUSH))
+    transitionTo(createLocation(input, PUSH), silence)
   }
 
   function replace<BL extends BaseLocation = BaseLocation>(
-    input: BL | string
+    input: BL | string,
+    silence: boolean = false
   ): void {
-    transitionTo(createLocation(input, REPLACE))
+    transitionTo(createLocation(input, REPLACE), silence)
   }
 
   function goBack(): void {

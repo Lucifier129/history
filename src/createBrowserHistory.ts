@@ -81,11 +81,11 @@ export default function createBrowserHistory(
     }, void 0, key)
   }
 
-  function startListenerBrowser<IL extends Location>(listener: Hook<IL>): StopListener {
+  function startListenerBrowser<IL extends Location>(callback: (l: IL) => void): StopListener {
     function handlePopState(event: PopStateEvent): void {
       // Ignore extraneous popstate events in WebKit
       if (isExtraneousPopstateEvent(event)) return
-      listener(createBroserverLocation(event.state))
+      callback(createBroserverLocation(event.state))
     }
 
     addEventListener(
@@ -197,7 +197,7 @@ export default function createBrowserHistory(
     return -1
   }
 
-  function updateLocation<IL extends Location>(nextLocation: IL): void {
+  function updateLocation<IL extends Location>(nextLocation: IL, silence: boolean = false): void {
     const currentIndex = getCurrentIndex()
     currentLocation = nextLocation
 
@@ -207,7 +207,9 @@ export default function createBrowserHistory(
       allKeys[currentIndex] = currentLocation.key
     }
 
-    hooks.forEach(hook => hook(currentLocation))
+    if (!silence) {
+      hooks.forEach(hook => hook(currentLocation))
+    }
   }
 
   function listenBefore<IL extends Location>(listener: Hook<IL>): StopListener {
@@ -218,7 +220,7 @@ export default function createBrowserHistory(
     return startListener(listener, false)
   }
 
-  function confirmTransitionTo<IL extends Location>(location: IL, callback: (ok: unknown) => void): void {
+  function confirmTransitionTo<IL extends Location>(location: IL, callback: (ok: boolean) => void): void {
     loopAsync(
       beforeHooks.length,
       (index, next, done) => {
@@ -236,7 +238,7 @@ export default function createBrowserHistory(
     )
   }
 
-  function transitionTo<IL extends Location>(nextLocation: IL): void {
+  function transitionTo<IL extends Location>(nextLocation: IL, silence: boolean = false): void {
     if (
       (currentLocation && locationsAreEqual(currentLocation, nextLocation)) ||
       (pendingLocation && locationsAreEqual(pendingLocation, nextLocation))
@@ -267,14 +269,14 @@ export default function createBrowserHistory(
         }
 
         if (nextLocation.action === POP) {
-          updateLocation(nextLocation)
+          updateLocation(nextLocation, silence)
         } else if (nextLocation.action === PUSH) {
           if (pushLocation(nextLocation) !== false) {
-            updateLocation(nextLocation)
+            updateLocation(nextLocation, silence)
           }
         } else if (nextLocation.action === REPLACE) {
           if (replaceLocation(nextLocation) !== false) {
-            updateLocation(nextLocation)
+            updateLocation(nextLocation, silence)
           }
         }
       } else if (currentLocation && nextLocation.action === POP) {
@@ -288,12 +290,12 @@ export default function createBrowserHistory(
     })
   }
 
-  function push<BL extends BaseLocation>(input: BL | string): void {
-    transitionTo(createLocation(input, PUSH))
+  function push<BL extends BaseLocation>(input: BL | string, silence: boolean = false): void {
+    transitionTo(createLocation(input, PUSH), silence)
   }
 
-  function replace<BL extends BaseLocation>(input: BL | string): void {
-    transitionTo(createLocation(input, REPLACE))
+  function replace<BL extends BaseLocation>(input: BL | string, silence: boolean = false): void {
+    transitionTo(createLocation(input, REPLACE), silence)
   }
 
   function goBack() {
