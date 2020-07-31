@@ -112,21 +112,23 @@ export default function useQueries<CH extends CreateHistory<any>>(
     }
 
     // Override all write methods with query-aware versions.
-    function push<BL extends BaseLocation>(location: BL | string): void {
+    function push<BL extends BaseLocation>(location: BL | string, silence: boolean = false): void {
       history.push(
         encodeQuery(
           location,
           typeof location === 'string' ? void 0 : location.query
-        )
+        ),
+        silence
       )
     }
 
-    function replace<BL extends BaseLocation>(location: BL | string): void {
+    function replace<BL extends BaseLocation>(location: BL | string, silence: boolean = false): void {
       history.replace(
         encodeQuery(
           location,
           typeof location === 'string' ? void 0 : location.query
-        )
+        ),
+        silence
       )
     }
 
