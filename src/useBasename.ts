@@ -105,12 +105,12 @@ export default function useBasename<CH extends CreateHistory<any>>(
     }
 
     // Override all write methods with basename-aware versions.
-    function push<BL extends BaseLocation>(location: BL | string): void {
-      history.push(prependBasename(location))
+    function push<BL extends BaseLocation>(location: BL | string, silence: boolean = false): void {
+      history.push(prependBasename(location), silence)
     }
 
-    function replace<BL extends BaseLocation>(location: BL | string): void {
-      history.replace(prependBasename(location))
+    function replace<BL extends BaseLocation>(location: BL | string, silence: boolean = false): void {
+      history.replace(prependBasename(location), silence)
     }
 
     function createPath<BL extends BaseLocation>(location: BL | string): string {
