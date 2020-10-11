@@ -23,7 +23,7 @@ Then with a module bundler like [webpack](https://webpack.github.io/), use as yo
 
 ```js
 // using an ES6 transpiler, like babel
-import histrory from 'history'
+import history from 'history'
 
 history.createHistory()
 
